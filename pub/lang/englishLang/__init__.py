@@ -3,14 +3,20 @@ from protocols import advise
 from pub.interfaces import ILang, IEnglish 
 
 
-advise(moduleProvides=[ILang, IEnglish])
+advise(moduleProvides=[ILang])
 
 name = 'english'
 
-#def initiate():
-#    """
-#    function to return the current module.
-#    """
-#
-#    if __name__ != '__main__': return __import__(__name__) 
-#    else: return None
+class English:
+    """
+    Provides IEnglish.
+    """
+
+    advise(instancesProvide=[IEnglish])
+
+def initiate():
+    """
+    return a language. 
+    """
+
+    return English()

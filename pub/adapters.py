@@ -28,7 +28,7 @@ class StrLangAdapter:
                 # set this language as current language 
                 # this way next time we adapt we won't need to evaluate.
                 
-                return lang
+                return lang.initiate()
 
         # No such language found
         raise pub.errors.LanguageError, "Can't find specified language"

@@ -209,7 +209,9 @@ def find(obj,proto,default=None):
 
     else: return out.next()
 
-
+#--------------------------------------------------------------------
+# lingo -- a language finder
+#
 def lingo(obj,proto):
     """
     lingo is used for instances when we want to find the right language.
@@ -218,6 +220,9 @@ def lingo(obj,proto):
     adapted = adapt(obj, ILang, None)
     if adapted != None:
         adapted = adapted.initiate()
+        if pub.debugging: print adapted
+
+    if pub.debugging: print obj, proto
 
     return adapt(adapted, proto, None)
 
