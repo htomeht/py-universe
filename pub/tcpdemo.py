@@ -1,13 +1,13 @@
-#	PUB Demo
+#   PUB Demo
 #
-#	This file demonstrates a few simple objects.
+#   This file demonstrates a few simple objects.
 #
 
-from pubcore import *		# import core datatypes, functions, & constants
-import pubobjs				# import standard object library
-import pub					# import global variables
-import gadgets				# import wierd & wonderful things
-import pubtcp			# network handling
+from pubcore import *       # import core datatypes, functions, & constants
+import pubobjs              # import standard object library
+import pub                  # import global variables
+import gadgets              # import wierd & wonderful things
+import pubtcp           # network handling
 import time
 
 # create shortcuts for most common object types
@@ -16,10 +16,10 @@ Exit = pubobjs.Exit
 Thing = pubobjs.Thing
 NPC = pubobjs.NPC
 
-pub.scheduler = Scheduler("12:00")		# start the clock!
+pub.scheduler = Scheduler("12:00")      # start the clock!
 
 #----------------------------------------------------------------------
-#	Create some objects
+#   Create some objects
 #
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -40,7 +40,7 @@ rock = Thing("rock,stone")
 rock.desc = "It looks like an ordinary rock, except that it glows very faintly."
 rock.light = 5
 
-pub.player = pubtcp.NetPlayer('Joe')	# put net player here
+pub.player = pubtcp.NetPlayer('Joe')    # put net player here
 pub.player.password = '.'
 
 square_n = Exit("north,n")
@@ -118,10 +118,10 @@ trans2 = gadgets.Transceiver('Transceiver2,trans2,tran2')
 
 guard = gadgets.ScriptPlayer("Guard")
 guard.script = [
-	'DELAY 100', 'DO go north', 'The Guard marches up and down the square.',
-	'DELAY 100', 'DO go north',
-	'DELAY 100', 'DO go south', 'The Guard marches up and down the square.',
-	'DELAY 100', 'DO go south']
+    'DELAY 100', 'DO go north', 'The Guard marches up and down the square.',
+    'DELAY 100', 'DO go north',
+    'DELAY 100', 'DO go south', 'The Guard marches up and down the square.',
+    'DELAY 100', 'DO go south']
 guard.desc = "It's a tall, lean man in a crisp uniform, who has decorated \
 his face with a neatly trimmed mustache and a perpetual scowl."
 
@@ -188,13 +188,13 @@ lamp.onListLine = "a lamp (lit)"
 
 TV = gadgets.ScriptPlayer('TV,telley,television')
 TV.script = [
-	"DELAY 4", 'On the TV, John says "Marsha, Darling, I love you so much!"',
-	'"Don\'t you wish we were married?" says John on the TV.',
-	'DELAY 2',
-	'"But Darling," Marsha replies, "we are!"',
-	'"...or did you mean to each other?"',
-	'DELAY 5', 'The TV takes a commercial break.',
-	'DELAY 5', 'DO say And now back to our program...']
+    "DELAY 4", 'On the TV, John says "Marsha, Darling, I love you so much!"',
+    '"Don\'t you wish we were married?" says John on the TV.',
+    'DELAY 2',
+    '"But Darling," Marsha replies, "we are!"',
+    '"...or did you mean to each other?"',
+    'DELAY 5', 'The TV takes a commercial break.',
+    'DELAY 5', 'DO say And now back to our program...']
 TV.a = 'a'
 
 camera = gadgets.Camera('camera,cam')
@@ -238,12 +238,12 @@ of the manhole.  You can just barely reach it to climb out."
 sewermain_u.light = 5
 
 #----------------------------------------------------------------------
-#	Run the game
+#   Run the game
 #
 
 while pubtcp.running >= 0:
-	time.sleep(0.3)
-	pub.scheduler.Update()
-	pubtcp.NetUpdate()
+    time.sleep(0.3)
+    pub.scheduler.Update()
+    pubtcp.NetUpdate()
 
 pubtcp.ShutDown()
