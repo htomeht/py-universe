@@ -1,0 +1,50 @@
+2002-11/21:
+This is a tentative "Alpha" release of the PUB aka PyUniverse
+package.  It *is* now a package thanks to Lalo Martins. <applause/>
+
+It only recently occured to me that I really ought to make a
+downloadable package of this work.  I have been meaning to
+write more documentation and/or experiment with the package,
+but I have been really busy on other projects, so no dice.
+
+However ...
+
+Extremely quick starter notes:
+
+1) You can install the package with distutils like so:
+
+python setup.py install
+
+It's pure python, so don't worry about building extensions -- there
+aren't any.
+
+2) To see what it does, run the Greedy Gargoyle example:
+
+cd pub/games/
+python gredgar.py
+
+This is a simple, one-room interactive-fiction adventure.
+
+There is documentation generated from HappyDoc in pub/doc, which
+is certainly more useful than it was, but is a long way from being
+complete.
+
+
+Other notes:
+
+The official website is on Sourceforge: http://py-universe.sourceforge.net
+(unfortunately, "pub" is a reserved word!).
+
+There's a mailing list (very low volume): py-universe-main@lists.sourceforge.net
+
+The current maintainer is me: Terry Hancock hancock@anansispaceworks.com
+
+Python Universe Builder was originally written by Joseph Strout.
+
+It is licensed according to the Gnu Lesser or Library Public License (LGPL).
+
+For details, see the file COPYING in this directory.
+
+
+
+
