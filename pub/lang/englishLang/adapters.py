@@ -1,6 +1,6 @@
 import pub
 
-from pub.interfaces import IEnglish, IParser
+from pub.interfaces import IEnglish, IParser, ITest
 
 from protocols import advise
 
@@ -275,3 +275,23 @@ class Parser:
                 if command == "quit": done = TRUE
                 else: print string.join(map(str,self.Parse(command)),'\n')
 
+#--------------------------------------------------------------------
+# TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TE
+#
+
+class TestAdapter:
+    """
+    TestAdapter is used to test that lingo works. It Simply provides
+    a ITest interface with one function.
+    """
+
+    advise(instancesProvide=[ITest], asAdapterForProtocols=[IEnglish])
+
+    def __init__(self,obj,proto):
+        self.obj = obj
+        self.proto = proto
+
+    def test(self):
+        """Everything seems fine now =)"""
+
+        print self.obj, "has adapted to", self.proto

@@ -2,6 +2,7 @@ from protocols import advise
 
 from pub.interfaces import ILang, IEnglish 
 
+import adapters
 
 advise(moduleProvides=[ILang])
 
