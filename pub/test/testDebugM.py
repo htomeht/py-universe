@@ -40,8 +40,8 @@ class TestDebugVerbs(TestCase):
         gredgar, we could just as well use any other game. 
         """
         
-        gredgar = pathjoin(gamesdir, 'gredgar.py')           
-        runtest('debug', gredgar, makeoutput)
+        pubdemo= pathjoin(pubdir, 'pubdemo.py')           
+        runtest('debug', pubdemo, makeoutput)
         
 
 
