@@ -84,7 +84,8 @@ class TestBaseThing(TestCase):
     """
     """
 
-suite = TestSuite([makeSuite(TestScheduler), makeSuite(TestEvent)])
+suitelist = [TestScheduler, TestEvent]
+suite = TestSuite([makeSuite(suite) for suite in suitelist])
 
 if __name__ == '__main__': main()
 
