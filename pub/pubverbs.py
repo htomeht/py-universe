@@ -1,4 +1,4 @@
-#    pubverbs.py            8/27/96 JJS
+#    pubverbs.py                                            8/27/96 JJS
 #
 #    This module defines the standard PUB verbs.
 #
@@ -436,9 +436,9 @@ class Look(Verb):
                 return CANCEL
             try: str = cmd.inobj.GetContentsDesc(cmd.actor)
             except AttributeError:
-	        cmd.Tell("You can't look in <the inobj>")
-		return CANCEL
-	    if str:
+                cmd.Tell("You can't look in <the inobj>")
+                return CANCEL
+            if str:
                 cmd.Tell('It looks like <the inobj> contains:' + str)
             else:
                 cmd.Tell('<The inobj> appears to be empty.')
@@ -549,7 +549,7 @@ class Quit(Verb):
         self.succ = 'Quitting game.'
         self.osucc = '<The actor> '+x+'s the game.'
         self.ask = '  Are you sure you want to quit? Y/y/N/n (Default No): '
-	
+        
     def Finish(self,cmd):
         # to quit the game, set pub.gameStatus...
         answer = raw_input(self.ask)
@@ -652,24 +652,24 @@ class Eat(Verb):
     def __init__(self,pNames=''):
         Verb.__init__(self,pNames)
         self.fail = "You can't eat <a dirobj>."
-	self.succ = "You eat <the dirobj>."
+        self.succ = "You eat <the dirobj>."
         self.seefail = "What should I eat?."
-	
+        
     def Begin(self,cmd):
-	if not cmd.dirobj or not isInstance(cmd.dirobj):
-	    cmd.actor.Tell(self.seefail)
-	    return CANCEL
-	if not hasattr(cmd.dirobj, 'edible'): 
-	    cmd.Tell(self.fail)
-	    return CANCEL
+        if not cmd.dirobj or not isInstance(cmd.dirobj):
+            cmd.actor.Tell(self.seefail)
+            return CANCEL
+        if not hasattr(cmd.dirobj, 'edible'): 
+            cmd.Tell(self.fail)
+            return CANCEL
         if not cmd.dirobj.edible:
-	    cmd.Tell(self.fail)
-	    return CANCEL
+            cmd.Tell(self.fail)
+            return CANCEL
         if cmd.dirobj.container == cmd.actor: cmd.Tell(self.succ)
         return Verb.Begin(self,cmd)
     
     def Finish(self,cmd):
-	cmd.dirobj.MoveTo('TRASH') # delete the object
+        cmd.dirobj.MoveTo('TRASH') # delete the object
         return Verb.Finish(self,cmd)
     
 eat = Eat('eat')
@@ -689,8 +689,8 @@ class Drink(Verb):
 
     def __init__(self,pNames=''):
         Verb.__init__(self,pNames)
-	self.fail = "You can't drink <a dirobj>."
-	self.succ = "You drink <the dirobj>."
+        self.fail = "You can't drink <a dirobj>."
+        self.succ = "You drink <the dirobj>."
         self.seefail = "You can't see any <dirobj> here."
 
     def Begin(self,cmd):
@@ -699,7 +699,7 @@ class Drink(Verb):
             return CANCEL
         if not hasattr(cmd.dirobj, 'drinkable'):
             cmd.Tell(self.fail)
-	    return CANCEL
+            return CANCEL
         if not cmd.dirobj.drinkable:
             cmd.Tell(self.fail)
             return CANCEL
@@ -707,9 +707,9 @@ class Drink(Verb):
         return Verb.Begin(self,cmd)
 
     def Finish(self,cmd):
-	cmd.dirobj.MoveTo('TRASH') # delete the object
+        cmd.dirobj.MoveTo('TRASH') # delete the object
         return Verb.Finish(self,cmd)
-	
+        
 drink = Drink('drink')
 #----------------------------------------------------------------------
 # @break -- sets line breaks, or turns them off
@@ -802,10 +802,10 @@ class Save(Verb):
     """
 
     def Finish(self,cmd):
-	file = raw_input('  Enter a name for this game, default is pub.dat.')
+        file = raw_input('  Enter a name for this game, default is pub.dat.')
         cmd.actor.Tell('  Saving game to disk...')
         if file == '': savegame()
-	else: savegame(file)
+        else: savegame(file)
         return OK
 
 save = Save('save')
@@ -824,10 +824,10 @@ class Restore(Verb):
 
     def Finish(self,cmd):
         file = raw_input('  Enter a save game to load, default is pub.dat.')
-	cmd.actor.Tell('  Restoring game from disk...')
+        cmd.actor.Tell('  Restoring game from disk...')
         if file == '': restoregame()
         else: restoregame(file)
-	cmd.actor = pub.player
+        cmd.actor = pub.player
         cmd.actor.DoCommandString("look")
         raise pub.BailOutError, "Resetting stack to restore game"
 
@@ -841,7 +841,7 @@ class Script(Verb):
 
     def Finish(self,cmd):
         if self.DoPostchecks(cmd) == CANCEL: return OK
-	code.interact(banner='', local=sys.modules['__main__'].__dict__)
-	return OK
+        code.interact(banner='', local=sys.modules['__main__'].__dict__)
+        return OK
 
 script = Script('@script,@code')
