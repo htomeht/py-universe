@@ -19,13 +19,13 @@ exclude = [ModuleType, FunctionType, ClassType, BuiltinFunctionType,
        BuiltinMethodType, CodeType, FileType ]
 
 def modvars(module):
-    dict = module.__dict__
-    list = []
-    for name, value in dict.items():
+    mdict = module.__dict__
+    li = []
+    for name, value in mdict.items():
         t = type(value)
         if t not in exclude and name[:2] != '__':
-            list.append((name, value))
-    return list
+            li.append((name, value))
+    return li
 
 def save( f, *pModules ):
     p = cPickle.Pickler(f)
@@ -35,6 +35,6 @@ def save( f, *pModules ):
 def restore( f, *pModules ):
     u = cPickle.Unpickler(f)
     for mod in pModules:
-        list = u.load()
-        for (name, value) in list:
+        relist = u.load()
+        for (name, value) in relist:
             setattr(mod, name, value)
