@@ -7,8 +7,9 @@
 from pubcore import *		# import core datatypes, functions, & constants
 import pubobjs				# import standard object library
 import pub					# import global variables
+import gadgets
 
-
+pub.scheduler = Scheduler("12:00") # start the clock, else can't restore 
 #----------------------------------------------------------------------
 #	Run the game
 #
@@ -18,6 +19,7 @@ restoregame()		# load game from file
 pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
 pub.scheduler.AddEvent( 0, Event(pub.player, 'object.Act()') )
+
 
 while pub.gameStatus == RUNNING:
 	pub.scheduler.Update()
