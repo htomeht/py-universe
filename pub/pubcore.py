@@ -221,6 +221,13 @@ class Scheduler:
             self.events[pAbsTime] = [pEvent]
     
     def AddEvent(self,pRelTime,pEvent):
+        """AddEvent:
+        Adds an event to the scheduler. pRelTime should be a number of
+        minutes. 
+        
+        self.AddEvent(5, event) will add a new event 5 minutes from now. 
+        
+        """
         time = self.minutes + pRelTime
         if self.events.has_key(time):
             self.events[time].append(pEvent)
