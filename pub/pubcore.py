@@ -1,11 +1,8 @@
 #	pubcore.py			6/01/98 JJS
 #
-#	This module defines datatypes and constants used by most other
+#	This module defines datatypes used by most other
 #	PUB modules.  You shouldn't mess with this file unless you
 #	really know what you're doing.
-#
-#	Use this module with:
-#	from pubcore import *
 #
 #	2002-5/10:
 #	Terry Hancock
@@ -33,29 +30,14 @@ import types
 import copy
 import whrandom
 import re
+from constants import *
 
 # import the PUB module which declares "global" variables
 import pub
 
-# declare some constants
-
-the = 'the'
-a = 'a'
-The = 'The'
-A = 'A'
-OK = 1
-CANCEL = 0
-BEGIN = 1
-FINISH = 2
-RUNNING = 1
-QUIT = 0
-TRUE = 1
-FALSE = 0
 
 # function to capitalize a string
-def cap(s):
-	if not s: return s
-	return string.upper(s[0]) + s[1:]
+cap = string.capitalize
 
 # function to determine whether it's a string
 def isString(x):

@@ -14,5 +14,15 @@ lastroom = None			# last room created; default location for new objects
 universe = None			# room which contains all other rooms
 player = None			# game player (esp. for single-user games)
 
-BailOutError = "BailOutError"	# exception to raise to bail out of current
-                             	# stack frame (used when restoring, etc.)
+class BailOutError(Exception):	# exception to raise to bail out of current
+    pass			# stack frame (used when restoring, etc.)
+
+
+from pubcore import *		# import core datatypes, functions, & constants
+import pubverbs			# import standard verbs
+verbs = pubverbs
+import pubobjs 			# import standard object library
+objs = pubobjs
+import gadgets
+import pubtcp
+tcp = pubtcp

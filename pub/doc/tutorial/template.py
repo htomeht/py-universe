@@ -4,23 +4,12 @@
 #
 #----------------------------------------------------------------------
 
-# required modules:
-from pubcore import *		# import core datatypes, functions, & constants
-import pubverbs				# import standard verbs
-import pubobjs				# import standard object library
-import pub					# import global variables
-
-# extra/optional modules:
-import gadgets				# miscellaneous gadgets & gizmos
+import pub
+from pub.constants import *
+player = pub.player
 
 # start the scheduler
-pub.scheduler = Scheduler("12:00")
-
-# create shortcuts for most common object types
-Exit = pubobjs.Exit
-Thing = pubobjs.Thing
-NPC = pubobjs.NPC
-player = pub.player
+pub.scheduler = pub.Scheduler("12:00")
 
 #----------------------------------------------------------------------
 #	Define special object types used in this game
@@ -53,5 +42,5 @@ player.Tell(player.container.GetDesc(player))
 # run the game until it's no longer RUNNING
 while pub.gameStatus == RUNNING:
 	if not pub.scheduler.events:
-		pub.scheduler.AddEvent( 0, Event(player, 'object.Act()') )
+		pub.scheduler.AddEvent( 0, pub.Event(player, 'object.Act()') )
 	pub.scheduler.Update()

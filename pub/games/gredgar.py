@@ -1,28 +1,21 @@
 #	The Greedy Gargoyle
 #
 #	A mini-adventure by Joe Strout       5/11/96
-#                     last revised       8/27/96
+#                     last revised       2002-07-02 Lalo Martins
 
-from pubcore import *		# import core datatypes, functions, & constants
-import pubverbs				# import standard verbs
-import pubobjs				# import standard object library
-import pub					# import global variables
-import gadgets
+import pub
+from pub.constants import *
 
-pub.scheduler = Scheduler("12:00")		# start the clock!
-
-# create shortcuts for most common object types
-Exit = pubobjs.Exit
-Thing = pubobjs.Thing
-NPC = pubobjs.NPC
+pub.scheduler = pub.Scheduler("12:00")		# start the clock!
+print pub.scheduler
 
 #----------------------------------------------------------------------
 #	Define special object types used in this game
 #
-class Gargoyle(NPC):
+class Gargoyle(pub.objs.NPC):
 
 	def __init__(self,pNames):
-		NPC.__init__(self,pNames)
+		pub.objs.NPC.__init__(self,pNames)
 		self.door = None
 		self.openDesc = "The gargoyle is split in half, leaving the door \
 open in between."
@@ -54,17 +47,17 @@ door to the north.")
 		if self.door: self.door.open = TRUE
 		self.closedDesc = self.desc
 		self.desc = self.openDesc
-		pub.scheduler.AddEvent(10,Event(self,'object.Close()'))
+		pub.scheduler.AddEvent(10,pub.Event(self,'object.Close()'))
 	
 	def Close(self):
 		self.Announce("The gargoyle door slides shut again, and the two \
 halves of the gargoyle fuse with an evil grin.")
 		if self.door: self.door.open = FALSE
 		self.desc = self.closedDesc
-		pub.scheduler.AddEvent(2,Event(self,'object.Freeze()'))
+		pub.scheduler.AddEvent(2,pub.Event(self,'object.Freeze()'))
 	
 	def PostObj(self,cmd):
-		if cmd.verb == pubverbs.give:
+		if cmd.verb == pub.verbs.give:
 		
 			if cmd.dirobj.name == "gold coin":
 				cmd.Tell("As you place the coin in the gargoyle's palm, \
@@ -73,7 +66,7 @@ then nods approvingly.  With the help of a clawed finger, it begins to \
 count -- but, finding only one coin in its palm, it stops abruptly and \
 throws the coin down in disgust.")
 				cmd.dirobj.MoveTo(self.container)
-				pub.scheduler.AddEvent(3,Event(self,'object.Freeze()'))
+				pub.scheduler.AddEvent(3,pub.Event(self,'object.Freeze()'))
 
 			if cmd.dirobj.synonyms[0] == "tin coin":
 				if self.CanSee(cmd.dirobj):
@@ -81,10 +74,10 @@ throws the coin down in disgust.")
 hand, its face springs to life.  It cocks a bulging eye at your offering.  \
 Noting the dull grey color and featureless surfaces, its eyes grow wide.  \
 With an angry flick of its arm, it hurls "+cmd.dirobj(the)+" over your head.")
-					pub.scheduler.AddEvent(3,Event(self, \
+					pub.scheduler.AddEvent(3,pub.Event(self, \
 					'object.Throw("'+cmd.dirobj.name+'")'))
 
-					pub.scheduler.AddEvent(4,Event(self,'object.Freeze()'))
+					pub.scheduler.AddEvent(4,pub.Event(self,'object.Freeze()'))
 
 				else:	#---- tin coin in the dark ----#
 					if cmd.dirobj.quantity > 1: 
@@ -105,12 +98,12 @@ clawed finger and begins counting.")
 + ' ' + coins + ", it stops abruptly and throws the "+ coins + " down in \
 disgust.")
 						cmd.dirobj.MoveTo(self.container)
-						pub.scheduler.AddEvent(3,Event(self,'object.Freeze()'))				
+						pub.scheduler.AddEvent(3,pub.Event(self,'object.Freeze()'))				
 					else:
 						cmd.Tell("It stabs its finger at the coins three \
 times, and compares this to the three clawed toes on its foot.  Apparently \
 satisfied, the gargoyle opens its mouth and tosses the coins down.")
-						pub.scheduler.AddEvent(3,Event(self,'object.Open()'))
+						pub.scheduler.AddEvent(3,pub.Event(self,'object.Open()'))
 
 			return CANCEL
 		return OK
@@ -119,7 +112,7 @@ satisfied, the gargoyle opens its mouth and tosses the coins down.")
 #	Create some objects
 #
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-room = pubobjs.Room("Fountain Room")
+room = pub.objs.Room("Fountain Room")
 room.desc = "You're in a small room with walls of stone.  In the middle of \
 the room is a raised stone pool filled with water.  To the north is a great \
 stone door, into which a gargoyle has been carved with amazingly lifelike \
@@ -127,7 +120,7 @@ detail."
 pub.player.MoveTo(room)
 room.ownLight = 5
 
-pool = pubobjs.Container("pool,fountain")
+pool = pub.objs.Container("pool,fountain")
 pool.desc = "The pool is composed of circular stone walls about a foot \
 high and five feet across.  The floor of the pool is also depressed \
 several inches below the floor of the room.  It's filled with a clear \
@@ -135,17 +128,17 @@ liquid that appears to be water."
 pool.size = 20
 pool.salient = FALSE
 
-water = pubobjs.Liquid("water,liquid")
+water = pub.objs.Liquid("water,liquid")
 water.desc = "It appears to be ordinary water, and fairly clean."
 water.MoveTo(pool)
 
-coins = pubobjs.Countable("tin coin,tin coins,coins,coin,tin,slugs,slug")
+coins = pub.objs.Countable("tin coin,tin coins,coins,coin,tin,slugs,slug")
 coins.desc = "Each tin slug feels just like a genuine gold coin, but \
 one can easily tell that it's fake by its color and smooth pattern."
 coins.quantity = 3
 coins.MoveTo(pool)
 
-gold = Thing("gold coin,gold,coin")
+gold = pub.objs.Thing("gold coin,gold,coin")
 gold.desc = "It's a small coin, but from the gold color and elaborate pattern \
 stamped into it, you know it's quite valuable."
 gold.MoveTo(pub.player)
@@ -159,13 +152,13 @@ garg.light = 10
 garg.note = 'The gargoyle on the door glows faintly in the dark, as \
 magical items frequently do.'
 
-door = Exit('north,n,door,exit,leave,out')
+door = pub.objs.Exit('north,n,door,exit,leave,out')
 door.open = FALSE
 door.desc = "It's a great stone door, with a carving of a gargoyle \
 that appears amazingly lifelike."
 garg.door = door
 
-lamp = pubobjs.Switch('lamp')
+lamp = pub.objs.Switch('lamp')
 lamp.onDesc = 'The lamp is glowing brightly.'
 lamp.offDesc = 'The lamp is dark.'
 lamp.effectOnCode = 'self.light = 40'
@@ -180,19 +173,19 @@ lamp.onListLine = "a lamp (lit)"
 lamp.MoveTo(pub.player)
 lamp.Activate(pub.player)
 
-endroom = pubobjs.Room("Congratulations!")
+endroom = pub.objs.Room("Congratulations!")
 endroom.desc = "You've gotten past the greedy gargoyle -- and it only cost \
 you three fake coins!  Nicely done.  You may examine the credits, or quit."
 door.dest = endroom
 
-credits = Thing("credits,cred")
+credits = pub.objs.Thing("credits,cred")
 credits.desc = "The Greedy Gargoyle was written on May 11, 1996 by \
 Joseph J. Strout, using the Python Universe Builder (also by J. Strout).  \
+It was refitted by Lalo Martins on Jul 2, 2002 when PUB was turned into a \
+Python Package. \
 At the time of this writing, there have been no beta testers; give me \
 some constructive comments and I'll put your name in this space!"
-credits.a = 'the'
-
-tester = Thing("testerama")
+credits.a = the
 
 #----------------------------------------------------------------------
 #	Run the game
@@ -221,7 +214,7 @@ print "\n\n\n"
 #
 pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
-pub.scheduler.AddEvent( 0, Event(pub.player, 'object.Act()') )
+pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
 
 while pub.gameStatus == RUNNING:
 	try: pub.scheduler.Update()
