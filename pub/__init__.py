@@ -42,16 +42,16 @@ def Debugging(mode='on'):
         pub.Debugging('off')
 
     """
+    global debugging
     if mode.lower() == 'on':
         if 'pubdebug' not in locals():
             try: import pubdebug
-            except: pass
+            except ImportError: pass
         debugging = 1
         print 'Debugging On'
     if mode.lower() == 'off':
         try: del pubdebug
-        except: pass
-        for verb in verbs:
-            if verb in dbgverbs:
-                del verb
+        except NameError: pass
+        #XXX: need to delete debug verbs here, but to do that
+        # we need to add the ability to delete verbs
         debugging = 0
