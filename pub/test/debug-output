@@ -9,52 +9,52 @@ street runs north and south.  Wilderness lies to the east.
 
 
 >
-Contents of <pubobjs.Player instance at 0x405c818c> 
+Contents of <pubobjs.Player instance at 0x405c814c> 
 
 
 
 >
-Contents of <pubobjs.NPC instance at 0x405cc6cc> 
+Contents of <pubobjs.NPC instance at 0x405cc68c> 
 
-<pubobjs.Container instance at 0x405ddc2c> bag
+<pubobjs.Container instance at 0x405ddbec> bag
 
 
 >@contents what?!?
 
 >
-Contents of <pubobjs.Thing instance at 0x405ddd4c> 
+Contents of <pubobjs.Thing instance at 0x405ddd0c> 
 
-<pubobjs.Thing instance at 0x405ddd4c> has no contents
+<pubobjs.Thing instance at 0x405ddd0c> has no contents
 
 >
-<pubobjs.Player instance at 0x405c818c> 
+<pubobjs.Player instance at 0x405c814c> 
 
-                 Act : <bound method Player.Act of <pubobjs.Player instance at 0x405c818c>>
-            Announce : <bound method Player.Announce of <pubobjs.Player instance at 0x405c818c>>
-          CanContain : <bound method Player.CanContain of <pubobjs.Player instance at 0x405c818c>>
-              CanSee : <bound method Player.CanSee of <pubobjs.Player instance at 0x405c818c>>
-      ContainNoCheck : <bound method Player.ContainNoCheck of <pubobjs.Player instance at 0x405c818c>>
-     DoCommandString : <bound method Player.DoCommandString of <pubobjs.Player instance at 0x405c818c>>
-           DoNextCmd : <bound method Player.DoNextCmd of <pubobjs.Player instance at 0x405c818c>>
-            FindNoun : <bound method Player.FindNoun of <pubobjs.Player instance at 0x405c818c>>
-     GetContentsDesc : <bound method Player.GetContentsDesc of <pubobjs.Player instance at 0x405c818c>>
-             GetDesc : <bound method Player.GetDesc of <pubobjs.Player instance at 0x405c818c>>
-         GetListLine : <bound method Player.GetListLine of <pubobjs.Player instance at 0x405c818c>>
-             GetName : <bound method Player.GetName of <pubobjs.Player instance at 0x405c818c>>
-             GetNote : <bound method Player.GetNote of <pubobjs.Player instance at 0x405c818c>>
-             GetRoom : <bound method Player.GetRoom of <pubobjs.Player instance at 0x405c818c>>
-          LocalNouns : <bound method Player.LocalNouns of <pubobjs.Player instance at 0x405c818c>>
-              MoveTo : <bound method Player.MoveTo of <pubobjs.Player instance at 0x405c818c>>
-           NameMatch : <bound method Player.NameMatch of <pubobjs.Player instance at 0x405c818c>>
-           NameToObj : <bound method Player.NameToObj of <pubobjs.Player instance at 0x405c818c>>
-            PostMove : <bound method Player.PostMove of <pubobjs.Player instance at 0x405c818c>>
-             PostObj : <bound method Player.PostObj of <pubobjs.Player instance at 0x405c818c>>
-              PreAct : <bound method Player.PreAct of <pubobjs.Player instance at 0x405c818c>>
-             PreMove : <bound method Player.PreMove of <pubobjs.Player instance at 0x405c818c>>
-              PreObj : <bound method Player.PreObj of <pubobjs.Player instance at 0x405c818c>>
-                Tell : <bound method Player.Tell of <pubobjs.Player instance at 0x405c818c>>
-     VisibleContents : <bound method Player.VisibleContents of <pubobjs.Player instance at 0x405c818c>>
-            __call__ : <bound method Player.__call__ of <pubobjs.Player instance at 0x405c818c>>
+                 Act : <bound method Player.Act of <pubobjs.Player instance at 0x405c814c>>
+            Announce : <bound method Player.Announce of <pubobjs.Player instance at 0x405c814c>>
+          CanContain : <bound method Player.CanContain of <pubobjs.Player instance at 0x405c814c>>
+              CanSee : <bound method Player.CanSee of <pubobjs.Player instance at 0x405c814c>>
+      ContainNoCheck : <bound method Player.ContainNoCheck of <pubobjs.Player instance at 0x405c814c>>
+     DoCommandString : <bound method Player.DoCommandString of <pubobjs.Player instance at 0x405c814c>>
+           DoNextCmd : <bound method Player.DoNextCmd of <pubobjs.Player instance at 0x405c814c>>
+            FindNoun : <bound method Player.FindNoun of <pubobjs.Player instance at 0x405c814c>>
+     GetContentsDesc : <bound method Player.GetContentsDesc of <pubobjs.Player instance at 0x405c814c>>
+             GetDesc : <bound method Player.GetDesc of <pubobjs.Player instance at 0x405c814c>>
+         GetListLine : <bound method Player.GetListLine of <pubobjs.Player instance at 0x405c814c>>
+             GetName : <bound method Player.GetName of <pubobjs.Player instance at 0x405c814c>>
+             GetNote : <bound method Player.GetNote of <pubobjs.Player instance at 0x405c814c>>
+             GetRoom : <bound method Player.GetRoom of <pubobjs.Player instance at 0x405c814c>>
+          LocalNouns : <bound method Player.LocalNouns of <pubobjs.Player instance at 0x405c814c>>
+              MoveTo : <bound method Player.MoveTo of <pubobjs.Player instance at 0x405c814c>>
+           NameMatch : <bound method Player.NameMatch of <pubobjs.Player instance at 0x405c814c>>
+           NameToObj : <bound method Player.NameToObj of <pubobjs.Player instance at 0x405c814c>>
+            PostMove : <bound method Player.PostMove of <pubobjs.Player instance at 0x405c814c>>
+             PostObj : <bound method Player.PostObj of <pubobjs.Player instance at 0x405c814c>>
+              PreAct : <bound method Player.PreAct of <pubobjs.Player instance at 0x405c814c>>
+             PreMove : <bound method Player.PreMove of <pubobjs.Player instance at 0x405c814c>>
+              PreObj : <bound method Player.PreObj of <pubobjs.Player instance at 0x405c814c>>
+                Tell : <bound method Player.Tell of <pubobjs.Player instance at 0x405c814c>>
+     VisibleContents : <bound method Player.VisibleContents of <pubobjs.Player instance at 0x405c814c>>
+            __call__ : <bound method Player.__call__ of <pubobjs.Player instance at 0x405c814c>>
              __doc__ : 
     Player's persona in the game --
         This is the interface between the player and the game.
@@ -65,14 +65,14 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
 
         Has 'Tell' and 'Act' methods.
     
-     __getinitargs__ : <bound method Player.__getinitargs__ of <pubobjs.Player instance at 0x405c818c>>
-            __init__ : <bound method Player.__init__ of <pubobjs.Player instance at 0x405c818c>>
+     __getinitargs__ : <bound method Player.__getinitargs__ of <pubobjs.Player instance at 0x405c814c>>
+            __init__ : <bound method Player.__init__ of <pubobjs.Player instance at 0x405c814c>>
           __module__ : pubobjs
                    a : 
                blind : False
             busytill : 727
              cmdList : []
-           container : <pubobjs.Room instance at 0x403e3fcc>
+           container : <pubobjs.Room instance at 0x403e3f8c>
             contents : []
              defverb : None
                 desc : It looks like an ordinary Everyman.
@@ -91,7 +91,7 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
            listening : 1
                 name : Everyman
                 note : Everyman is here.
-                 par : <pubcore.Parser instance at 0x405cc0ec>
+                 par : <pubcore.Parser instance at 0x405cc0ac>
              salient : True
             seesDark : 0
        seesInvisible : 0
@@ -103,37 +103,37 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
 
 
 >
-<pubobjs.NPC instance at 0x405cc6cc> 
+<pubobjs.NPC instance at 0x405cc68c> 
 
-                 Act : <bound method NPC.Act of <pubobjs.NPC instance at 0x405cc6cc>>
-            Announce : <bound method NPC.Announce of <pubobjs.NPC instance at 0x405cc6cc>>
-          CanContain : <bound method NPC.CanContain of <pubobjs.NPC instance at 0x405cc6cc>>
-              CanSee : <bound method NPC.CanSee of <pubobjs.NPC instance at 0x405cc6cc>>
-      ContainNoCheck : <bound method NPC.ContainNoCheck of <pubobjs.NPC instance at 0x405cc6cc>>
-     DoCommandString : <bound method NPC.DoCommandString of <pubobjs.NPC instance at 0x405cc6cc>>
-           DoNextCmd : <bound method NPC.DoNextCmd of <pubobjs.NPC instance at 0x405cc6cc>>
-            FindNoun : <bound method NPC.FindNoun of <pubobjs.NPC instance at 0x405cc6cc>>
-     GetContentsDesc : <bound method NPC.GetContentsDesc of <pubobjs.NPC instance at 0x405cc6cc>>
-             GetDesc : <bound method NPC.GetDesc of <pubobjs.NPC instance at 0x405cc6cc>>
-         GetListLine : <bound method NPC.GetListLine of <pubobjs.NPC instance at 0x405cc6cc>>
-             GetName : <bound method NPC.GetName of <pubobjs.NPC instance at 0x405cc6cc>>
-             GetNote : <bound method NPC.GetNote of <pubobjs.NPC instance at 0x405cc6cc>>
-             GetRoom : <bound method NPC.GetRoom of <pubobjs.NPC instance at 0x405cc6cc>>
-         HearCommand : <bound method NPC.HearCommand of <pubobjs.NPC instance at 0x405cc6cc>>
-          HearEffect : <bound method NPC.HearEffect of <pubobjs.NPC instance at 0x405cc6cc>>
-          HearSpeech : <bound method NPC.HearSpeech of <pubobjs.NPC instance at 0x405cc6cc>>
-          LocalNouns : <bound method NPC.LocalNouns of <pubobjs.NPC instance at 0x405cc6cc>>
-              MoveTo : <bound method NPC.MoveTo of <pubobjs.NPC instance at 0x405cc6cc>>
-           NameMatch : <bound method NPC.NameMatch of <pubobjs.NPC instance at 0x405cc6cc>>
-           NameToObj : <bound method NPC.NameToObj of <pubobjs.NPC instance at 0x405cc6cc>>
-            PostMove : <bound method NPC.PostMove of <pubobjs.NPC instance at 0x405cc6cc>>
-             PostObj : <bound method NPC.PostObj of <pubobjs.NPC instance at 0x405cc6cc>>
-              PreAct : <bound method NPC.PreAct of <pubobjs.NPC instance at 0x405cc6cc>>
-             PreMove : <bound method NPC.PreMove of <pubobjs.NPC instance at 0x405cc6cc>>
-              PreObj : <bound method NPC.PreObj of <pubobjs.NPC instance at 0x405cc6cc>>
-                Tell : <bound method NPC.Tell of <pubobjs.NPC instance at 0x405cc6cc>>
-     VisibleContents : <bound method NPC.VisibleContents of <pubobjs.NPC instance at 0x405cc6cc>>
-            __call__ : <bound method NPC.__call__ of <pubobjs.NPC instance at 0x405cc6cc>>
+                 Act : <bound method NPC.Act of <pubobjs.NPC instance at 0x405cc68c>>
+            Announce : <bound method NPC.Announce of <pubobjs.NPC instance at 0x405cc68c>>
+          CanContain : <bound method NPC.CanContain of <pubobjs.NPC instance at 0x405cc68c>>
+              CanSee : <bound method NPC.CanSee of <pubobjs.NPC instance at 0x405cc68c>>
+      ContainNoCheck : <bound method NPC.ContainNoCheck of <pubobjs.NPC instance at 0x405cc68c>>
+     DoCommandString : <bound method NPC.DoCommandString of <pubobjs.NPC instance at 0x405cc68c>>
+           DoNextCmd : <bound method NPC.DoNextCmd of <pubobjs.NPC instance at 0x405cc68c>>
+            FindNoun : <bound method NPC.FindNoun of <pubobjs.NPC instance at 0x405cc68c>>
+     GetContentsDesc : <bound method NPC.GetContentsDesc of <pubobjs.NPC instance at 0x405cc68c>>
+             GetDesc : <bound method NPC.GetDesc of <pubobjs.NPC instance at 0x405cc68c>>
+         GetListLine : <bound method NPC.GetListLine of <pubobjs.NPC instance at 0x405cc68c>>
+             GetName : <bound method NPC.GetName of <pubobjs.NPC instance at 0x405cc68c>>
+             GetNote : <bound method NPC.GetNote of <pubobjs.NPC instance at 0x405cc68c>>
+             GetRoom : <bound method NPC.GetRoom of <pubobjs.NPC instance at 0x405cc68c>>
+         HearCommand : <bound method NPC.HearCommand of <pubobjs.NPC instance at 0x405cc68c>>
+          HearEffect : <bound method NPC.HearEffect of <pubobjs.NPC instance at 0x405cc68c>>
+          HearSpeech : <bound method NPC.HearSpeech of <pubobjs.NPC instance at 0x405cc68c>>
+          LocalNouns : <bound method NPC.LocalNouns of <pubobjs.NPC instance at 0x405cc68c>>
+              MoveTo : <bound method NPC.MoveTo of <pubobjs.NPC instance at 0x405cc68c>>
+           NameMatch : <bound method NPC.NameMatch of <pubobjs.NPC instance at 0x405cc68c>>
+           NameToObj : <bound method NPC.NameToObj of <pubobjs.NPC instance at 0x405cc68c>>
+            PostMove : <bound method NPC.PostMove of <pubobjs.NPC instance at 0x405cc68c>>
+             PostObj : <bound method NPC.PostObj of <pubobjs.NPC instance at 0x405cc68c>>
+              PreAct : <bound method NPC.PreAct of <pubobjs.NPC instance at 0x405cc68c>>
+             PreMove : <bound method NPC.PreMove of <pubobjs.NPC instance at 0x405cc68c>>
+              PreObj : <bound method NPC.PreObj of <pubobjs.NPC instance at 0x405cc68c>>
+                Tell : <bound method NPC.Tell of <pubobjs.NPC instance at 0x405cc68c>>
+     VisibleContents : <bound method NPC.VisibleContents of <pubobjs.NPC instance at 0x405cc68c>>
+            __call__ : <bound method NPC.__call__ of <pubobjs.NPC instance at 0x405cc68c>>
              __doc__ : 
     Non-Player Character -- 
     
@@ -148,8 +148,8 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
         additional methods to interact with other advanced
         agents).
     
-     __getinitargs__ : <bound method NPC.__getinitargs__ of <pubobjs.NPC instance at 0x405cc6cc>>
-            __init__ : <bound method NPC.__init__ of <pubobjs.NPC instance at 0x405cc6cc>>
+     __getinitargs__ : <bound method NPC.__getinitargs__ of <pubobjs.NPC instance at 0x405cc68c>>
+            __init__ : <bound method NPC.__init__ of <pubobjs.NPC instance at 0x405cc68c>>
           __module__ : pubobjs
        _othersays_re : <_sre.SRE_Pattern object at 0x401ba808>
           _yousay_re : <_sre.SRE_Pattern object at 0x4019d8d8>
@@ -157,8 +157,8 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
                blind : False
             busytill : 0
              cmdList : []
-           container : <pubobjs.Room instance at 0x403e3fcc>
-            contents : [<pubobjs.Container instance at 0x405ddc2c>]
+           container : <pubobjs.Room instance at 0x403e3f8c>
+            contents : [<pubobjs.Container instance at 0x405ddbec>]
              defverb : None
                 desc : He's just a nondescript, ordinary-looking guy.  (But he just might give you a sack if you tell him to.)
                 fail : You can't put <a dirobj> in <the inobj>.
@@ -176,7 +176,7 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
              noReply : Bert does not reply.
                 note : Bert is here.
             obedient : True
-                 par : <pubcore.Parser instance at 0x405ddaec>
+                 par : <pubcore.Parser instance at 0x405ddaac>
              replies : {'thank': ["You're welcome.", 'No problem.', 'Think nothing of it.'], 'howdy': ['Howdy to you.', 'Hi'], 'hi': ['Hi', 'Hello', 'Hi already!', 'Sheesh!'], 'thanks': ["You're welcome.", 'No problem.', 'Think nothing of it.'], 'weather': ["Yes, isn't it?", 'Beautiful, just beautiful.'], 'hello': ['Hi', 'Hello', 'Hi already!', 'Sheesh!']}
         replyCounter : {}
              salient : True
@@ -192,23 +192,23 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
 >@ex what?!?
 
 >
-<pubobjs.Thing instance at 0x405ddd4c> 
+<pubobjs.Thing instance at 0x405ddd0c> 
 
-          CanContain : <bound method Thing.CanContain of <pubobjs.Thing instance at 0x405ddd4c>>
-              CanSee : <bound method Thing.CanSee of <pubobjs.Thing instance at 0x405ddd4c>>
-             GetDesc : <bound method Thing.GetDesc of <pubobjs.Thing instance at 0x405ddd4c>>
-         GetListLine : <bound method Thing.GetListLine of <pubobjs.Thing instance at 0x405ddd4c>>
-             GetName : <bound method Thing.GetName of <pubobjs.Thing instance at 0x405ddd4c>>
-             GetNote : <bound method Thing.GetNote of <pubobjs.Thing instance at 0x405ddd4c>>
-             GetRoom : <bound method Thing.GetRoom of <pubobjs.Thing instance at 0x405ddd4c>>
-              MoveTo : <bound method Thing.MoveTo of <pubobjs.Thing instance at 0x405ddd4c>>
-           NameMatch : <bound method Thing.NameMatch of <pubobjs.Thing instance at 0x405ddd4c>>
-            PostMove : <bound method Thing.PostMove of <pubobjs.Thing instance at 0x405ddd4c>>
-             PostObj : <bound method Thing.PostObj of <pubobjs.Thing instance at 0x405ddd4c>>
-             PreMove : <bound method Thing.PreMove of <pubobjs.Thing instance at 0x405ddd4c>>
-              PreObj : <bound method Thing.PreObj of <pubobjs.Thing instance at 0x405ddd4c>>
-                Tell : <bound method Thing.Tell of <pubobjs.Thing instance at 0x405ddd4c>>
-            __call__ : <bound method Thing.__call__ of <pubobjs.Thing instance at 0x405ddd4c>>
+          CanContain : <bound method Thing.CanContain of <pubobjs.Thing instance at 0x405ddd0c>>
+              CanSee : <bound method Thing.CanSee of <pubobjs.Thing instance at 0x405ddd0c>>
+             GetDesc : <bound method Thing.GetDesc of <pubobjs.Thing instance at 0x405ddd0c>>
+         GetListLine : <bound method Thing.GetListLine of <pubobjs.Thing instance at 0x405ddd0c>>
+             GetName : <bound method Thing.GetName of <pubobjs.Thing instance at 0x405ddd0c>>
+             GetNote : <bound method Thing.GetNote of <pubobjs.Thing instance at 0x405ddd0c>>
+             GetRoom : <bound method Thing.GetRoom of <pubobjs.Thing instance at 0x405ddd0c>>
+              MoveTo : <bound method Thing.MoveTo of <pubobjs.Thing instance at 0x405ddd0c>>
+           NameMatch : <bound method Thing.NameMatch of <pubobjs.Thing instance at 0x405ddd0c>>
+            PostMove : <bound method Thing.PostMove of <pubobjs.Thing instance at 0x405ddd0c>>
+             PostObj : <bound method Thing.PostObj of <pubobjs.Thing instance at 0x405ddd0c>>
+             PreMove : <bound method Thing.PreMove of <pubobjs.Thing instance at 0x405ddd0c>>
+              PreObj : <bound method Thing.PreObj of <pubobjs.Thing instance at 0x405ddd0c>>
+                Tell : <bound method Thing.Tell of <pubobjs.Thing instance at 0x405ddd0c>>
+            __call__ : <bound method Thing.__call__ of <pubobjs.Thing instance at 0x405ddd0c>>
              __doc__ : 
     Basic type for most PUB nouns. --
         This is the basic type most PUB objects are based on. It
@@ -216,12 +216,12 @@ Contents of <pubobjs.Thing instance at 0x405ddd4c>
         basic object.  The difference is that Thing has PreObj
         and PostObj with sensible defaults defines.
     
-     __getinitargs__ : <bound method Thing.__getinitargs__ of <pubobjs.Thing instance at 0x405ddd4c>>
-            __init__ : <bound method Thing.__init__ of <pubobjs.Thing instance at 0x405ddd4c>>
+     __getinitargs__ : <bound method Thing.__getinitargs__ of <pubobjs.Thing instance at 0x405ddd0c>>
+            __init__ : <bound method Thing.__init__ of <pubobjs.Thing instance at 0x405ddd0c>>
           __module__ : pubobjs
                    a : a
                blind : False
-           container : <pubobjs.Room instance at 0x403e3fcc>
+           container : <pubobjs.Room instance at 0x403e3f8c>
              defverb : None
                 desc : It looks like an ordinary rock, except that it glows very faintly.
          initialDesc : 
