@@ -1144,3 +1144,13 @@ class NPC(Actor):
 
 pub.universe = Room("Universe")
 pub.player = Player("Everyman")
+
+#----------------------------------------------------------------------
+#
+# try to use readline if available
+#
+
+try:
+	import readline
+except:
+	pass
