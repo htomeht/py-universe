@@ -3,7 +3,7 @@
 #	This file demonstrates a few simple objects.
 #
 
-import pub; pub.Debugging('on')				# import global variables
+import pub				# import global variables
 from pubcore import *		# import core datatypes, functions, & constants
 import pubobjs				# import standard object library
 import gadgets				# import wierd & wonderful things
@@ -15,7 +15,6 @@ Thing = pubobjs.Thing
 NPC = pubobjs.NPC
 
 pub.scheduler = Scheduler("12:00")		# start the clock!
-#pub.universe.canContainLiquid = TRUE
 
 #----------------------------------------------------------------------
 #	Create some objects
@@ -36,8 +35,6 @@ might give you a sack if you tell him to.)"
 
 banana = pubobjs.Edible('banana')
 banana.poison = 'neural'
-
-
 
 bag = pubobjs.Container("bag,sack")
 bag.size = 30
