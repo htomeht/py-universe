@@ -21,7 +21,7 @@ Also instantiates the "Universe" Room and the Player, named "Everyman"
 import whrandom
 import string
 import types
-import regex
+import re
 import copy
 
 # PUB modules
@@ -605,7 +605,7 @@ class Actor(Container):
 		# build the command list from the command string
 		# (insert at beginning, so we can insert prerequisite commands)
 		self.cmdList = self.par.Parse(cmdstr) + self.cmdList
-		#if self == player: print "Got: ",map(str,self.cmdList)
+		#print "@Got: ",map(str,self.cmdList)
 
 		# do the first command in the list immediately
 		self.DoNextCmd();
@@ -1031,6 +1031,10 @@ class NPC(Actor):
 		self.replies['thanks'] = self.replies['thank']
 		self.noReply = self.GetName() + " does not reply."
 		self.replyCounter = {}
+
+	# some compiled regular expressions to speed things up
+	_yousay_re = re.compile('You say ".*"')
+	_othersays_re = re.compile('.* says, ".*"')
 	
 	# Here's the main function through which NPC's react:
 	# they hear something, via their Tell() method
@@ -1040,11 +1044,12 @@ class NPC(Actor):
 			Here's the main function through which NPC's react:
 			they hear something, via their Tell() method.
 		"""
+		#print "@", self.synonyms[0], "heard:", pWhat
 		# if it's something we said, don't reply
-		if (regex.match('You say ".*"',pWhat)): return
+		if self._yousay_re.match(pWhat): return
 
 		# if it's someone else speaking, figure out who
-		if (regex.match('.* says, ".*"',pWhat)):
+		if self._othersays_re.match(pWhat):
 			speakername = string.split(pWhat)[0]
 			speaker = self.FindNoun( string.lower(speakername) )
 			if not speaker:
@@ -1070,7 +1075,7 @@ class NPC(Actor):
 			if (string.count( string.lower(pSpeech), word )):
 				pSpeaker.speakingTo = self
 
-#		print pSpeaker, ' speaking to ', pSpeaker.speakingTo
+		#print "@", pSpeaker, ' speaking to ', pSpeaker.speakingTo
 		
 		# if not speaking to me, then maybe ignore it
 		if pSpeaker.speakingTo != self and whrandom.randint(0,1): return
@@ -1098,7 +1103,7 @@ class NPC(Actor):
 			# ah, my name -- definitely speaking to me!
 			if len(words) < 2: return
 			w = 1
-#		print "Checking for a verb: ", words[w]
+		#print "@Checking for a verb: ", words[w]
 		if pub.verbdict.has_key(words[w]):
 			# looks like a command!
 			return self.HearCommand( pSpeaker, string.join(words[w:]) )
@@ -1121,7 +1126,7 @@ class NPC(Actor):
 			return
 		# if obedient, then execute the command
 		# after converting all "me"s to commander's name
-		pCmdStr = replace( "me", pCommander.synonyms[0], pCmdStr )
+		pCmdStr = replace( "me", string.capwords(pCommander.synonyms[0]), pCmdStr )
 		self.DoCommandString( pCmdStr )
 
 	def HearEffect(self, pStr ):

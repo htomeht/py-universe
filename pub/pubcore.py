@@ -32,7 +32,7 @@ import string
 import types
 import copy
 import whrandom
-import regex
+import re
 
 # import the PUB module which declares "global" variables
 import pub
@@ -346,8 +346,8 @@ class Parser:
 			words[0] = "#"
 		if words[0]=="#" or words[0] in nouns:
 			# first word is in nouns; how many more words can we munch?
-			matches = filter(lambda x,a=string.join(words): \
-					regex.match(x+'.*',a), nouns)
+			a = string.join(words)
+			matches = filter(lambda x,a=a: a[:len(x)] == x, nouns)
 			if not matches: return 1		# (must be a number)
 			# we now have a set of potential matches; find the longest
 			matches.sort(lambda a,b: cmp(len(a),len(b)))

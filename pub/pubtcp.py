@@ -19,7 +19,7 @@
 import whrandom
 import string
 import types
-import regex
+import re
 import copy
 from socket import *
 

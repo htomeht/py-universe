@@ -20,7 +20,7 @@ inherited into even more specialized objects.
 import whrandom
 import string
 import types
-import regex
+import re
 import copy
 
 # PUB modules
