@@ -1,0 +1,106 @@
+<html><head><title>
+PUB Intro
+</title></head><body>
+<center>
+<a href="whatsnew.htm">[ What's New ]</a>
+<a href="doc/index.htm">[ Documentation ]</a>
+<a href="games/index.htm">[ PUB Games ]</a>
+<a href="pubpack.html">[ pub.tar.gz ]</a>
+<hr>
+<h1>
+Python Universe Builder
+</h1><h3>
+Introduction
+</h3>
+</center>
+
+The <strong>Python Universe Builder</strong> (aka <strong>PUB</strong>) is a set of <a href="http://www.python.org">Python</a> modules for writing text-based adventure games or <a href="http://www.yahoo.com/Recreation/Games/Interactive_Fiction/">interacti
+
+ve fiction</a>.
+
+<hr><h3>Features</h3>
+<ul>
+	<li>sophisticated sentence parser (in some ways, better than Infocom's)
+	<li>fully object-oriented
+	<li>rich, deep language which is remarkably easy to learn and use
+	<li>includes full source code for the system
+	<li>may be connected to other services (web, TCP/IP, scripting languages, etc.)
+	<li>may be extended in C, C++, FORTRAN, etc.
+	<li>runs on almost any platform
+	<li>may be used as a <strong>multi-player network game</strong> (i.e., a MUD)
+	<li><strong>free</strong> for non-commercial use
+</ul>
+Many of these features are simply the features of <a
+href="http://www.python.org">Python</a> itself, which is one of the best
+languages I've ever seen (and definitely the best interpreted language
+I've ever seen).  In addition, the PUB modules offer some innovative
+features not found in other interactive-fiction builders:
+<ul>
+	<li>an event-based scheduler which handles timing in a powerful way
+	<li>output is directed not just at the player, but at any object which is 
+		listening
+	<li>all actors (both the player and NPCs) have equal status and abilities
+		(though these may, of course, be modified by the game designer)
+</ul>
+
+<hr><h3>Download PUB</h3>
+
+PUB currently consists of seven source files:
+<ul>
+	<li><a href="pub.py">pub.py</a> - defines "global" variables
+	<li><a href="pubcore.py">pubcore.py</a> - defines essential datatypes, 
+			functions, and constants
+	<li><a href="pubverbs.py">pubverbs.py</a> - defines standard verbs
+	<li><a href="pubobjs.py">pubobjs.py</a> - defines standard objects
+	<li><a href="picklemod.py">picklemod.py</a> - "pickle" (save) entire
+			modules
+	<li><a href="gadgets.py">gadgets.py</a> - defines more specific objects
+	<li><a href="pubdemo.py">pubdemo.py</a> - simple demo game
+</ul>
+And two optional files (for making a network game):<ul>
+	<li><a href="pubtcp.py">pubtcp.py</a> - adds network support
+	<li><a href="tcpdemo.py">tcpdemo.py</a> - adaptation of pubdemo as a MUD
+</ul>
+
+<p>The files were <b>last modified
+6/01/99
+</b>, with several updates to work correctly under Python 1.5.2.
+
+<p>
+Simply download each one and put them somewhere in your Python path.  Then
+launch python with pubdemo.py (e.g., type <strong>python pubdemo.py</strong>
+or if you're on a Mac, drag pubdemo.py onto the Python application).
+<P>
+Or, if you'd rather, you can get <a href="pubpack.html">pub.tar.gz</a>, a
+complete copy of the PUB files and documentation packed with tar and gzip.
+Filenames are kept short enough to work on even the most primitive file systems.
+<P>
+<strong>Note</strong>: PUB files are all written with a standard Mac text
+editor, in which tabs are equal to four spaces.  If your editor can only use
+eight-space tabs, you may be interested in 
+<a href="http://www.strout.net/python/tabfix.py">tabfix.py</a>.
+
+<hr><h3>How should I start?</h3>
+
+First, look at some <a href="games/index.htm">games</a> written with PUB.  Depending on your system, you may need to first get and install Python (which is free), or you may be able to get stand-alone executables.
+<P>
+Next, read the <a href="doc/index.htm">documentation</a>, which includes
+<a href="doc/tutorial/index.htm">a simple tutorial</a>.  This will lead
+you through the process of creating a very simple interactive-fiction
+game from scratch.
+<P>
+Then browse the <a href="doc/lib/index.htm">library reference</a>.  This shows you all the great object classes that have already been defined, so all you have to do is drop them in your game and give them names and descriptions.
+<P>
+Finally, go back to the <a href="games/index.htm">games</a> you've played a bit, and examine their code.  Now that you've gotten the general idea, you should be able to understand what makes these games do what they do, and you're ready to start designing
+
+ your own.
+
+<hr>
+<address>http://www.strout.net/python/pub/index.htm<br>
+Last Modified:
+6/01/99
+. . . . . . <a href="http://www.strout.net/">Joe Strout</a>
+. . . <a href="mailto:joe@strout.net">joe@strout.net</a>
+</address>
+
+</body></html>

@@ -1,0 +1,277 @@
+<html>
+
+        <head>
+        <title>Class: Scheduler</title>
+        </head>
+
+        <body bgcolor="#ffffff">
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%">
+        <tr bgcolor="#88bbee">
+            <th rowspan="2"
+                valign="top"
+                align="left"
+                width="10%"><font color="#000000">Class: Scheduler</font>
+            </th>
+            <th align="right"><font color="#000000">pubcore.py</font></th>
+        </tr>
+        <tr>
+        <td>
+        <p>----------------------------------------------------------------------
+ scheduler -- keeps track of the world clock, calls events, etc.</p>
+
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
+        
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Methods">Methods</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+<a href="#AddAbsEvent">AddAbsEvent</a><br>
+<a href="#AddEvent">AddEvent</a><br>
+<a href="#GetTime">GetTime</a><br>
+<a href="#HasEventFor">HasEventFor</a><br>
+<a href="#Update">Update</a><br>
+<a href="#__init__">__init__</a><br>
+<a href="#__str__">__str__</a><br>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="AddAbsEvent"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">AddAbsEvent&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+AddAbsEvent (
+        self,
+        pAbsTime,
+        pEvent,
+        )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="AddEvent"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">AddEvent&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+AddEvent (
+        self,
+        pRelTime,
+        pEvent,
+        )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="GetTime"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">GetTime&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+GetTime ( self )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="HasEventFor"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">HasEventFor&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+HasEventFor ( self,  pFor )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Update"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">Update&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+Update ( self )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="__init__"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">__init__&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+__init__ ( self,  pTimeString='12:00' )
+
+</pre><p>initialization method</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="__str__"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">__str__&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+__str__ ( self )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+</td></tr>
+        </td>
+        </tr>
+        </table>
+        
+        </td>
+        </tr>
+        </table>
+
+        <hr>
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+
+        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
+        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
+
+        </body>
+        </html>
+        

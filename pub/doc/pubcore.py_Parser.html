@@ -1,0 +1,331 @@
+<html>
+
+        <head>
+        <title>Class: Parser</title>
+        </head>
+
+        <body bgcolor="#ffffff">
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%">
+        <tr bgcolor="#88bbee">
+            <th rowspan="2"
+                valign="top"
+                align="left"
+                width="10%"><font color="#000000">Class: Parser</font>
+            </th>
+            <th align="right"><font color="#000000">pubcore.py</font></th>
+        </tr>
+        <tr>
+        <td>
+        <p>----------------------------------------------------------------------
+        Parser -- breaks a string into a command or set of commands</p>
+
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
+        
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Methods">Methods</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+<a href="#BreakString">BreakString</a><br>
+<a href="#FindPrep">FindPrep</a><br>
+<a href="#MunchNouns">MunchNouns</a><br>
+<a href="#NounWords">NounWords</a><br>
+<a href="#Parse">Parse</a><br>
+<a href="#ParseCore">ParseCore</a><br>
+<a href="#Test">Test</a><br>
+<a href="#WordEnd">WordEnd</a><br>
+<a href="#__init__">__init__</a><br>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="BreakString"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">BreakString&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+BreakString ( self,  pStr )
+
+</pre><p>break the string into a list of words
+ - filter garbage and reduce non-quoted stuff to lower case
+ - convert commas to conjunctions</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="FindPrep"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">FindPrep&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+FindPrep ( self,  words )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="MunchNouns"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">MunchNouns&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+MunchNouns ( self,  w )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="NounWords"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">NounWords&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+NounWords ( self,  words )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Parse"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">Parse&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+Parse ( self,  pStr='' )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="ParseCore"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">ParseCore&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+ParseCore ( self,  pStr )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Test"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">Test&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+Test ( self )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="WordEnd"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">WordEnd&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+WordEnd (
+        self,
+        pStr,
+        pStart,
+        )
+
+</pre><p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="__init__"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">__init__&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+__init__ ( self )
+
+</pre><p>initialization method</p>
+
+</td></tr>
+        </td>
+        </tr>
+        </table>
+        
+        </td>
+        </tr>
+        </table>
+
+        <hr>
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+
+        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
+        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
+
+        </body>
+        </html>
+        

@@ -1,0 +1,274 @@
+<html>
+
+        <head>
+        <title>Module: pubtcp</title>
+        </head>
+
+        <body bgcolor="#ffffff">
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%">
+        <tr bgcolor="#88bbee">
+            <th rowspan="2"
+                valign="top"
+                align="left"
+                width="10%"><font color="#000000">Module: pubtcp</font>
+            </th>
+            <th align="right"><font color="#000000">pubtcp.py</font></th>
+        </tr>
+        <tr>
+        <td>
+        <p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
+        
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Imported modules">Imported modules</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+import <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
+import <a href="pub.py.html">pub</a><br>
+import <a href="pubcore.py.html">pubcore</a><br>
+from <a href="pubcore.py.html">pubcore</a> import *<br>
+import <a href="pubobjs.py.html">pubobjs</a><br>
+from <a href="pubobjs.py.html">pubobjs</a> import <a href="pubobjs.py_Actor.html">Actor</a><br>
+import <a href="pubverbs.py.html">pubverbs</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-socket.html">socket</a><br>
+from <a href="http://www.python.org/doc/current/lib/module-socket.html">socket</a> import *<br>
+import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
+
+</td></tr>
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Functions">Functions</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+<a href="#Disconnect">Disconnect</a><br>
+<a href="#NetUpdate">NetUpdate</a><br>
+<a href="#NewConn">NewConn</a><br>
+<a href="#ShutDown">ShutDown</a><br>
+<a href="#StartServer">StartServer</a><br>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Disconnect"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">Disconnect&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+Disconnect ( player,  msg='' )
+
+</pre><p>----------------------------------------------------------------------
+ function to disconnect a NetPlayer</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="NetUpdate"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">NetUpdate&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+NetUpdate ()
+
+</pre><p>----------------------------------------------------------------------
+ network update -- call this function periodically</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="NewConn"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">NewConn&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+NewConn ( conn,  addr )
+
+</pre><p>----------------------------------------------------------------------
+ handle a new connection</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="ShutDown"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">ShutDown&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+ShutDown ()
+
+</pre><p>----------------------------------------------------------------------
+ function to shut the server down</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="StartServer"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">StartServer&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+StartServer ()
+
+</pre><p>----------------------------------------------------------------------
+ function to start the server</p>
+
+</td></tr>
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Classes">Classes</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <table border="0" cellpadding="5">
+<tr><td valign="top" align="left"><a href="pubtcp.py_LoginConn.html">LoginConn</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubtcp.py_NetPlayer.html">NetPlayer</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+</table>
+</td></tr>
+        </td>
+        </tr>
+        </table>
+        
+        </td>
+        </tr>
+        </table>
+
+        <hr>
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+
+        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
+        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
+
+        </body>
+        </html>
+        

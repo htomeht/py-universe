@@ -1,0 +1,420 @@
+<html>
+
+        <head>
+        <title>Module: pubcore</title>
+        </head>
+
+        <body bgcolor="#ffffff">
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%">
+        <tr bgcolor="#88bbee">
+            <th rowspan="2"
+                valign="top"
+                align="left"
+                width="10%"><font color="#000000">Module: pubcore</font>
+            </th>
+            <th align="right"><font color="#000000">pubcore.py</font></th>
+        </tr>
+        <tr>
+        <td>
+        <p>
+<TABLE BORDER=1 CELLPADDING=2>
+</TABLE></p>
+
+        
+        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
+        
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Imported modules">Imported modules</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+import <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
+import <a href="pub.py.html">pub</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
+import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
+
+</td></tr>
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Functions">Functions</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<tr><td align="LEFT" valign="TOP">
+<a href="#AddVerb">AddVerb</a><br>
+<a href="#cap">cap</a><br>
+<a href="#isInstance">isInstance</a><br>
+<a href="#isInt">isInt</a><br>
+<a href="#isString">isString</a><br>
+<a href="#replace">replace</a><br>
+<a href="#restoregame">restoregame</a><br>
+<a href="#savegame">savegame</a><br>
+<a href="#stripPunctuation">stripPunctuation</a><br>
+<a href="#toInt">toInt</a><br>
+</td>
+<td align="LEFT" valign="TOP">
+</td>
+</tr></table>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="AddVerb"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">AddVerb&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+AddVerb ( *pVerbs )
+
+</pre><p>----------------------------------------------------------------------
+ add a verb or list of verbs, singly, as a list, or separated with commas</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="cap"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">cap&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+cap ( s )
+
+</pre><p>function to capitalize a string</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="isInstance"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">isInstance&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+isInstance ( x )
+
+</pre><p>function to determine whether it's an Instance</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="isInt"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">isInt&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+isInt ( x )
+
+</pre><p>function to determine whether it's a number, or interpretable as one</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="isString"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">isString&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+isString ( x )
+
+</pre><p>function to determine whether it's a string</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="replace"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">replace&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+replace (
+        what,
+        withwhat,
+        inwhat,
+        )
+
+</pre><p>function to replace all occurances of one substring with another</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="restoregame"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">restoregame&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+restoregame ( filename='pub.dat' )
+
+</pre><p>function to restore the game</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="savegame"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">savegame&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+savegame ( filename='pub.dat' )
+
+</pre><p>function to save the game</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="stripPunctuation"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">stripPunctuation&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+stripPunctuation ( x )
+
+</pre><p>function to strip commas and periods from a string</p>
+
+
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="toInt"></a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">toInt&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <pre>
+toInt ( x )
+
+</pre><p>function to force it to be a number</p>
+
+</td></tr>
+        <tr>
+            <th bgcolor="#99ccff"
+                rowspan="2"
+                valign="top"
+                align="left"
+                width="20%"
+                >
+                <font color="#000000">
+                  <a name="Classes">Classes</a>&nbsp;
+                </font>
+            </th>
+            <th bgcolor="#99ccff"
+                valign="top"
+                align="left"
+                >
+                <font color="#000000">&nbsp;</font>
+            </th>
+        </tr>
+        <tr>
+        <td>
+        <table border="0" cellpadding="5">
+<tr><td valign="top" align="left"><a href="pubcore.py_BaseThing.html">BaseThing</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubcore.py_Command.html">Command</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubcore.py_Event.html">Event</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubcore.py_Parser.html">Parser</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubcore.py_Scheduler.html">Scheduler</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubcore.py_Verb.html">Verb</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
+
+</td></tr>
+</table>
+</td></tr>
+        </td>
+        </tr>
+        </table>
+        
+        </td>
+        </tr>
+        </table>
+
+        <hr>
+
+        <p><i><a href="index.html">Table of Contents</a></i></p>
+
+        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
+        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
+
+        </body>
+        </html>
+        
