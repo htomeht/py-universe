@@ -66,5 +66,8 @@ runtest('pubdemo', pubdemo, makeoutput)
 gredgar = pathjoin(gamesdir, 'gredgar.py')
 runtest('gredgar', gredgar, makeoutput)
 
+#Debugging test
+debug = pathjoin(pubdir, 'pubdemo.py')
+runtest('debug', debug, makeoutput)
 
 print "\nTesting Complete."
