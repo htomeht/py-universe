@@ -3,9 +3,9 @@
 #	This file demonstrates a few simple objects.
 #
 
+import pub; pub.Debugging('on')				# import global variables
 from pubcore import *		# import core datatypes, functions, & constants
 import pubobjs				# import standard object library
-import pub					# import global variables
 import gadgets				# import wierd & wonderful things
 
 # create shortcuts for most common object types
