@@ -14,8 +14,8 @@
 @break arm
 @break 200
 
-#@prompt
-#import sys
-#sys.exit()
+@prompt
+import sys
+sys.exit()
 q
 y

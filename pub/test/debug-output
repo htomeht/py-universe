@@ -17,15 +17,15 @@ Contents of <pubobjs.Player instance at 0x405c81cc>
 >
 Contents of <pubobjs.NPC instance at 0x405cc70c> 
 
-<pubobjs.Container instance at 0x405ddb2c> bag
+<pubobjs.Container instance at 0x405ddc6c> bag
 
 
 >@contents what?!?
 
 >
-Contents of <pubobjs.Thing instance at 0x405ddc4c> 
+Contents of <pubobjs.Thing instance at 0x405ddd8c> 
 
-<pubobjs.Thing instance at 0x405ddc4c> has no contents
+<pubobjs.Thing instance at 0x405ddd8c> has no contents
 
 >
 >
@@ -160,7 +160,7 @@ Contents of <pubobjs.Thing instance at 0x405ddc4c>
             busytill : 0
              cmdList : []
            container : <pubobjs.Room instance at 0x403e3d2c>
-            contents : [<pubobjs.Container instance at 0x405ddb2c>]
+            contents : [<pubobjs.Container instance at 0x405ddc6c>]
              defverb : None
                 desc : He's just a nondescript, ordinary-looking guy.  (But he just might give you a sack if you tell him to.)
                 fail : You can't put <a dirobj> in <the inobj>.
@@ -178,7 +178,7 @@ Contents of <pubobjs.Thing instance at 0x405ddc4c>
              noReply : Bert does not reply.
                 note : Bert is here.
             obedient : True
-                 par : <pubcore.Parser instance at 0x405dda0c>
+                 par : <pubcore.Parser instance at 0x405ddb2c>
              replies : {'thank': ["You're welcome.", 'No problem.', 'Think nothing of it.'], 'howdy': ['Howdy to you.', 'Hi'], 'hi': ['Hi', 'Hello', 'Hi already!', 'Sheesh!'], 'thanks': ["You're welcome.", 'No problem.', 'Think nothing of it.'], 'weather': ["Yes, isn't it?", 'Beautiful, just beautiful.'], 'hello': ['Hi', 'Hello', 'Hi already!', 'Sheesh!']}
         replyCounter : {}
              salient : True
@@ -196,23 +196,23 @@ Guard enters from the south.
 The Guard marches up and down the square.
 
 >
-<pubobjs.Thing instance at 0x405ddc4c> 
+<pubobjs.Thing instance at 0x405ddd8c> 
 
-          CanContain : <bound method Thing.CanContain of <pubobjs.Thing instance at 0x405ddc4c>>
-              CanSee : <bound method Thing.CanSee of <pubobjs.Thing instance at 0x405ddc4c>>
-             GetDesc : <bound method Thing.GetDesc of <pubobjs.Thing instance at 0x405ddc4c>>
-         GetListLine : <bound method Thing.GetListLine of <pubobjs.Thing instance at 0x405ddc4c>>
-             GetName : <bound method Thing.GetName of <pubobjs.Thing instance at 0x405ddc4c>>
-             GetNote : <bound method Thing.GetNote of <pubobjs.Thing instance at 0x405ddc4c>>
-             GetRoom : <bound method Thing.GetRoom of <pubobjs.Thing instance at 0x405ddc4c>>
-              MoveTo : <bound method Thing.MoveTo of <pubobjs.Thing instance at 0x405ddc4c>>
-           NameMatch : <bound method Thing.NameMatch of <pubobjs.Thing instance at 0x405ddc4c>>
-            PostMove : <bound method Thing.PostMove of <pubobjs.Thing instance at 0x405ddc4c>>
-             PostObj : <bound method Thing.PostObj of <pubobjs.Thing instance at 0x405ddc4c>>
-             PreMove : <bound method Thing.PreMove of <pubobjs.Thing instance at 0x405ddc4c>>
-              PreObj : <bound method Thing.PreObj of <pubobjs.Thing instance at 0x405ddc4c>>
-                Tell : <bound method Thing.Tell of <pubobjs.Thing instance at 0x405ddc4c>>
-            __call__ : <bound method Thing.__call__ of <pubobjs.Thing instance at 0x405ddc4c>>
+          CanContain : <bound method Thing.CanContain of <pubobjs.Thing instance at 0x405ddd8c>>
+              CanSee : <bound method Thing.CanSee of <pubobjs.Thing instance at 0x405ddd8c>>
+             GetDesc : <bound method Thing.GetDesc of <pubobjs.Thing instance at 0x405ddd8c>>
+         GetListLine : <bound method Thing.GetListLine of <pubobjs.Thing instance at 0x405ddd8c>>
+             GetName : <bound method Thing.GetName of <pubobjs.Thing instance at 0x405ddd8c>>
+             GetNote : <bound method Thing.GetNote of <pubobjs.Thing instance at 0x405ddd8c>>
+             GetRoom : <bound method Thing.GetRoom of <pubobjs.Thing instance at 0x405ddd8c>>
+              MoveTo : <bound method Thing.MoveTo of <pubobjs.Thing instance at 0x405ddd8c>>
+           NameMatch : <bound method Thing.NameMatch of <pubobjs.Thing instance at 0x405ddd8c>>
+            PostMove : <bound method Thing.PostMove of <pubobjs.Thing instance at 0x405ddd8c>>
+             PostObj : <bound method Thing.PostObj of <pubobjs.Thing instance at 0x405ddd8c>>
+             PreMove : <bound method Thing.PreMove of <pubobjs.Thing instance at 0x405ddd8c>>
+              PreObj : <bound method Thing.PreObj of <pubobjs.Thing instance at 0x405ddd8c>>
+                Tell : <bound method Thing.Tell of <pubobjs.Thing instance at 0x405ddd8c>>
+            __call__ : <bound method Thing.__call__ of <pubobjs.Thing instance at 0x405ddd8c>>
              __doc__ : 
     Basic type for most PUB nouns. --
         This is the basic type most PUB objects are based on. It
@@ -220,8 +220,8 @@ The Guard marches up and down the square.
         basic object.  The difference is that Thing has PreObj
         and PostObj with sensible defaults defines.
     
-     __getinitargs__ : <bound method Thing.__getinitargs__ of <pubobjs.Thing instance at 0x405ddc4c>>
-            __init__ : <bound method Thing.__init__ of <pubobjs.Thing instance at 0x405ddc4c>>
+     __getinitargs__ : <bound method Thing.__getinitargs__ of <pubobjs.Thing instance at 0x405ddd8c>>
+            __init__ : <bound method Thing.__init__ of <pubobjs.Thing instance at 0x405ddd8c>>
           __module__ : pubobjs
                    a : a
                blind : False
@@ -253,13 +253,4 @@ The Guard marches up and down the square.
 >Guard exits to the north.
 
 >
->Warning: unknown word #@prompt
-Huh?!?
-
->Warning: unknown word #import
-Huh?!?
-
->Warning: unknown word #sys.exit()
-Huh?!?
-
->  Are you sure you want to quit? Y/y/N/n (Default No): Quitting game.
+>>>> >>> 
