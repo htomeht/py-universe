@@ -880,6 +880,12 @@ class BaseThing:
         """
         if self.initialNote: return self.initialNote
         if self.note: return self.note
+        #This is a nasty hack.  Doing it without a hack will touch
+        #a lot more code, though, so I'm doing it this way for now.
+        from os import environ
+        if environ.get('PUBTESTING')=='true':
+            return 'There is ' + self(a) + ' here.'
+        #End hack.
         return random.choice( ['You see ' + self(a) + ' lying here.',
                                self(A) + ' is lying here.',
                                'There is ' + self(a) + ' here.'] )
