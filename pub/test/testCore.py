@@ -3,6 +3,17 @@ from unittest import main, TestCase, TestSuite, makeSuite
 import pub.pubcore as core
 
 
+class TestMain(TestCase):
+    """
+    Test main core.
+    """
+
+    def testStrip(self):
+        """Check that stripPunctuation does it's job"""
+        mystr = 's,.!?'
+        out = core.stripPunctuation(mystr)
+        assert out == 's' 
+
 class TestEvent(TestCase):
     """
     Tests for Event 
@@ -68,14 +79,27 @@ class TestParser(TestCase):
         """create the parsing object"""
         self.par = core.Parser()
         self.str = 'We are the knights who say Ni!'
+        self.str2 = 'open the shining door'
 
 #   I'm not sure what to test on the parser yet.
         
 
 class TestCommand(TestCase):
     """
+    Run a command test
     """
 
+    def setUp(self):
+        """create a command object"""
+        self.cmd = core.Command() 
+
+    def testClear(self):
+        """Check that the Clear function works"""
+        self.cmd.actor = 'me'
+        self.cmd.Clear()
+        assert self.cmd.actor == ''
+
+    
 class TestVerb(TestCase):
     """
     """
@@ -84,7 +108,7 @@ class TestBaseThing(TestCase):
     """
     """
 
-suitelist = [TestScheduler, TestEvent]
+suitelist = [TestMain, TestScheduler, TestEvent, TestCommand]
 suite = TestSuite([makeSuite(suite) for suite in suitelist])
 
 if __name__ == '__main__': main()
