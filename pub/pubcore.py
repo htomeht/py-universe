@@ -81,7 +81,7 @@ def stripPunctuation(str):
         str = str.replace(char, '')
     return str
 
-def savegame(filename='pub.dat'):
+def savegame(filename='pub.dat', quiet=FALSE):
     """
     Save the game.
     """
@@ -92,7 +92,7 @@ def savegame(filename='pub.dat'):
     import picklemod
 
     pub.lastroom = None    # (to prevent auto-placement of objects)
-    if os.path.isfile(filename): 
+    if not quiet and os.path.isfile(filename): 
         answer = raw_input('  File exists, do you wish to overwrite it?\
                               Y/y/N/n : ')
         if answer in 'Yy': pass
@@ -102,10 +102,10 @@ def savegame(filename='pub.dat'):
     f = open(filename, 'w')
     picklemod.save(f, pubverbs, pub, sys.modules['__main__'])
     f.close()
-    print '  Game saved as', filename 
+    if not quiet: print '  Game saved as', filename 
     
 
-def restoregame(filename='pub.dat'):
+def restoregame(filename='pub.dat', quiet=FALSE):
     """
     Restore a game.
     """
@@ -118,12 +118,13 @@ def restoregame(filename='pub.dat'):
     try: 
         f = open(filename, 'r') 
     except:
-        print '  Error:', filename, "doesn't exist or is not readable."
-        print '  Aborting!'
+        if not quiet:
+            print '  Error:', filename, "doesn't exist or is not readable."
+            print '  Aborting!'
         return CANCEL
     picklemod.restore(f, pubverbs, pub, sys.modules['__main__'])
     f.close()
-    print '  Game', filename, 'restored'
+    if not quiet: print '  Game', filename, 'restored'
 
 #----------------------------------------------------------------------
 # event -- a class which keeps something to be executed in the future
@@ -609,7 +610,7 @@ class Parser:
             # find the object of the preposition, and assign appropriately
             objs = self.MunchNouns(w+1)
             if not objs:
-                print "..." + self.words[w] + " WHAT?!?"
+                pub.player.Tell("..." + self.words[w] + " WHAT?!?")
                 return '' 
                    
             if self.words[w] == 'at': self.cmd.atobj = objs

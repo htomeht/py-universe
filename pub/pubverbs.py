@@ -722,10 +722,11 @@ class VerbsVerb(Verb):
     """
 
     def Finish(self,cmd):
-        print '\nKnown verbs:\n'
+        pub.player.Tell('\nKnown verbs:\n')
+        output = []
         for word in verbs:
-            print (word+"               ")[:15],
-        print '\n\n'
+            output.append(word)
+        pub.player.Tell(', '.join(output) + '\n\n')
         return OK
 
 verbsVerb = VerbsVerb('verbs,help')
