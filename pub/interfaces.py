@@ -469,4 +469,8 @@ class IContainer(Interface):
     def put(chain,cmd):
         """the put listener method"""
 
+class ITest(Interface):
+    """A Test Interface Facilit, use where you deem fit."""
 
+    def test(obj,proto):
+        """should just print out that everything worked out."""

@@ -14,7 +14,7 @@ lastroom = None     # last room created; default location for new objects
 universe = None     # room which contains all other rooms
 player = None       # game player (esp. for single-user games)
 debugging = False   # are we debugging?  Don't set this, see 'Debugging' below
-language = ''       # a string containing a language ie 'English'
+language = 'english'# a string containing a language default: 'english'
 
 
 from pubcore import *           # import core datatypes, functions, & constants
@@ -26,7 +26,6 @@ import gadgets
 import pubtcp
 tcp = pubtcp
 import lang
-import errors
 
 
 #def Debugging(mode='on'):
