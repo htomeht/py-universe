@@ -249,6 +249,10 @@ class Scheduler:
             e.Perform()            # perform scheduled events
 
     def HasEventFor(self, pFor):
+        """
+        see if the scheduler has an event for a certain object,
+        pass this method a game object.
+        """
         if not self.events: return FALSE
         for eventlist in self.events.values():
             if filter(lambda x,a=pFor: x.RefersTo(a), eventlist):
