@@ -694,7 +694,14 @@ class Player(Actor):
 
 	def __init__(self,pNames=''):
 		Actor.__init__(self,pNames)
-		self.linebreak = 80
+		try:
+			import curses
+			curses.setupterm()
+			self.linebreak = curses.tigetnum('cols')
+			self.lines = curses.tigetnum('lines')
+		except:
+			self.linebreak = 80
+			self.lines = 25
 
 	def Tell(self, pWhat):
 		"""
@@ -703,9 +710,9 @@ class Player(Actor):
 		if self.linebreak:
 			# break lines every <linebreak> characters:
 			while len(pWhat) >= self.linebreak:
-				pos = string.rfind(pWhat[:self.linebreak],' ')
-				pos2 = string.rfind(pWhat[:self.linebreak],'\n')
-				if pos2 < pos and pos2 > -1: pos = pos2
+				pos = string.find(pWhat[:self.linebreak], '\n')
+				if pos == -1:
+					pos = string.rfind(pWhat[:self.linebreak],' ')
 				print pWhat[:pos]
 				pWhat = pWhat[pos+1:]
 		print pWhat
