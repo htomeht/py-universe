@@ -46,6 +46,13 @@ for candidate in listdir(testdir):
         testmod = __import__('pub.test.%s' % modname)
         tests.addTest(getattr(testmod.test,modname).suite)
 TextTestRunner().run(tests)
+print
+print
+
+#Check for tabs.
+print "Checking for tabs in python source files.  Output is bad:"
+system('grep "\t" *.py')
+print "Done looking for tabs.\n\n"
 
 
 #Now run the integration tests.
