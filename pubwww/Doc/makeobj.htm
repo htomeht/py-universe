@@ -1,0 +1,65 @@
+<html><head><title>
+PUB: Making Objects
+</title></head><body>
+<center><h3>
+Python Universe Builder
+</h3><h1>
+Creating Objects from Existing Classes
+</h1>
+</center>
+
+This is pretty easy.  The general form is:<pre>
+objid = Classname("main name,synonym1,synonym2")
+objid.property = value
+objid.property2 = value
+
+</pre>Broken down into parts, we have
+<ol>
+<li><strong>objid</strong> - some identifier, unique within the file.  This can
+be any valid Python variable name, but the standard form is to begin with a
+lowercase letter.  Examples: rock, coat, greenSlime, furryHairBall.
+<li><strong>Classname</strong> - the name of a previously defined object class.
+Unless it's defined in the same file, you'll have to prefix it with the name
+of the file where it is defined.  Examples: pubobjs.Thing, pubobjs.NPC, 
+gadgets.Elevator, MySpecialWidget.
+<li><strong>name and synonyms</strong> - in the parenthesis, put a string 
+containing the object's main name and any number of synonyms, separated by
+commas.  Example: "rock,stone,large pebble,large,small boulder,small".  Note
+that whenever you have a multiword name or synonym, the first word of the name
+must also be given by itself.
+<li><strong>property</strong> - this is the name of a valid property for the
+object class.  This may be found by directly examining the source code (they're
+commented), or (eventually) in the <a href="lib/index.htm">library reference</a>.
+Examples: light, size, isOpen.
+<li><strong>value</strong> - you can assign any Python value to any property,
+but their meaning varies.  A property like "light" generally expects a number
+between 0 and 100; boolean values like "isOpen" expect TRUE or FALSE, and string
+properties like "desc" expect a string in quotes.
+</ol>
+
+<h3>Examples</h3><pre>
+# create a room
+northend = Room("North End of Town")
+northend.desc = "Standing at the north end of the town, you have shops on \
+three sides and the center of town to the south."
+
+# create some objects (they go into the most recently created room)
+barrel = pubobjs.Container("barrel,keg")
+barrel.desc = "A large wooden barrel has been set at the end of the street."
+barrel.canContainLiquid = TRUE
+barrel.size = 30
+
+water = pubobjs.Liquid("water,H2O")
+water.size = 5
+water.MoveTo(barrel)       # place the water inside the barrel 
+</pre>
+
+<hr>
+<address>http://www.strout.net/python/pub/doc/makeobj.html<br>
+Last Modified:
+7/22/96
+. . . . . . <a href="http://www.strout.net/">Joe Strout</a>
+. . . <a href="mailto:joe@strout.net">joe@strout.net</a>
+</address>
+
+</body></html>

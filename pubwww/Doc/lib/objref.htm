@@ -1,0 +1,78 @@
+<html><head><title>
+PUB Objects Reference
+</title></head><body>
+<center><h3>
+Python Universe Builder
+</h3><h1>
+Standard Objects Reference
+</h1>
+</center>
+
+<h3>Things</h3>
+
+All things in the game should be derived from Thing (below).  Although Thing
+is itself derived from BaseThing, defined in
+<a href="../pubcore.htm">pubcore.py</a>, you should never need to access BaseThing
+directly.
+<P>
+
+<a name="Thing"></a>
+<table border=4 width=100%>
+<tr><th>Thing: base class of all things in the game</th></tr>
+<tr><td>
+This is the base class of everything you see in a game -- Rooms, Containers,
+Actors, whatever.  It has a lot of attributes, but many of them don't even
+need to be defined, and they all have sensible default values.  The only
+required attributes are the name and synonyms, and these are set automatically
+when you create the Thing.
+</td></tr>
+<tr><th>Attributes</th></tr>
+<tr><td><table>
+<tr><th align=left>.a</th><td> article to be used in place of "a" (e.g., "a rock")</td></tr>
+<tr><th align=left>.container</th><td> object which contains this Thing</td></tr>
+<tr><th align=left>.defverb</th><td> Verb object to be called when no verb is given</td></tr>
+<tr><th align=left>.desc</th><td> description (if any)</td></tr>
+<tr><th align=left>.light</th><td> light given off by this Thing</td></tr>
+<tr><th align=left>.initialNote</th><td> note to be used before this Thing is moved</td></tr>
+<tr><th align=left>.initialDesc</th><td> desc to be used before this Thing is moved</td></tr>
+<tr><th align=left>.invisible</th><td> invisibility level (usually 0 or 1)</td></tr>
+<tr><th align=left>.listening</th><td> TRUE if this Thing wants Tell() calls</td></tr>
+<tr><th align=left>.name</th><td> primary name, as it appears in descriptions</td></tr>
+<tr><th align=left>.note</th><td> printed in list of room contents</td></tr>
+<tr><th align=left>.salient</th><td> TRUE if this should show in list of room contents</td></tr>
+<tr><th align=left>.size</th><td> mass or volume (100 = human)</td></tr>
+<tr><th align=left>.synonyms</th><td> list of names by which this Thing can be called</td></tr>
+<tr><th align=left>.the</th><td> article to be used in place of "the" (e.g., "the rock")</td></tr>
+</table></td></tr>
+<tr><th>Methods</th></tr>
+<tr><td><table>
+<tr><th align=left>.__init__(names)</th><td> initialize; e.g. rock = Thing("rock,stone")</td></tr>
+<tr><th align=left>.GetName(article=0)</th><td> return name with article; e.g.,
+		rock.GetName(The) returns "The rock"</td></tr>
+<tr><th align=left>.(article=0)</th><td> alternate for GetName(); e.g.,
+		rock(a) returns "a rock"</td></tr>
+<tr><th align=left>.NameMatch(str)</th><td> returns TRUE if this could be called str</td></tr>
+<tr><th align=left>.GetNote()</th><td> return string for room contents list</td></tr>
+<tr><th align=left>.GetDesc()</th><td> return description of the Thing</td></tr>
+<tr><th align=left>.GetRoom()</th><td> return first Room which contains this Thing</td></tr>
+<tr><th align=left>.CanSee(obj)</th><td> return TRUE if this can "see" obj, 
+		assuming it's present</td></tr>
+<tr><th align=left>.Tell(str,cmd=None)</th><td> tell this object the string,
+		after substituting object names etc. from command cmd</td></tr>
+<tr><th align=left>.PreObj(cmd)</th><td> check validity of cmd; return OK or CANCEL</td></tr>
+<tr><th align=left>.PostObj(cmd)</th><td> post-process cmd; return OK for normal output</td></tr>
+<tr><th align=left>.PreMove(dest)</th><td> OK to move this to dest? return OK or CANCEL</td></tr>
+<tr><th align=left>.PostMove(dest)</th><td> called after the object is moved</td></tr>
+<tr><th align=left>.MoveTo(dest)</th><td> attempt to move this to dest</td></tr>
+</table></td></tr>
+</table>
+
+<P>(Other objects not yet documented)
+
+<hr>
+<address>http://www.strout.net/python/pub/doc/lib/objref.htm<br>
+Last Modified:
+5/08/96
+. . . . . . <a href="http://www.strout.net/">Joe Strout</a>
+. . . <a href="mailto:joe@strout.net">joe@strout.net</a>
+</address>

@@ -1,0 +1,97 @@
+<html><head><title>
+PUB Intro
+</title></head>
+<body background="Image/pub.bkg.gif" bgcolor="#f7e7c7" vlink="#df3f1f">
+<font size="-1">Last Update 2001-03/31 Terry Hancock</font>
+<hr>
+<center>
+<a href="index.html">[ Introduction ]</a>
+<a href="whatsnew.html">[ What's New ]</a>
+<a href="Doc/index.htm">[ Documentation ]</a>
+<a href="Games/index.htm">[ Sample Games ]</a>
+<a href="index.html#HISTORY">[ History ]</a><br>
+<a href="future.html">[ Future ]</a>
+<a href="download.html">[ Download ]</a>
+<a href="http://sourceforge.net/projects/py-universe">[ Project Page ]</a>
+<hr>
+<img src="Image/pub.logo.gif" alt="Python Universe Builder">
+</center>
+
+
+<h1>Introduction</h1>
+
+The <strong>Python Universe Builder</strong> (aka <strong>PUB</strong>) is a set of <a href="http://www.python.org">Python</a> modules for writing text-based adventure games or <a href="http://www.yahoo.com/Recreation/Games/Interactive_Fiction/">interacti
+
+ve fiction</a>.
+
+<hr>
+<h3>Features</h3>
+<ul>
+	<li>sophisticated sentence parser (in some ways, better than Infocom's)
+	<li>fully object-oriented
+	<li>rich, deep language which is remarkably easy to learn and use
+	<li>includes full source code for the system
+	<li>may be connected to other services (web, TCP/IP, scripting languages, etc.)
+	<li>may be extended in C, C++, FORTRAN, etc.
+	<li>runs on almost any platform
+	<li>may be used as a <strong>multi-player network game</strong> (i.e., a MUD)
+	<li><strong>free</strong> for non-commercial use
+</ul>
+Many of these features are simply the features of <a
+href="http://www.python.org">Python</a> itself, which is one of the best
+languages I've ever seen (and definitely the best interpreted language
+I've ever seen).  In addition, the PUB modules offer some innovative
+features not found in other interactive-fiction builders:
+<ul>
+	<li>an event-based scheduler which handles timing in a powerful way
+	<li>output is directed not just at the player, but at any object which is 
+		listening
+	<li>all actors (both the player and NPCs) have equal status and abilities
+		(though these may, of course, be modified by the game designer)
+</ul>
+<hr>
+
+<a name="HISTORY"></a>
+<H3>History of PUB</H3></a>
+I discovered PUB quite recently, but it was actually written in
+about 1996 by Joseph J. Strout.  I was very excited when I found
+out about it, because it was exactly what I needed for AutoManga --
+an engine and language environment which would work like developing
+games in Inform for the Z-Machine, but run under Python, with full
+access to the computer's resources.  This makes it possible to
+interface with the software easily for use with the
+<a href="http://sourceforge.net/projects/automanga">AutoManga Presenter</a>,
+and also to extend it with the capabilities
+like those in the
+<a href="oz.html">Oz Architecture</a>.
+<p>
+Beyond this, I'm still evaluating PUB, but it seems to have a
+number of nice features beyond what you usually get in an
+interactive fiction system, for example: partial real-time
+capabilities and multi-user play (support for MUDs) via
+TCP/IP connections.  Also, since the player character is
+modeled like a non-player character, and because the system
+is object-oriented, there is direct support for characters
+to pass messages to each other and to other objects in
+the environment, thus supporting the basic hooks needed
+for Tok architecture emotional agents to be used.
+</p>
+
+
+<hr>
+<h3>How should I start?</h3>
+
+First, look at some <a href="Games/index.htm">games</a> written with PUB.  Depending on your system, you may need to first get and install Python (which is free), or you may be able to get stand-alone executables.
+<P>
+Next, read the <a href="Doc/index.htm">documentation</a>, which includes
+<a href="Doc/tutorial/index.htm">a simple tutorial</a>.  This will lead
+you through the process of creating a very simple interactive-fiction
+game from scratch.
+<P>
+Then browse the <a href="Doc/lib/index.htm">library reference</a>.  This shows you all the great object classes that have already been defined, so all you have to do is drop them in your game and give them names and descriptions.
+<P>
+Finally, go back to the <a href="Games/index.htm">games</a> you've played a bit, and examine their code.  Now that you've gotten the general idea, you should be able to understand what makes these games do what they do, and you're ready to start designing your own.
+
+<hr>
+
+</body></html>

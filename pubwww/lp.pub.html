@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>The Light Princess -- Python Universe Builder</title>
+</HEAD>
+<BODY TEXT="#000000" LINK="#0000FF" VLINK="#551A8B" ALINK="#FF0000" BGCOLOR="#F0F0FF">
+
+<a name="TOP" href="../lp.developer.html">[Up to Developer Home]</a> | <a href="../../index.html">[Light Princess Home]</a><br>
+Last update to this page, 2001-1/24.
+
+<h2><a href="lp.automanga.html" name="TOP">Python Universe Builder</a></h2>
+
+<a href="#TOP" name="HISTORY"><H4>History of PUB</H4></a>
+I discovered PUB quite recently, but it was actually written in
+about 1996 by Joseph J. Strout.  I was very excited when I found
+out about it, because it was exactly what I needed for AutoManga --
+an engine and language environment which would work like developing
+games in Inform for the Z-Machine, but run under Python, with full
+access to the computer's resources.  This makes it possible to
+interface with the software easily for use with the
+<a href="lp.automanga.html#PRESENTER">AutoManga Presenter</a>,
+and also to extend it with the capabilities
+like those in the
+<a href="lp.oz.html#TOK">Tok Architecture</a>.
+<p>
+Beyond this, I'm still evaluating PUB, but it seems to have a
+number of nice features beyond what you usually get in an
+interactive fiction system, for example: partial real-time
+capabilities and multi-user play (support for MUDs) via
+TCP/IP connections.  Also, since the player character is
+modeled like a non-player character, and because the system
+is object-oriented, there is direct support for characters
+to pass messages to each other and to other objects in
+the environment, thus supporting the basic hooks needed
+for Tok architecture emotional agents to be used.
+</p>
+
+<a href="#TOP" name="STATUS"><h4>Status of PUB</h4></a>
+PUB has been sitting unattended for awhile now.  The author
+has moved on, and so although it appears to be functional,
+it needs to be maintained.  Also, there's almost no documentation,
+although there are extensive comments in the source code.
+<p>
+This being the case, I volunteered to adopt the code and
+put up a Source Forge site for it.  As soon as the present
+problems with Source Forge are resolved, I plan to do this.
+I spoke to Mr. Strout about this and we are in agreement.
+He'll adjust his site to reflect the change as soon as the
+new Source Forge site is up and running (which hopefully
+won't be too long).
+</p>
+<p>
+My development plan for PUB is:
+<ol>
+<li>Test with sample game provided</li>
+<li>Fix any Python upgrade problems</li>
+<li>Set up Source Forge site</li>
+<li>Add doc strings to all classes and methods based on comments</li>
+<li>Create automatic documentation using the doc strings</li>
+<li>Review code and write architectural design documentation</li>
+<li>Adapt the one-room "Alice" tutorial (from Inform) to PUB</li>
+<li>Normalize this as PUB version 1.0.x</li>
+<li>Package the resulting version for distribution</li>
+<li>Begin extending to version 1.1.x (development)</li>
+</ol>
+This will provide a clean breakpoint for anyone who
+wants to do other things with PUB, and we can then
+extend it as needed to support character agents and
+the AutoManga Presenter.
+</p>
+<h3>Enhancements for PUB</h3>
+In order to provide hooks for AutoManga, and as general
+adaptations of the system, I want to add:
+<ul>
+<li>
+Tkinter menu-based input.  This follows an interface concept we
+discussed for The Light Princess.  The idea is that game play
+could be smoother if there were less confusion about what verbs
+will be understood by the parser (since it's not realistic to
+have a parser that understands full English).  This has been
+criticized as the "slippery slope" towards the "Myst" model,
+where there's only mouse-controlled input, and essentially
+only one verb "click-on-object", which causes all game play
+to be driven by defaults.  However, I think there's a broad
+middle ground here:  I want to stay fairly close to the IF
+side, but with less frustration learning the parsers' vocabulary.
+(Later I hope this will be ported to an SDL-based GUI
+such as 
+<a href="lp.automanga.html#PARAGUI">ParaGUI</a>).
+</li>
+
+<li>
+XML File format.  This will involve defining a DTD for
+the important design elements (such as rooms and characters).
+It is assumed that more complex extensions will involve
+programming directly in Python, but this will be used to automate
+time-consuming programming task, such as laying out rooms.
+</li>
+
+<li>
+In-Scene modeling.  Limited 3D positioning within a room, to
+support the AutoManga scene model -- camera choices, sound
+mixing, etc.  This information will be available to 
+characters that are within the room and to the presentation
+engine (but will be lost when one moves to a new room).
+</li>
+
+<li>
+Integration with Oz character models.  This seems like a
+trivial extension of the "Actor" object within PUB.
+</li>
+
+</ul>
+
+<p>
+And of course, the room design format will be integrated with the
+design system I worked out with
+<a href="lp.automanga.html#XCIRCUIT">XCircuit</a>
+as a room/level layout tool.
+</p>
+
+<p>
+Until all this starts happening, you can find out more
+at the
+<a href="http://www.strout.net/python/pub/index.htm">Original PUB Site</a>.
+
+</body>
+</html>
