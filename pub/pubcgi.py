@@ -118,7 +118,7 @@ class CGIPlayer(pubobjs.Actor):
         self.Tell('Thanks for playing.')
         self.Tell("You can resume your game using the command below. " +
             "<ul>restore " + gsid + "</ul>")
-        self.Tell("From time to time games may have be deleted to " +
+        self.Tell("From time to time games may have to be deleted to " +
             "conserve disk space.") 
 
     def Restore(self, words):
