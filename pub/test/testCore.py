@@ -2,13 +2,37 @@ from unittest import main, TestCase, TestSuite, makeSuite
 
 import pub.pubcore as core
 
+
+class TestEvent(TestCase):
+    """
+    Tests for Event 
+    """
+    def setUp(self):
+        """Create some objects"""
+        self.obj = core.BaseThing('shrubbery')
+        self.event = core.Event(self.obj, 'self.x = 2')
+
+    def testPerform(self):
+        """check that perform really executes code"""
+        self.event.Perform()
+        assert self.event.x == 2
+
+    def testRefersToObj(self):
+        """check that event refers to obj"""
+        assert self.event.RefersTo(self.obj) == True
+
+    def testRefersToElse(self):
+        """check that it doesn't refer to something else"""
+        assert self.event.RefersTo(self.event) == False
+        
+
 class TestScheduler(TestCase):
     """
     Tests that try various things with the Scheduler. 
     """
     
     def setUp(self):
-        """Create some objects used by several methods of TestSceduler."""
+        """Create some objects used by several methods of TestScheduler."""
         self.scheduler = core.Scheduler()
         self.obj = core.BaseThing('obj')
         self.event = core.Event(self.obj, "")
@@ -33,17 +57,20 @@ class TestScheduler(TestCase):
         self.scheduler.AddEvent(1, self.event)
         assert len(self.scheduler.events) == 1 
 
-class TestEvent(TestCase):
-    """
-    """
-
-class TestSceduler(TestCase):
-    """
-    """
+    
 
 class TestParser(TestCase):
     """
+    Run a parse test
     """
+
+    def setUp(self):
+        """create the parsing object"""
+        self.par = core.Parser()
+        self.str = 'We are the knights who say Ni!'
+
+#   I'm not sure what to test on the parser yet.
+        
 
 class TestCommand(TestCase):
     """
@@ -57,7 +84,7 @@ class TestBaseThing(TestCase):
     """
     """
 
-suite = TestSuite([makeSuite(TestScheduler)])
+suite = TestSuite([makeSuite(TestScheduler), makeSuite(TestEvent)])
 
 if __name__ == '__main__': main()
 
