@@ -725,8 +725,10 @@ class Save(Verb):
     """
 
     def Finish(self,cmd):
-        cmd.actor.Tell("Saving game to disk...")
-        savegame()
+	file = raw_input('  Enter a name for this game, default is pub.dat.')
+        cmd.actor.Tell('  Saving game to disk...')
+        if file == '': savegame()
+	else: savegame(file)
         return OK
 
 save = Save('save')
@@ -744,9 +746,11 @@ class Restore(Verb):
     """
 
     def Finish(self,cmd):
-        cmd.actor.Tell("Restoring game from disk...")
-        restoregame()
-        cmd.actor = pub.player
+        file = raw_input('  Enter a save game to load, default is pub.dat.')
+	cmd.actor.Tell('  Restoring game from disk...')
+        if file == '': restoregame()
+        else: restoregame(file)
+	cmd.actor = pub.player
         cmd.actor.DoCommandString("look")
         raise pub.BailOutError, "Resetting stack to restore game"
 
