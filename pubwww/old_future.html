@@ -1,0 +1,145 @@
+<html>
+<head>
+<title>PUB (old probably over-ambitious) Future Development Plans</title>
+</head>
+<body background="Image/pub.bkg.gif" bgcolor="#f7e7c7" vlink="#df3f1f">
+
+<font size="-1">Last Update 2001-03/31 Terry Hancock</font>
+<hr>
+<center>
+<a href="index.html">[ Introduction ]</a>
+<a href="whatsnew.html">[ What's New ]</a>
+<a href="Doc/index.htm">[ Documentation ]</a>
+<a href="Games/index.htm">[ Sample Games ]</a>
+<a href="index.html#HISTORY">[ History ]</a><br>
+<a href="future.html">[ Future ]</a>
+<a href="download.html">[ Download ]</a>
+<a href="http://sourceforge.net/projects/py-universe">[ Project Page ]</a>
+<hr>
+<img src="Image/pub.logo.gif" alt="Python Universe Builder">
+</center>
+
+<hr>
+<h3>(Old &amp; Probably Over-Ambitious) Status and Future Plans for PUB</h3></a>
+<p>
+<tt>[This was written in 2001, much has changed since then, and these are probably very dated. -- TJH 2004-2].
+</tt>
+</p>
+<p>
+PUB has been sitting unattended for awhile now.  The author
+has moved on, and so although it appears to be functional,
+it needs to be maintained.  Also, there's almost no documentation,
+although there are extensive comments in the source code.
+<p>
+This being the case, I volunteered to adopt the code and
+put up a Source Forge site for it (which is what you
+are now looking at).
+</p>
+<p>
+Since this time, 
+<a href="mailto:jmacy@users.sourceforge.net">Joshua Macy</a>
+has also expressed an interest in
+PUB and is currently working on updating PUB to work with
+Python 2.0 as well as implementing a version of the
+<a href="oz.html#HAP">Hap</a>
+character agent architecture originally developed as part of the 
+<a href="oz.html">Oz Project</a>
+at Carnegie Mellon University.
+</p>
+<p>
+My development plan for PUB is:
+<ol>
+<li>Test with sample game provided</li>
+<li>Fix any Python upgrade problems</li>
+<li>Set up Source Forge site</li>
+<li>Add doc strings to all classes and methods based on comments</li>
+<li>Create automatic documentation using the doc strings</li>
+<li>Review code and write architectural design documentation</li>
+<li>Adapt the one-room "Alice" tutorial (from Inform) to PUB</li>
+<li>Normalize this as PUB version 1.0.x</li>
+<li>Package the resulting version for distribution</li>
+<li>Begin extending to version 1.1.x (development)</li>
+</ol>
+This will provide a clean breakpoint for anyone who
+wants to do other things with PUB, and we can then
+extend it as needed to support character agents and
+the AutoManga Presenter. <i>[By the way, I've done
+steps 1-4 on this list -- but I haven't had a chance
+to start in on the documentation yet (2001-3/31, TJH)]</i>.
+</p>
+<h3>Enhancements for PUB</h3>
+In order to provide hooks for AutoManga, and as general
+adaptations of the system, I want to add:
+<ul>
+<li>
+GUI menu-based input.  This follows an interface concept we
+discussed for 
+<a href="http://light-princess.sourceforge.net">The Light Princess</a>.
+The idea is that game play
+could be smoother if there were less confusion about what verbs
+will be understood by the parser (since it's not realistic to
+have a parser that understands full English).  This has been
+criticized as the "slippery slope" towards the "Myst" model,
+where there's only mouse-controlled input, and essentially
+only one verb "click-on-object", which causes all game play
+to be driven by defaults.  However, I think there's a broad
+middle ground here:  I want to stay fairly close to the IF
+side, but with less frustration learning the parsers' vocabulary.
+(Later I hope this will be ported to an SDL-based GUI
+such as 
+<a href="http://www.bms-austria.com/projects/paragui/">ParaGUI</a>).
+<p></p>
+</li>
+
+<li>
+XML File format.  This will involve defining a DTD for
+the important design elements (such as rooms and characters).
+It is assumed that more complex extensions will involve
+programming directly in Python, but this will be used to automate
+time-consuming programming task, such as laying out rooms. This is
+currently being looked at by <a href="mailto:giem@free.fr">Jm</a>.
+<p>
+I worked out a method for using the netlister in
+<a href="http://sourceforge.net/projects/xcircuit">xcircuit</a>
+to layout adventure game rooms.  Although I have prototyped
+this in principle, I don't have a specific backend for any
+particular IF engine in practice. I'm hoping to start with an
+XML format.
+<p></p>
+</li>
+
+<li>
+In-Scene modeling.  Limited 3D positioning within a room, to
+support the AutoManga scene model -- camera choices, sound
+mixing, etc.  This information will be available to 
+characters that are within the room and to the presentation
+engine (but will be lost when one moves to a new room).
+<p></p>
+</li>
+
+<li>
+Integration with Oz character models.  This seems like an
+extension of the "Actor" object within PUB.  This is being
+worked on by
+<a href="mailto:jmacy@users.sourceforge.net">Joshua Macy</a>.
+<p></p>
+</li>
+
+</ul>
+
+<p>
+If this sounds really ambitious -- well, it is.  I don't expect
+it to happen tomorrow.  In fact,
+I am currently devoting most of my energy to the
+multimedia programming in
+<a href="http://sourceforge.net/projects/automanga">AutoManga</a>
+and the game
+<a href="http://light-princess.sourceforge.net">The Light Princess</a>,
+but once those are more stable, I expect to spend
+some time on PUB! Meanwhile,
+<a href="mailto:jmacy@users.sourceforge.net">Joshua Macy</a>
+seems to be the leading developer on PUB.
+</p>
+
+</body>
+</html>

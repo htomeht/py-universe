@@ -2,8 +2,8 @@
 PUB Intro
 </title></head>
 <body background="Image/pub.bkg.gif" bgcolor="#f7e7c7" vlink="#df3f1f">
-<font size="-1">Last Revision 2001-03/31 
-<a href="mailto:hancock@earthlink.net">Terry Hancock</a>, Original by Joseph Strout.</font>
+<font size="-1">Last Revision 2004-02/07 
+<a href="mailto:thancock@users.sourceforge.net">Terry Hancock</a>, Original by Joseph Strout.</font>
 <hr>
 <center>
 <a href="index.html">[ Introduction ]</a>
@@ -55,19 +55,44 @@ features not found in other interactive-fiction builders:
 
 <a name="HISTORY"></a>
 <H3>History of PUB</H3></a>
-I discovered PUB quite recently (2000), but it was actually written in
-about 1996 by Joseph J. Strout.  I was very excited when I found
-out about it, because it was exactly what I needed for AutoManga --
-an engine and language environment which would work like developing
-games in Inform for the Z-Machine, but run under Python, with full
-access to the computer's resources.  This makes it possible to
-interface with the software easily for use with the
-<a href="http://sourceforge.net/projects/automanga">AutoManga Presenter</a>,
-and also to extend it with the capabilities
-like those in the
-<a href="oz.html">Oz Architecture</a>.
 <p>
-Beyond this, I'm still evaluating PUB, but it seems to have a
+I (Terry Hancock) first discovered PUB in 2000, but it was 
+actually written in about 1996 by Joseph J. Strout.  I was very
+excited when I found out about it, because it was exactly what I
+needed at the time -- an engine and language environment which
+would work like developing games in Inform for the Z-Machine, but
+run under Python, with full access to the computer's resources.
+This makes it possible to interface with the software easily for
+building extended environments or interfaces.
+</p>
+<p>
+At the time I was working on an adventure game project 
+<a href="http://light-princess.sourceforge.net">The Light Princess</a>,
+and PUB looked like a good base to start the game engine, since
+we really wanted a graphic engine that "felt" more like using
+the old text adventure (or "interactive fiction") games. I thought
+of it as "interactive cinema".
+</p>
+<p>
+However, that is a <i>really</i> ambitious idea, and as the primary
+interest in <b>The Light Princess</b> was from artists and writers,
+rather than programmers, and as I was not up to writing the engine myself,
+and as, late in 2000, I got a "real" job, the project just stalled.
+</p>
+<p>
+The Py-Universe/PUB project sat here for about 24 months, with very
+little being done to it, although it was during this time that I added
+some of the docstrings, and Lalo Martins added the necessary machinery
+for PUB to install as a proper Python package.
+</p>
+<p>
+In 2003, interest perked up, particularly driven by
+<a href="mailto:gbay@users.sourceforge.net">Gabriel Jägenstedt</a>,
+who has been the most active developer over the last few months, and is
+still quite active (2004-2).
+</p>
+<p>
+PUB has a
 number of nice features beyond what you usually get in an
 interactive fiction system, for example: partial real-time
 capabilities and multi-user play (support for MUDs) via
@@ -75,8 +100,47 @@ TCP/IP connections.  Also, since the player character is
 modeled like a non-player character, and because the system
 is object-oriented, there is direct support for characters
 to pass messages to each other and to other objects in
-the environment, thus supporting the basic hooks needed
-for Tok architecture emotional agents to be used.
+the environment.
+</p>
+<p>
+For the <b>The Light Princess</b> project, I had visualized
+building on the <a href="oz.html">Oz Architecture</a> to
+create more interesting characters.  This still seems like
+a good idea, but it is definitely non-trivial in complexity.
+However, most of the code in the original Oz project (unfortunately
+not available -- I made some inquiries, and it seems to be
+essentially lost), was simply to provide the "topological world-model"
+(which is what PUB does already).  Thus it seems like a natural
+to extend the PUB character object into an Oz-like agent.
+</p>
+<p>
+Maybe someday, when I've got more time, and/or no one else has already
+done this, I'll give it a whirl.  Meanwhile, I hope the references
+are interesting.
+</p>
+<p>
+The other extension I had considered, was graphic presentation. At the
+time, not much existed to support this, so I started the
+<a href="http://automanga.sourceforge.net">Automanga Project</a> to build
+one. I'm not sure how relevant this project is now, and I have not worked
+on it for a long time (there is some C code to do cel animation with SDL
+and to handle procedural lighting effects, but that's about it).  The
+existence of the Java <a href="http://www.animatronik.org">Animatronik</a>
+seemed to obviate the need for some of the animation and "expressions"
+work in Automanga, but alas, that project looks dead, too (2004-2).
+</p>
+<p>
+A much more exciting possibility is to use the 
+<a href="http://www.blender.org">Blender</a> Game Engine,
+which is NOW FREE, thanks to the historic 2003 community purchase deal. Since
+it already embeds a Python interpreter, the possibility for integration
+seems great.  On the downside, I'm still just barely learning to use
+the Blender application, let alone experiment with the game engine.  Blender
+even does the "cartoon rendering" that we had discussed during the Light Princess
+project, and I believe it is possible to use 2-D animation elements within a
+3-D Blender world.  It's certainly worth investigating if you have an
+interest in it.  Again, someday I plan to check this out, but it may be
+a long time in coming.
 </p>
 
 
