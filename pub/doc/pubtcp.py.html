@@ -1,10 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html40/loose.dtd">
+
 <html>
+         
+  <head>
+    <title>Module: pubtcp</title>
+  </head>
 
-        <head>
-        <title>Module: pubtcp</title>
-        </head>
-
-        <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff">
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
         
@@ -15,17 +18,13 @@
                 align="left"
                 width="10%"><font color="#000000">Module: pubtcp</font>
             </th>
-            <th align="right"><font color="#000000">pubtcp.py</font></th>
+            <th width="90%" align="right"><font color="#000000">pubtcp.py</font></th>
         </tr>
         <tr>
         <td>
-        <p>
-<TABLE BORDER=1 CELLPADDING=2>
-</TABLE></p>
+        
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
 
-        
-        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
-        
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -40,6 +39,7 @@
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -47,21 +47,19 @@
         <tr>
         <td>
         
-import <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
-import <a href="pub.py.html">pub</a><br>
-import <a href="pubcore.py.html">pubcore</a><br>
-from <a href="pubcore.py.html">pubcore</a> import *<br>
-import <a href="pubobjs.py.html">pubobjs</a><br>
-from <a href="pubobjs.py.html">pubobjs</a> import <a href="pubobjs.py_Actor.html">Actor</a><br>
-import <a href="pubverbs.py.html">pubverbs</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-socket.html">socket</a><br>
-from <a href="http://www.python.org/doc/current/lib/module-socket.html">socket</a> import *<br>
-import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
+<b>import</b> <a href="pub.py.html">pub</a><br>
+<b>from</b> <a href="pubcore.py.html">pubcore</a> <b>import</b> *<br>
+<b>from</b> <a href="pubobjs.py.html">pubobjs</a> <b>import</b> <a href="pubobjs_Actor.py.html">Actor</a><br>
+<b>import</b> <a href="pubverbs.py.html">pubverbs</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
+<b>from</b> <a href="http://www.python.org/doc/current/lib/module-socket.html">socket</a> <b>import</b> *<br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
 
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -76,6 +74,7 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -104,18 +103,19 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">Disconnect&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 Disconnect ( player,  msg='' )
 
-</pre><p>----------------------------------------------------------------------
- function to disconnect a NetPlayer</p>
+</pre></font>
 
+<p>function to disconnect a NetPlayer</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -131,18 +131,22 @@ Disconnect ( player,  msg='' )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">NetUpdate&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 NetUpdate ()
 
-</pre><p>----------------------------------------------------------------------
- network update -- call this function periodically</p>
+</pre></font>
 
+<dl>
+<dt>network update</dt>
+<dd>call this function periodically</dd>
+</dl>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -158,18 +162,19 @@ NetUpdate ()
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">NewConn&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 NewConn ( conn,  addr )
 
-</pre><p>----------------------------------------------------------------------
- handle a new connection</p>
+</pre></font>
 
+<p>handle a new connection</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -185,18 +190,19 @@ NewConn ( conn,  addr )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">ShutDown&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 ShutDown ()
 
-</pre><p>----------------------------------------------------------------------
- function to shut the server down</p>
+</pre></font>
 
+<p>function to shut the server down</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -212,19 +218,21 @@ ShutDown ()
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">StartServer&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 StartServer ()
 
-</pre><p>----------------------------------------------------------------------
- function to start the server</p>
+</pre></font>
 
+<p>function to start the server</p>
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -239,25 +247,32 @@ StartServer ()
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <table border="0" cellpadding="5">
-<tr><td valign="top" align="left"><a href="pubtcp.py_LoginConn.html">LoginConn</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+        
+<table border="0" cellpadding="3" cellspacing="0">
+<tr><td valign="top" align="left"><a href="pubtcp_LoginConn.py.html">LoginConn</a></td><td valign="top" align="left">
+<dl>
+<dt>class LoginConn</dt>
+<dd>a connection still in the process of logging in</dd>
+</dl>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubtcp.py_NetPlayer.html">NetPlayer</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubtcp_NetPlayer.py.html">NetPlayer</a></td><td valign="top" align="left">
+<dl>
+<dt>class of the network player</dt>
+<dd>i.e., the Actor interfaced to a socket</dd>
+</dl>
 </td></tr>
 </table>
 </td></tr>
-        </td>
-        </tr>
-        </table>
-        
+</td></tr>
+</table>
+
         </td>
         </tr>
         </table>
@@ -266,9 +281,11 @@ StartServer ()
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
 
-        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
-        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
-
+        <font size="-2"><i>This document was automatically generated
+        on Fri May 10 17:18:29 2002 by
+        <a href="http://happydoc.sourceforge.net">HappyDoc</a> version
+        2.0.1</i></font>
+        
         </body>
         </html>
         

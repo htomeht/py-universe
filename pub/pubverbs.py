@@ -5,6 +5,10 @@
 #	Use this module with:  import pubverbs
 #
 #----------------------------------------------------------------------
+"""
+Defines the basic classes of verbs understood by the game. More
+verbs are interpreted via synonyms to these.
+"""
 
 import string
 
@@ -15,6 +19,9 @@ from pubcore import *
 # Transitive verbs -- require a direct object
 
 class Transitive(Verb):
+	"""
+	Transitive verbs -- require direct objects.
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -45,6 +52,24 @@ class Transitive(Verb):
 # have no objects, or one object (which we'll call dirobj).
 
 class Social(Verb):
+	"""
+	Social verb class -- little effect on topology
+		verbs which do very little, and may either
+		have no objects, or one object (which we'll
+		call dirobj).
+
+		Note that Social verbs may take on a whole new
+		meaning with emotive characters. These may become
+		every bit as meaningful as action verbs. The
+		distinction then will be that social verbs affect
+		the agent state of other characters while action
+		verbs affect the topological world.
+
+		(But since agents emit action verbs based on
+		emotive state, social verbs may indirectly affect
+		the topo world. This makes for a new dimension in
+		game play involving complex persuasion tasks).
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -90,6 +115,12 @@ grin.atsucc = 'You smile at <the dirobj>.'
 # Use verbs: call the Use(byWhom) method of the object
 #
 class Use(Transitive):
+	"""
+	Call the Use(byWhom) method of the object
+
+		This is a heavily used concept for PUB objects,
+		as you might expect.
+	"""
 
 	def Finish(self,cmd):
 		# update the objects
@@ -119,6 +150,11 @@ go.fail = 'Go where?!?'
 #	  the defcmd property of the direct object
 
 class DefVerb(Transitive):
+	"""
+	Call verb defined by defcmd of an object --
+		this transitive verb class calls the verb specified
+		by the defcmd property of the direct object
+	"""
 
 	def Begin(self,cmd):
 		if not isInstance(cmd.dirobj):
@@ -139,6 +175,18 @@ defverb = DefVerb('defverb')		# instantiate it
 # Inventory verb (a class unto itself)
 #
 class Inventory(Verb):
+	"""
+	Get the inventory (of the player) --
+		(a class unto itself)
+		Obviously this is the verb for the inventory command
+		the player uses to find out what they're carrying.
+		
+		An interesting thought -- should NPC's be able to do
+		this, and why?  An agent might act on or be affected
+		emotionally or intellectually by what they are
+		carrying. Of course, they can directly query their
+		contents, I would think.
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -169,6 +217,9 @@ inventory = Inventory('inv,inventory,i')
 # Get verb -- get an object into your grubby little hands
 #
 class Get(Transitive):
+	"""
+	Get an object into your grubby little hands.
+	"""
 
 	def Finish(self,cmd):
 		# update the database
@@ -187,6 +238,9 @@ get = Get('get,take,grab,obtain,procure')
 # Drop verb -- place on object into the actor's container
 #
 class Drop(Transitive):
+	"""
+	Place on object into the Actor's Container.
+	"""
 
 	def Finish(self,cmd):
 		# update the database
@@ -204,6 +258,16 @@ drop = Drop('drop')		# couldn't think of any 1-word synonyms!
 # Follow verb -- follow another Actor
 #
 class Follow(Transitive):
+	"""
+	Follow another Actor --
+		Follow another Actor  (adds the actor to the list
+		of followers for another actor (technically anything
+		that implements the followers attribute).  When that
+		actor moves, this actor will automatically get a
+		command to move with it.
+
+		See also Actor class in the pubobjs.py module.
+	"""
 
 	def __init__(self,pNames=''):
 		Transitive.__init__(self,pNames)
@@ -245,6 +309,11 @@ follow = Follow('follow,fol')
 # On verb -- activate an object
 #
 class On(Transitive):
+	"""
+	Turn ON --
+		activate an object  (see also Off, Toggle, this
+		module, and Switch in pubobjs).
+	"""
 
 	def Begin(self,cmd):
 		if not isInstance(cmd.dirobj) or not hasattr(cmd.dirobj,'Activate'):
@@ -266,6 +335,12 @@ on = On('activate,on,switch on,turn on,wear,don,light,start')
 # Off verb -- deactivate an object
 #
 class Off(Transitive):
+	"""
+	Turn OFF --
+		deactivate an object
+		See also On, Toggle in this module and
+		Switch in pubobjs.
+	"""
 
 	def Begin(self,cmd):
 		if not isInstance(cmd.dirobj) or not hasattr(cmd.dirobj,'Deactivate'):
@@ -287,6 +362,16 @@ off = Off('deactivate,off,turn off,switch off,shut off,remove,doff,extinguish,st
 # Toggle verb -- activate or deactivate an object
 #
 class Toggle(Transitive):
+	"""
+	Toggle ON/OFF --
+		activate or deactivate an object
+
+		See also On, Off in this module and
+		Switch in pubobjs.
+
+		This is why Switch doesn't need a toggle method, this
+		verb handles it.
+	"""
 
 	def Begin(self,cmd):
 		if not isInstance(cmd.dirobj) or not hasattr(cmd.dirobj,'Deactivate') \
@@ -312,6 +397,21 @@ toggle = Toggle('toggle,switch,turn,change,invert')
 # Look
 #
 class Look(Verb):
+	"""
+	Look (get description from an object) --
+		Returns a description of the direct object to the 
+		subject.
+
+		While in text adventure games, this may be a very
+		simple text string, in a graphical extension, this
+		might contain more complex topological or even
+		absolute spatial information which could be interpreted
+		by an agent or presented graphically to the player.
+
+		Thus, this is a potential AutoManga hook (also see
+		what a "Description" is -- is it a string, or a
+		general object?
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -350,6 +450,13 @@ look = Look('look,l,examine,ex,x,inspect,read')
 # Put -- put something into something else
 #
 class Put(Transitive):
+	"""
+	Put something into something else.
+
+		Note that this topological universe doesn't distinguish
+		'in' 'on' 'within', etc. (I don't think).  This is
+		pretty typical of IF game behavior in general.
+	"""
 
 	def __init__(self, pNames=''):
 		Transitive.__init__(self,pNames)
@@ -389,6 +496,14 @@ put = Put('put,stuff,stick')
 # Give -- give something to someone else
 #
 class Give(Transitive):
+	"""
+	Give something to someone else
+
+		Its not clear to me if the recipient can refuse it,
+		I suspect that would be done via the recipient's
+		PreObj method, which looks like it might get called
+		by this code. (?)
+	"""
 
 	def __init__(self, pNames=''):
 		Transitive.__init__(self,pNames)
@@ -419,6 +534,10 @@ give = Give('give,hand')
 # Quit the game
 
 class Quit(Verb):
+	"""
+	Quit the game --
+		Really a game command.
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -440,6 +559,13 @@ quit = Quit("quit")
 # Wait (by default, 5 minutes)
 
 class Wait(Verb):
+	"""
+	Wait (by default, 5 minutes)
+		Again, this looks like real time behavior, I haven't
+		found anything turn-based yet (could be turns are
+		implemented through the scheduler as virtual time
+		passage?).
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -466,6 +592,11 @@ zzz.duration = 15
 # Say
 
 class Say(Verb):
+	"""
+	Say -- send information to Tell methods --
+		This is not a do-nothing verb with PUB -- objects may
+		be listening.
+	"""
 
 	def __init__(self,pNames=''):
 		Verb.__init__(self,pNames)
@@ -500,6 +631,12 @@ say = Say('say,speak,talk')		# instantiate it
 #
 
 class SetBreak(Verb):
+	"""
+	@break:	sets line breaks, or turns them off.
+	(for debugging)
+	It appears that the '@' prefix is used for
+	verbs the player isn't really supposed to use.
+	"""
 
 	def Finish(self,cmd):
 		try: num = string.atoi(cmd.dirobj)
@@ -516,6 +653,10 @@ setBreak = SetBreak('@break')	# instantiate it
 #
 
 class DbgExamine(Transitive):
+	"""
+	@Examine: Print all attributes of an object.
+	(for debugging)
+	"""
 
 	def Finish(self,cmd):
 		print '\n', cmd.dirobj,'\n'
@@ -531,7 +672,10 @@ dbgEx = DbgExamine('@ex,@examine')	# instantiate it
 # @contents -- a debugging verb which prints all contents of an object
 #
 class DbgContents(Transitive):
-
+	"""
+	@contents: Print all contents of an object.
+	(for debugging)
+	"""
 	def Finish(self,cmd):
 		print '\nContents of', cmd.dirobj,'\n'
 		for item in cmd.dirobj.contents:
@@ -546,6 +690,11 @@ dbgContents = DbgContents('@contents,@con')
 # verbs -- print all known verbs
 #
 class VerbsVerb(Verb):
+	"""
+	verbs:	print all known verbs
+
+		Probably useful for debugging and for help.
+	"""
 
 	def Finish(self,cmd):
 		print '\nKnown verbs:\n'
@@ -563,6 +712,9 @@ verbsVerb = VerbsVerb('verbs,help')
 # save -- save the game
 #
 class Save(Verb):
+	"""
+	Save the game to disk.
+	"""
 
 	def Finish(self,cmd):
 		cmd.actor.Tell("Saving game to disk...")
@@ -576,6 +728,12 @@ save = Save('save')
 # restore -- restore the game
 #
 class Restore(Verb):
+	"""
+	Restore the game from disk.
+
+		Looks like maybe we only get one saved-game.  Probably
+		ought to use the direct object as a filename instead. (?)
+	"""
 
 	def Finish(self,cmd):
 		cmd.actor.Tell("Restoring game from disk...")

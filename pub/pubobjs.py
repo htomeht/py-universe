@@ -4,7 +4,18 @@
 #
 #	Use this module with:  import pubobjs
 #
+#	2002-5/10:
+#	Terry Hancock
+#		Added docstrings based on comments and some simple
+#		code analysis.
+#
 #----------------------------------------------------------------------
+
+"""
+Defines all the most basic objects (see Gadget for some more derivatives).
+Also instantiates the "Universe" Room and the Player, named "Everyman"
+(presumeably you can change the name afterwards).
+"""
 
 # standard modules
 import whrandom
@@ -24,6 +35,13 @@ import pubverbs
 #		(couldn't do this in BaseThing, since it references pubverbs)
 #
 class Thing(BaseThing):
+	"""
+	Basic type for most PUB nouns. --
+		This is the basic type most PUB objects are based on. It
+		actually inherits from BaseThing which is an even more
+		basic object.  The difference is that Thing has PreObj
+		and PostObj with sensible defaults defines.
+	"""
 
 	def __init__(self,pNames=''):
 		# if we've already initialized, don't do it again:
@@ -98,6 +116,16 @@ class Thing(BaseThing):
 # class Switch -- has Activate and Deactivate (and supporting) methods
 #
 class Switch(Thing):
+	"""
+	A 'Thing' with simple On-Off behavior --
+		Also the base class for garments, boxes, and other
+		things which have a basic two-state behavior.
+		
+		'Use'='Activate'.
+		Activate = turn the switch on
+		Deactivate = turn the switch off
+		No toggle method -- a "toggle" verb does this.
+	"""
 
 	def __init__(self,pNames=''):
 		Thing.__init__(self,pNames)
@@ -119,21 +147,27 @@ class Switch(Thing):
 	
 	# define some new methods
 	def Activate(self,pUser=None):
+		"""
+		Turn the Switch 'On'.
+		"""
 		self.isActive = TRUE
 		if self.onDesc: self.desc = self.onDesc
-		else: self.desc = ''
+		else: 		self.desc = ''
 		if self.onNote: self.note = self.onNote
-		else: self.note = ''
+		else: 		self.note = ''
 		if self.onListLine: self.listLine = "   - " + self.onListLine
-		else: self.listLine = ''
-		if pUser: user = pUser
-		else: user = self
+		else: 		    self.listLine = ''
+		if pUser: 	user = pUser
+		else: 		user = self
 		object = self
 		here = user.container
 		if self.effectOnCode: exec self.effectOnCode
 		self.GetRoom().ComputeTotalLight()
 	
 	def Deactivate(self,pUser=None):
+		"""
+		Turn the Switch 'Off'.
+		"""
 		self.isActive = FALSE
 		if self.offDesc: self.desc = self.offDesc
 		else: self.desc = ''
@@ -148,7 +182,11 @@ class Switch(Thing):
 		if self.effectOffCode: exec self.effectOffCode
 		self.GetRoom().ComputeTotalLight()
 
-	def Use(self,pUser): return self.Activate(pUser)
+	def Use(self,pUser):
+		"""
+		Same as 'Activate'.
+		"""
+		return self.Activate(pUser)
 
 	# see whether the thing can be activated/deactivated
 	def PreObj(self,cmd):
@@ -188,6 +226,17 @@ class Switch(Thing):
 # Container -- base type of any object which can contain another
 #
 class Container (Thing):
+	"""
+	Object which can contain other objects.
+		<container>.contents is just a list of contained
+		objects (i.e. references).
+
+		Ability to contain a 'Thing' is based on the Thing's
+		single-parameter "size". (i.e. nothing as complex
+		as length/breasth/weight or other considerations).
+		Also sizes seem not to be additive, can contain
+		as many smaller things as we want..
+	"""
 
 	# initialization method
 	def __init__(self,pNames=''):
@@ -197,10 +246,17 @@ class Container (Thing):
 
 	# return true if this object can contain another
 	def CanContain(self,pThing):
+		"""
+		Determines if the 'Thing' to be contained is smaller
+		than this container.
+		"""
 		return pThing.size < self.size;
 
 	# move the given object to the contents of this one
 	def ContainNoCheck(self,*pThing):
+		"""
+		Puts an object into the container.
+		"""
 		#print self(the)+" contains ",pThing
 		for item in pThing:
 			if item.container != None:
@@ -221,6 +277,10 @@ class Container (Thing):
 #		return Thing.GetDesc(self) + '\n' + self.GetContentsDesc()
 
 	def GetContentsDesc(self, pLooker=None):
+		"""
+		Describes the contents of the object by reporting their
+		'GetListLine' method results.
+		"""
 		out = ''
 		contentslist = filter(lambda x:x.salient, self.contents)
 		if pLooker:
@@ -231,9 +291,14 @@ class Container (Thing):
 
 	# return list of visible contents as objects (recursively)
 	def VisibleContents(self):
+		"""
+		Returns a list of contents recursively. The comments say
+		it must be transparent or open, but I don't see any code
+		to check that.
+		"""
 		out = self.contents
 		for item in out:
-			if hasattr(item,'contents'):		# and is open or transparent...
+			if hasattr(item,'contents'):	# and is open or transparent...
 				out = out + item.VisibleContents()
 		return out
 
@@ -243,6 +308,16 @@ class Container (Thing):
 
 # base class of any room or location
 class Room(Container):
+	"""
+	Basic 'Room' object, a special 'Container'.
+		A special case of container to use as a room. The
+		room is contained in the PUB universe and has a light
+		property and a large size (5000), so that it will not
+		complain about containing objects including the player.
+
+		It also has a Tell method which seems to broadcast
+		messages to anyone in the room (Player or NPC?)
+	"""
 
 	def __init__(self,pNames=''):
 		Container.__init__(self,pNames)
@@ -253,6 +328,11 @@ class Room(Container):
 		pub.lastroom = self		# note last room created
 
 	def GetDesc(self, pLooker=None):
+		"""
+		Get the Room's Description --
+		Get a description of the room for 'Look'ers
+		and 'Camera's (etc.)
+		"""
 		if pLooker and not pLooker.CanSee(self):
 			isDark = TRUE
 			out = "It's too dark to see much.\n"
@@ -267,10 +347,20 @@ class Room(Container):
 		return out + '\n'
 
 	def Tell( self, pWhat, *pExcept):
+		"""
+		Broadcast info to Actors in Room --
+		If we 'Tell' a 'Room', it means 'Tell' all the 'Actor's
+		in the 'Room'.
+		"""
 		whom = filter(lambda x,n=pExcept: x.listening and x not in n, self.contents)
 		for i in whom: i.Tell(pWhat)
 
 	def ComputeTotalLight(self):
+		"""
+		Count how many light sources we have available. --
+		Including ones contained in (transparent or open?)
+		containers in the room.
+		"""
 		if self == pub.universe: return	# don't bother for universe object
 		self.light = self.ownLight
 		for item in self.VisibleContents():
@@ -283,6 +373,14 @@ class Room(Container):
 # Box -- a Container which can be opened, closed, locked, etc.
 #
 class Box (Container,Switch):
+	"""
+	Minimal 'Container' plus 'Switch' --
+		A very minimal container which also inherits from switch.
+		(I guess you Activate it to open it?).  Doesn't seem to
+		be more than the sum of its parts, though (e.g. nothing
+		seems to make Activate determine whether it can accept
+		contents).
+	"""
 
 	def __init__(self,pNames=''):
 		Container.__init__(self,pNames)
@@ -298,6 +396,18 @@ class Box (Container,Switch):
 # class for exits -- things which connect one room to another
 #
 class Exit(Thing):
+	"""
+	Exit / Entrance to a Room --
+		Connections between rooms (e.g. Door).
+		Size is "3 people" = 300 (which means people are 100).
+		Default verb is 'Go'. 'Use' is the same?
+
+		Default is it goes nowhere.
+
+		Note that an Exit is also an entrance.  (I think you
+		connect 'Exit' to 'Exit' rather than Exit to Room,
+		but I haven't verified this yet).
+	"""
 
 	def __init__(self,pNames=''):
 		Thing.__init__(self,pNames)
@@ -321,6 +431,10 @@ class Exit(Thing):
 
 	# move someone through the exit, if possible
 	def Use(self,pWhom):
+		"""
+		Move an actor through the exit,
+		if possible.
+		"""
 		if not self.open: return
 		# perform the move
 		pWhom.MoveTo(self.dest)
@@ -363,10 +477,18 @@ class Exit(Thing):
 
 # base class of any person, monster, or other chanacter
 class Actor(Container):
+	"""
+	Base class of People or other active Creatures.
+		Implements agent-like behavor.
+	
+		This will probably be the parent class of
+		agent-extensions to PUB. (See 'NPC' for
+		what will probably be expected of them.
+	"""
 
 	def __init__(self,pNames=''):
 		Container.__init__(self,pNames)
-		self.a = ''				# no article for Actors
+		self.a = ''			# no article for Actors
 		self.cmdList = []		# list of commands to be executed
 		self.size = 100			# human-sized
 		self.listening = 1		# wants Tell() calls
@@ -381,20 +503,41 @@ class Actor(Container):
 		self.note = self(The) + " is here."
 
 	def GetName(self,article=0,pLooker=None):
+		"""
+		Get the actor's name. --
+		By default, no article will be used with it (e.g. we 
+		don't say "a John is here", we say "John is here").
+		"""
 		# don't use articles with Actors, unless explicitly specified
 		if self.the or self.a or (pLooker and not pLooker.CanSee(self)):
 			return Container.GetName(self,article,pLooker)
 		return self.name
 
 	def Act(self):
+		"""
+		Does nothing -- overload?
+		"""
 		return
 
 	def Announce(self, pWhat):
+		"""
+		Speak to the room --
+		This character says something which is heard by everyone
+		in the 'Room' (more precisely, the container).
+		"""
 		if self.container:
 			self.container.Tell( pWhat, self )
 
 	# get list of objects within visible/reachable range
 	def LocalNouns(self):
+		"""
+		Everything visible from the room. --
+		
+		Gets a list of objects in visible/reachable range.
+		
+		There's a note here about extending it to include container's
+		container in the search. (Not sure if that's a good idea).
+		"""
 		# that'd be everything visible from the room...
 		out = self.container.VisibleContents()
 		# plus room's container's contents (maybe later)
@@ -402,6 +545,11 @@ class Actor(Container):
 
 	# given the name of a noun, return the visible object
 	def FindNoun(self,pName,cmd=None):
+		"""
+		Find a thing if in the room --
+		Given the name of a noun, return the visible object.
+		Returns None if the noun can't be found (?).
+		"""
 		if not pName: return None
 		if pName == 'self' or pName == 'me': return self
 		if pName == 'here' or pName == 'room': return self.container
@@ -423,11 +571,30 @@ class Actor(Container):
 
 	# similar to above, but if it can't find the object, return the given string
 	def NameToObj(self,pName,cmd=None):
+		"""
+		Find a thing in the room --
+		Given the name of a noun, return the visible object.
+		If not found, returns the name (first argument to this method).
+		"""
 		ans = self.FindNoun(pName,cmd)
 		if ans: return ans
 		return pName
 
 	def DoCommandString(self,cmdstr):
+		"""
+		Interpret a command to the actor. --
+
+		If first word is an Actor's name, interpret it as
+		a "say" action.
+
+		There's a concept here of a 'command list', which I hope
+		will become clear from other parts of the code.
+
+		Anyway, this code executes the first command as it's
+		last act (presumeably the command list is completed by
+		some other part of the code -- perhaps commands consume
+		turns?).
+		"""
 		# check for direct address
 		firstword = stripPunctuation( string.split(cmdstr)[0] )
 		obj = self.NameToObj(firstword)
@@ -444,6 +611,13 @@ class Actor(Container):
 		self.DoNextCmd();
 	
 	def DoNextCmd(self):
+		"""
+		Do the next command in the list --
+			The command interpretation process.  When complete,
+			adds the next command via the "Scheduler".
+			
+			So commands consume turns or time.
+		"""
 		if not self.cmdList: return CANCEL
 		cmd = copy.copy(self.cmdList[0])
 		self.cmdList = self.cmdList[1:]
@@ -487,6 +661,15 @@ class Actor(Container):
 		return
 
 	def PreAct(self, cmd):
+		"""
+		Gets called before doing things --
+			Gets called before doing things. Notably, if
+			the actor has "followers" (actors who follow
+			it, presumeably), they are commanded to follow
+			when this actor moves.
+
+			(This seems to be its only current use).
+		"""
 		if cmd.verb == pubverbs.go and self.followers:
 			for item in self.followers:
 				item.DoCommandString('go '+cmd.dirobj())
@@ -498,12 +681,25 @@ class Actor(Container):
 
 # class of the player -- i.e., the Actor interfaced to the terminal
 class Player(Actor):
+	"""
+	Player's persona in the game --
+		This is the interface between the player and the game.
+		The player inherits from Actor. 
+
+		However, the player prompts the user for the next action,
+		instead of simply reacting as other actors do. (?)
+
+		Has 'Tell' and 'Act' methods.
+	"""
 
 	def __init__(self,pNames=''):
 		Actor.__init__(self,pNames)
 		self.linebreak = 80
 
 	def Tell(self, pWhat):
+		"""
+		Get information from (actual) player to 'Player'. (?)
+		"""
 		if self.linebreak:
 			# break lines every <linebreak> characters:
 			while len(pWhat) >= self.linebreak:
@@ -515,6 +711,12 @@ class Player(Actor):
 		print pWhat
 
 	def Act(self):
+		"""
+		Act on commands in scheduler, or prompt --
+		
+		If the player's persona already has commands to follow,
+		it does, otherwise it asks what to do next.
+		"""
 		if pub.scheduler.HasEventFor( self ): 
 			# I've already got a scheduled event; no need to ask for input
 			pub.scheduler.Update()
@@ -534,6 +736,13 @@ class Player(Actor):
 
 # class Monitor -- puts whatever it hears to the terminal
 class Monitor(Actor):
+	"""
+	Monitor 'Tell' messages --
+		Listens to Tell broadcasts and prints them (I suspect this
+		is mostly for debugging). Clearly you could bug a Room
+		with this object and tell what NPCs or other Actors are
+		up to.
+	"""
 
 	def Tell(self,pWhat):
 		print '[' + self() + ' hears] ' + pWhat
@@ -545,6 +754,13 @@ class Monitor(Actor):
 # class Timer -- something that goes off after a certain amount of time on
 #
 class Timer(Switch):
+	"""
+	Timer switch --
+		This is a real time timer!  Uses the scheduler, which see.
+		'Activate' = set the timer for the delay (default= 8 minutes)
+		When the time runs out ('ComeDue') it will 'Deactivate'
+		(or you can call the method directly?).  
+	"""
 
 	def __init__(self,pNames=''):
 		Switch.__init__(self,pNames)
@@ -556,11 +772,16 @@ class Timer(Switch):
 		self.offOnDrop = FALSE
 		
 	def Activate(self,pUser):
-		# upon activation, schedule a ComeDue event
+		"""
+		Upon activation, schedule a 'ComeDue' event.
+		"""
 		pub.scheduler.AddEvent(self.delay,Event(self,'object.ComeDue()'))
 		Switch.Activate(self,pUser)
 	
 	def ComeDue(self):
+		"""
+		Deactivate the switch when the time runs out.
+		"""
 		here = self.container
 		if self.dueCode: exec self.dueCode
 		Switch.Deactivate(self)
@@ -577,6 +798,12 @@ class Timer(Switch):
 # class Garment -- something you can wear (and may have an effect)
 #
 class Garment(Switch):
+	"""
+	Clothes or other thing you wear.
+		Something you wear, with appropriate messages.
+		Inherits from Switch, so it is activated when
+		worn.
+	"""
 
 	def __init__(self,pNames=''):
 		Switch.__init__(self,pNames)
@@ -616,6 +843,13 @@ class Garment(Switch):
 # Liquid -- a Thing with some special properties
 #
 class Liquid(Thing):
+	"""
+	Liquid objects. --
+		Obviously this implements basic liquid behaviors --
+		has to be contained to get it, can't put it in
+		a container unless it has 'canContainLiquid'
+		property.
+	"""
 
 	def __init__(self,pNames=''):
 		Thing.__init__(self,pNames)
@@ -636,6 +870,12 @@ class Liquid(Thing):
 # Countable -- a Thing with a quantity, can be divided and recombined
 #
 class Countable(Thing):
+	"""
+	Countable object (can be plural). --
+		Thing with quantity, which is apparently treated as
+		a single object otherwise. Can be combined/divided
+		etc.
+	"""
 
 	def __init__(self,pNames=''):
 		Thing.__init__(self,pNames)
@@ -648,6 +888,9 @@ class Countable(Thing):
 		self.prevqty = 0
 	
 	def GetName(self,article=0,pLooker=None):
+		"""
+		Return singular or plural name with appropriate article.
+		"""
 #		return self.pluralname + ' (' + str(self.quantity) + ')'
 		if self.quantity == 1:
 			self.a = 'a'
@@ -660,9 +903,15 @@ class Countable(Thing):
 		return Thing.GetName(self,article,pLooker)
 	
 	def GetNote(self):
+		"""
+		Gets appropriate note with quantity indicated.
+		"""
 		return "You see " + self.GetName(a) + " here."
 	
 	def NameMatch(self,str):
+		"""
+		See if it is (at least) N objects.
+		"""
 		# print "Trying name match of ",str," with ",self.GetName()
 		# name should match if it starts with a number less that self.quantity
 		self.newquantity = self.quantity
@@ -679,6 +928,10 @@ class Countable(Thing):
 		return FALSE
 
 	def Split(self,pQty):
+		"""
+		Divide the plural object into more than one
+		plural object containing the same amount in total.
+		"""
 		# create a new object, pQty less than the current one
 		newobj = copy.copy(self)
 		# copy.copy calls the constructor, so the new object
@@ -692,6 +945,10 @@ class Countable(Thing):
 		self.newquantity = pQty
 	
 	def Absorb(self, pOther):
+		"""
+		Combine more than one similar object into a
+		single collection object.
+		"""
 		# absorb the other one into this one, and delete the other
 		self.quantity = self.quantity + pOther.quantity
 		pOther.container.contents.remove(pOther)
@@ -746,6 +1003,20 @@ class Countable(Thing):
 # NPC -- a Non-Player Character; an Actor with simple responses
 #
 class NPC(Actor):
+	"""
+	Non-Player Character -- 
+	
+		Actor with simple responses.
+		
+		Responds to commands, etc. If we want a more full-featured
+		agent character, we'll probably attempt to mimic this
+		interface.
+
+		An advanced agent-based character would probably be
+		written to support this interface.  (Possibly with
+		additional methods to interact with other advanced
+		agents).
+	"""
 
 	def __init__(self,pNames=''):
 		Actor.__init__(self,pNames)
@@ -764,6 +1035,11 @@ class NPC(Actor):
 	# Here's the main function through which NPC's react:
 	# they hear something, via their Tell() method
 	def Tell(self, pWhat):
+		"""
+		Hear something told to me --
+			Here's the main function through which NPC's react:
+			they hear something, via their Tell() method.
+		"""
 		# if it's something we said, don't reply
 		if (regex.match('You say ".*"',pWhat)): return
 
@@ -784,6 +1060,11 @@ class NPC(Actor):
 		self.HearEffect( pWhat )
 	
 	def HearSpeech(self, pSpeaker, pSpeech):
+		"""
+		Hear speech from another actor --
+		A special case of Tell, when another actor is
+		speaking to me.
+		"""
 		# is the speaker speaking to me?
 		for word in self.synonyms:
 			if (string.count( string.lower(pSpeech), word )):
@@ -826,6 +1107,14 @@ class NPC(Actor):
 		if whrandom.randint(0,2): self.Announce( self.noReply )
 
 	def HearCommand(self, pCommander, pCmdStr ):
+		"""
+		Hear and react to commands --
+		May act on the command or not, depending on whether
+		the 'obedient' property has been set. Doesn't seem
+		to distinguish who I'm obedient to -- this would seem
+		to be necessary with advanced characters who might be
+		expected to give orders as well as take them.
+		"""
 		# if not obedient...
 		if not self.obedient:
 			pCommander.Tell( self.GetName() + " ignores you.")
@@ -836,6 +1125,10 @@ class NPC(Actor):
 		self.DoCommandString( pCmdStr )
 
 	def HearEffect(self, pStr ):
+		"""
+		Does nothing. --
+		I think it's a hook for responding to non-verbal inputs.
+		"""
 		# nothing for now...
 		return
 

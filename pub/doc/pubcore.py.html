@@ -1,10 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html40/loose.dtd">
+
 <html>
+         
+  <head>
+    <title>Module: pubcore</title>
+  </head>
 
-        <head>
-        <title>Module: pubcore</title>
-        </head>
-
-        <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff">
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
         
@@ -15,17 +18,22 @@
                 align="left"
                 width="10%"><font color="#000000">Module: pubcore</font>
             </th>
-            <th align="right"><font color="#000000">pubcore.py</font></th>
+            <th width="90%" align="right"><font color="#000000">pubcore.py</font></th>
         </tr>
         <tr>
         <td>
-        <p>
-<TABLE BORDER=1 CELLPADDING=2>
-</TABLE></p>
+        
+<p>Includes Scheduler, Event, Command, Parser, Verb, and BaseThing (=Noun?)</p>
+<p>Also a number of utility functions. I'm a little
+disturbed by things like &quot;cap&quot; which simply call
+Python library functions -- not sure that we need
+such a wrapper, as it likely increases the learning
+curve for working with the code. (?)  On the other
+hand, if used frequently enough, it might clarify
+the code. If so, we need to add comments to define
+what these things do.</p>
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
 
-        
-        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
-        
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -40,6 +48,7 @@
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -47,14 +56,15 @@
         <tr>
         <td>
         
-import <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
-import <a href="pub.py.html">pub</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
+<b>import</b> <a href="pub.py.html">pub</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
 
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -69,6 +79,7 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -76,23 +87,26 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
         <tr>
         <td>
         
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
-<tr><td align="LEFT" valign="TOP">
+
+            <table border="0" cellspacing="2" cellpadding="2" width="100%">
+              <tr>
+            <td align="LEFT" valign="TOP">
 <a href="#AddVerb">AddVerb</a><br>
 <a href="#cap">cap</a><br>
 <a href="#isInstance">isInstance</a><br>
 <a href="#isInt">isInt</a><br>
 <a href="#isString">isString</a><br>
+</td>
+<td align="LEFT" valign="TOP">
 <a href="#replace">replace</a><br>
 <a href="#restoregame">restoregame</a><br>
 <a href="#savegame">savegame</a><br>
 <a href="#stripPunctuation">stripPunctuation</a><br>
 <a href="#toInt">toInt</a><br>
 </td>
-<td align="LEFT" valign="TOP">
-</td>
-</tr></table>
-
+</tr>
+            </table>
+            
 
         <tr>
             <th bgcolor="#99ccff"
@@ -108,18 +122,22 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">AddVerb&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 AddVerb ( *pVerbs )
 
-</pre><p>----------------------------------------------------------------------
- add a verb or list of verbs, singly, as a list, or separated with commas</p>
+</pre></font>
 
+<p>AddVerb:
+                add a verb or list of verbs, singly, as a list, or 
+                separated with commas<p> add a verb or list of verbs, singly, as a list, or separated with commas</p>
+</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -135,17 +153,19 @@ AddVerb ( *pVerbs )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">cap&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 cap ( s )
 
-</pre><p>function to capitalize a string</p>
+</pre></font>
 
+<p>function to capitalize a string</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -161,17 +181,19 @@ cap ( s )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">isInstance&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 isInstance ( x )
 
-</pre><p>function to determine whether it's an Instance</p>
+</pre></font>
 
+<p>function to determine whether it's an Instance</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -187,17 +209,19 @@ isInstance ( x )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">isInt&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 isInt ( x )
 
-</pre><p>function to determine whether it's a number, or interpretable as one</p>
+</pre></font>
 
+<p>function to determine whether it's a number, or interpretable as one</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -213,17 +237,19 @@ isInt ( x )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">isString&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 isString ( x )
 
-</pre><p>function to determine whether it's a string</p>
+</pre></font>
 
+<p>function to determine whether it's a string</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -239,21 +265,23 @@ isString ( x )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">replace&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 replace (
         what,
         withwhat,
         inwhat,
         )
 
-</pre><p>function to replace all occurances of one substring with another</p>
+</pre></font>
 
+<p>function to replace all occurances of one substring with another</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -269,17 +297,20 @@ replace (
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">restoregame&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 restoregame ( filename='pub.dat' )
 
-</pre><p>function to restore the game</p>
+</pre></font>
 
+<h3>Restore a game.</h3>
+<p> function to restore the game</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -295,17 +326,20 @@ restoregame ( filename='pub.dat' )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">savegame&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 savegame ( filename='pub.dat' )
 
-</pre><p>function to save the game</p>
+</pre></font>
 
+<h3>Save the game.</h3>
+<p> function to save the game</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -321,17 +355,19 @@ savegame ( filename='pub.dat' )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">stripPunctuation&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 stripPunctuation ( x )
 
-</pre><p>function to strip commas and periods from a string</p>
+</pre></font>
 
+<p>function to strip commas and periods from a string</p>
 
         <tr>
             <th bgcolor="#99ccff"
@@ -347,18 +383,21 @@ stripPunctuation ( x )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">toInt&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <pre>
+        <font color="#000088"><pre>
 toInt ( x )
 
-</pre><p>function to force it to be a number</p>
+</pre></font>
 
+<p>function to force it to be a number</p>
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -373,37 +412,38 @@ toInt ( x )
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <table border="0" cellpadding="5">
-<tr><td valign="top" align="left"><a href="pubcore.py_BaseThing.html">BaseThing</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+        
+<table border="0" cellpadding="3" cellspacing="0">
+<tr><td valign="top" align="left"><a href="pubcore_BaseThing.py.html">BaseThing</a></td><td valign="top" align="left">
+<p>BaseThing:</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubcore.py_Command.html">Command</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubcore_Command.py.html">Command</a></td><td valign="top" align="left">
+<p>Command:</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubcore.py_Event.html">Event</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubcore_Event.py.html">Event</a></td><td valign="top" align="left">
+<p>Event:</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubcore.py_Parser.html">Parser</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubcore_Parser.py.html">Parser</a></td><td valign="top" align="left">
+<p>Parser:</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubcore.py_Scheduler.html">Scheduler</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubcore_Scheduler.py.html">Scheduler</a></td><td valign="top" align="left">
+<p>Scheduler:</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubcore.py_Verb.html">Verb</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubcore_Verb.py.html">Verb</a></td><td valign="top" align="left">
+<p>Verb:</p>
 </td></tr>
 </table>
 </td></tr>
-        </td>
-        </tr>
-        </table>
-        
+</td></tr>
+</table>
+
         </td>
         </tr>
         </table>
@@ -412,9 +452,11 @@ toInt ( x )
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
 
-        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
-        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
-
+        <font size="-2"><i>This document was automatically generated
+        on Fri May 10 17:18:29 2002 by
+        <a href="http://happydoc.sourceforge.net">HappyDoc</a> version
+        2.0.1</i></font>
+        
         </body>
         </html>
         

@@ -1,10 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html40/loose.dtd">
+
 <html>
+         
+  <head>
+    <title>Module: gadgets</title>
+  </head>
 
-        <head>
-        <title>Module: gadgets</title>
-        </head>
-
-        <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff">
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
         
@@ -15,17 +18,17 @@
                 align="left"
                 width="10%"><font color="#000000">Module: gadgets</font>
             </th>
-            <th align="right"><font color="#000000">gadgets.py</font></th>
+            <th width="90%" align="right"><font color="#000000">gadgets.py</font></th>
         </tr>
         <tr>
         <td>
-        <p>
-<TABLE BORDER=1 CELLPADDING=2>
-</TABLE></p>
+        
+<p>Extended collection of 'Thing's useful in making games.</p>
+<p>These are convenience objects which implement various useful
+things you might want in a game. They can be used as is or
+inherited into even more specialized objects.</p>
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
 
-        
-        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
-        
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -40,6 +43,7 @@
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -47,18 +51,18 @@
         <tr>
         <td>
         
-import <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
-import <a href="pub.py.html">pub</a><br>
-import <a href="pubcore.py.html">pubcore</a><br>
-from <a href="pubcore.py.html">pubcore</a> import *<br>
-import <a href="pubobjs.py.html">pubobjs</a><br>
-import <a href="pubverbs.py.html">pubverbs</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
-import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-copy.html">copy</a><br>
+<b>import</b> <a href="pub.py.html">pub</a><br>
+<b>from</b> <a href="pubcore.py.html">pubcore</a> <b>import</b> *<br>
+<b>import</b> <a href="pubobjs.py.html">pubobjs</a><br>
+<b>import</b> <a href="pubverbs.py.html">pubverbs</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-regex.html">regex</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-types.html">types</a><br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whrandom</a><br>
 
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -73,41 +77,44 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <table border="0" cellpadding="5">
-<tr><td valign="top" align="left"><a href="gadgets.py_Button.html">Button</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+        
+<table border="0" cellpadding="3" cellspacing="0">
+<tr><td valign="top" align="left"><a href="gadgets_Button.py.html">Button</a></td><td valign="top" align="left">
+<p>A simple button.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Camera.html">Camera</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_Camera.py.html">Camera</a></td><td valign="top" align="left">
+<p>Takes <code>pictures</code> of container and stores them.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Driver.html">Driver</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Elevator.html">Elevator</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_Driver.py.html">Driver</a></td><td valign="top" align="left">
+<p>NPC who operates a Vehicle --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_ScriptPlayer.html">ScriptPlayer</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_Elevator.py.html">Elevator</a></td><td valign="top" align="left">
+<p>Elevator object --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Transceiver.html">Transceiver</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_ScriptPlayer.py.html">ScriptPlayer</a></td><td valign="top" align="left">
+<p>ScriptPlayer: executes a script.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Vehicle.html">Vehicle</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_Transceiver.py.html">Transceiver</a></td><td valign="top" align="left">
+<p>Transceiver when on, transmits to all others what it hears.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="gadgets.py_Window.html">Window</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="gadgets_Vehicle.py.html">Vehicle</a></td><td valign="top" align="left">
+<p>Vehicle (car, boat etc).</p>
+</td></tr>
+<tr><td valign="top" align="left"><a href="gadgets_Window.py.html">Window</a></td><td valign="top" align="left">
+<p>Object with a view returned by GetDesc. --</p>
 </td></tr>
 </table>
 </td></tr>
-        </td>
-        </tr>
-        </table>
-        
+</td></tr>
+</table>
+
         </td>
         </tr>
         </table>
@@ -116,9 +123,11 @@ import <a href="http://www.python.org/doc/current/lib/module-whrandom.html">whra
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
 
-        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
-        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
-
+        <font size="-2"><i>This document was automatically generated
+        on Fri May 10 17:18:29 2002 by
+        <a href="http://happydoc.sourceforge.net">HappyDoc</a> version
+        2.0.1</i></font>
+        
         </body>
         </html>
         

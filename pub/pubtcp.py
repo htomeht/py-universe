@@ -5,6 +5,14 @@
 #
 #	Use this module with:  import pubtcp
 #
+#
+#	2002-5/10:
+#		Terry Hancock
+#		I'm not going to support this, because:
+#		1) It's probably been superceded by JJS's MUD project
+#		2) I'm not planning on using it, since I'm more interested
+#		in adding AI players.
+#
 #----------------------------------------------------------------------
 
 # standard modules

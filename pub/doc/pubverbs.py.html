@@ -1,10 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html40/loose.dtd">
+
 <html>
+         
+  <head>
+    <title>Module: pubverbs</title>
+  </head>
 
-        <head>
-        <title>Module: pubverbs</title>
-        </head>
-
-        <body bgcolor="#ffffff">
+  <body bgcolor="#ffffff">
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
         
@@ -15,17 +18,15 @@
                 align="left"
                 width="10%"><font color="#000000">Module: pubverbs</font>
             </th>
-            <th align="right"><font color="#000000">pubverbs.py</font></th>
+            <th width="90%" align="right"><font color="#000000">pubverbs.py</font></th>
         </tr>
         <tr>
         <td>
-        <p>
-<TABLE BORDER=1 CELLPADDING=2>
-</TABLE></p>
+        
+<p>Defines the basic classes of verbs understood by the game. More
+verbs are interpreted via synonyms to these.</p>
+<table border="0" cellpadding="5" cellspacing="0" width="100%">
 
-        
-        <table border="0" cellpadding="5" cellspacing="0" width="100%%">
-        
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -40,6 +41,7 @@
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
@@ -47,12 +49,12 @@
         <tr>
         <td>
         
-import <a href="pub.py.html">pub</a><br>
-import <a href="pubcore.py.html">pubcore</a><br>
-from <a href="pubcore.py.html">pubcore</a> import *<br>
-import <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
+<b>import</b> <a href="pub.py.html">pub</a><br>
+<b>from</b> <a href="pubcore.py.html">pubcore</a> <b>import</b> *<br>
+<b>import</b> <a href="http://www.python.org/doc/current/lib/module-string.html">string</a><br>
 
 </td></tr>
+
         <tr>
             <th bgcolor="#99ccff"
                 rowspan="2"
@@ -67,72 +69,98 @@ import <a href="http://www.python.org/doc/current/lib/module-string.html">string
             <th bgcolor="#99ccff"
                 valign="top"
                 align="left"
+                width="80%"
                 >
                 <font color="#000000">&nbsp;</font>
             </th>
         </tr>
         <tr>
         <td>
-        <table border="0" cellpadding="5">
-<tr><td valign="top" align="left"><a href="pubverbs.py_DbgContents.html">DbgContents</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+        
+<table border="0" cellpadding="3" cellspacing="0">
+<tr><td valign="top" align="left"><a href="pubverbs_DbgContents.py.html">DbgContents</a></td><td valign="top" align="left">
+<p>@contents: Print all contents of an object.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_DbgExamine.html">DbgExamine</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_DefVerb.html">DefVerb</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Drop.html">Drop</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_DbgExamine.py.html">DbgExamine</a></td><td valign="top" align="left">
+<p>@Examine: Print all attributes of an object.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Follow.html">Follow</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_DefVerb.py.html">DefVerb</a></td><td valign="top" align="left">
+<p>Call verb defined by defcmd of an object --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Get.html">Get</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Drop.py.html">Drop</a></td><td valign="top" align="left">
+<p>Place on object into the Actor's Container.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Give.html">Give</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Follow.py.html">Follow</a></td><td valign="top" align="left">
+<p>Follow another Actor --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Inventory.html">Inventory</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Get.py.html">Get</a></td><td valign="top" align="left">
+<p>Get an object into your grubby little hands.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Look.html">Look</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Give.py.html">Give</a></td><td valign="top" align="left">
+<p>Give something to someone else</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Off.html">Off</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Inventory.py.html">Inventory</a></td><td valign="top" align="left">
+<p>Get the inventory (of the player) --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_On.html">On</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Look.py.html">Look</a></td><td valign="top" align="left">
+<p>Look (get description from an object) --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Put.html">Put</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Off.py.html">Off</a></td><td valign="top" align="left">
+<p>Turn OFF --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Quit.html">Quit</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Restore.html">Restore</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_On.py.html">On</a></td><td valign="top" align="left">
+<p>Turn ON --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Save.html">Save</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Put.py.html">Put</a></td><td valign="top" align="left">
+<p>Put something into something else.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Say.html">Say</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_SetBreak.html">SetBreak</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Social.html">Social</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Toggle.html">Toggle</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Quit.py.html">Quit</a></td><td valign="top" align="left">
+<p>Quit the game --</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Transitive.html">Transitive</a></td><td valign="top" align="left"></td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Use.html">Use</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Restore.py.html">Restore</a></td><td valign="top" align="left">
+<p>Restore the game from disk.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_VerbsVerb.html">VerbsVerb</a></td><td valign="top" align="left"><p>----------------------------------------------------------------------</p>
-
+<tr><td valign="top" align="left"><a href="pubverbs_Save.py.html">Save</a></td><td valign="top" align="left">
+<p>Save the game to disk.</p>
 </td></tr>
-<tr><td valign="top" align="left"><a href="pubverbs.py_Wait.html">Wait</a></td><td valign="top" align="left"></td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Say.py.html">Say</a></td><td valign="top" align="left">
+<dl>
+<dt>Say</dt>
+<dd>send information to Tell methods --</dd>
+</dl>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_SetBreak.py.html">SetBreak</a></td><td valign="top" align="left">
+<p>@break: sets line breaks, or turns them off.</p>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Social.py.html">Social</a></td><td valign="top" align="left">
+<dl>
+<dt>Social verb class</dt>
+<dd>little effect on topology</dd>
+</dl>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Toggle.py.html">Toggle</a></td><td valign="top" align="left">
+<p>Toggle ON/OFF --</p>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Transitive.py.html">Transitive</a></td><td valign="top" align="left">
+<dl>
+<dt>Transitive verbs</dt>
+<dd>require direct objects.</dd>
+</dl>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Use.py.html">Use</a></td><td valign="top" align="left">
+<p>Call the Use(byWhom) method of the object</p>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_VerbsVerb.py.html">VerbsVerb</a></td><td valign="top" align="left">
+<p>verbs:  print all known verbs</p>
+</td></tr>
+<tr><td valign="top" align="left"><a href="pubverbs_Wait.py.html">Wait</a></td><td valign="top" align="left">
+<p>Wait (by default, 5 minutes)</p>
+</td></tr>
 </table>
 </td></tr>
-        </td>
-        </tr>
-        </table>
-        
+</td></tr>
+</table>
+
         </td>
         </tr>
         </table>
@@ -141,9 +169,11 @@ import <a href="http://www.python.org/doc/current/lib/module-string.html">string
 
         <p><i><a href="index.html">Table of Contents</a></i></p>
 
-        <i>This document was automatically generated on Thu Jan 18 13:39:00 2001
-        by <a href="http://happydoc.sourceforge.net">HappyDoc</a> version r0_9</i>
-
+        <font size="-2"><i>This document was automatically generated
+        on Fri May 10 17:18:29 2002 by
+        <a href="http://happydoc.sourceforge.net">HappyDoc</a> version
+        2.0.1</i></font>
+        
         </body>
         </html>
         

@@ -7,6 +7,23 @@
 #	Use this module with:
 #	from pubcore import *
 #
+#	2002-5/10:
+#	Terry Hancock
+#		Added doc strings based on comments/code.
+"""
+
+Includes Scheduler, Event, Command, Parser, Verb, and BaseThing (=Noun?)
+
+Also a number of utility functions. I'm a little
+disturbed by things like "cap" which simply call
+Python library functions -- not sure that we need
+such a wrapper, as it likely increases the learning
+curve for working with the code. (?)  On the other
+hand, if used frequently enough, it might clarify
+the code. If so, we need to add comments to define
+what these things do.
+"""
+#
 #----------------------------------------------------------------------
 
 # import standard Python modules needed by the functions below
@@ -79,6 +96,9 @@ def stripPunctuation(x):
 
 # function to save the game
 def savegame(filename='pub.dat'):
+	"""
+	Save the game.
+	"""
 	import sys
 	import pub
 	import pubverbs
@@ -91,6 +111,9 @@ def savegame(filename='pub.dat'):
 
 # function to restore the game
 def restoregame(filename='pub.dat'):
+	"""
+	Restore a game.
+	"""
 	import sys
 	import pub
 	import pubverbs
@@ -105,6 +128,13 @@ def restoregame(filename='pub.dat'):
 # event -- a class which keeps something to be executed in the future
 #
 class Event:
+	"""
+	Event:
+		a class which keeps something to be executed in the future
+
+		Basically you load code into it. If 'Perform'ed, it
+		executes the code.
+	"""
 
 	# initialization method
 	def __init__(self,pObject=None,pCode=None,pCmd=None):
@@ -132,7 +162,15 @@ class Event:
 # scheduler -- keeps track of the world clock, calls events, etc.
 #
 class Scheduler:
+	"""
+	Scheduler:
+		keeps track of the world clock, calls events, etc.
+		
+		Basically, it controls 'Event's.
 
+		Appears to work on a realtime model, not sure how
+		turns figure in.
+	"""
 	# initialization method
 	def __init__(self,pTimeString='12:00'):
 		timeparts = string.split(pTimeString,':')
@@ -190,6 +228,16 @@ class Scheduler:
 #	Command -- stores references for variarious parts of a command
 #
 class Command:
+	"""
+	Command:
+		stores references for various parts of a command
+
+		Basically, this is the object that gets passed back
+		and forth by objects (mainly actors?).  Parsed tokens?
+		Seems to understand parts of speech in some way.
+
+		Not sure about details.
+	"""
 
 	def __init__(self):
 		self.Clear()
@@ -271,6 +319,10 @@ class Command:
 #	Parser -- breaks a string into a command or set of commands
 #
 class Parser:
+	"""
+	Parser:
+		breaks a string into a command or set of commands
+	"""
 
 	def __init__(self):
 		self.words = []
@@ -510,6 +562,11 @@ class Parser:
 #----------------------------------------------------------------------
 # add a verb or list of verbs, singly, as a list, or separated with commas
 def AddVerb( *pVerbs ):
+	"""
+	AddVerb:
+		add a verb or list of verbs, singly, as a list, or 
+		separated with commas
+	"""
 	for item in pVerbs:
 		if type(item) == types.StringType:
 			if item not in verbs: verbs.append(item)
@@ -532,6 +589,12 @@ translations = {}
 # Verb -- base class of any Verb object
 #
 class Verb:
+	"""
+	Verb:
+		base class of any Verb object
+		Verbs have various methods which are involved in
+		executing them -- checking possibilities, etc.
+	"""
 
 	def __init__(self,pNames=''):
 		self.synonyms = string.split(string.lower(pNames),',')
@@ -625,6 +688,11 @@ class Verb:
 # BaseThing -- base class of any noun in the game
 #
 class BaseThing:
+	"""
+	BaseThing:
+		base class of any noun in the game
+		(why not 'Noun'?)
+	"""
         
 	# initialization method
 	def __init__(self,pName=''):
