@@ -654,17 +654,13 @@ class Verb:
     def Begin(self,cmd):		# handle the command
     	# do pre-checks; see if the command will even work
     	if self.DoPrechecks(cmd) == CANCEL: return CANCEL
-    	
     	# finish executing the command
     	self.Finish(cmd)
-
     	# make the actor pause appropriately before next comman
     	delay = self.GetDuration(cmd)
-
     	if cmd.actor.busytill > pub.scheduler.minutes:
     		cmd.actor.busytill = cmd.actor.busytill + delay
     	else:	cmd.actor.busytill = pub.scheduler.minutes + delay
-
     	return OK
 
     def Finish(self,cmd):		# execute and output the event
@@ -814,6 +810,11 @@ class BaseThing:
     	return OK
     
     def MoveTo(self, pWhere):
+	if pWhere == 'TRASH': # Let's delete things, used mainly for eat drink 
+	    if self.container: 
+	        self.container.contents.remove(self)
+	        del self
+	        return CANCEL 
     	if not pWhere.CanContain(self) \
     	or not self.PreMove():
     		return CANCEL

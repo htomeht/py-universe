@@ -15,6 +15,7 @@ Thing = pubobjs.Thing
 NPC = pubobjs.NPC
 
 pub.scheduler = Scheduler("12:00")		# start the clock!
+#pub.universe.canContainLiquid = TRUE
 
 #----------------------------------------------------------------------
 #	Create some objects
@@ -26,10 +27,17 @@ square.desc = 'You are in the center of town.  A "Gadget Shop" lies to \
 the west, and the street runs north and south.  Wilderness lies to the east.'
 
 square.ContainNoCheck(pub.player)
+pub.player.hunger = 2
+pub.player.thirst = 2
 
 Bert = NPC("Bert,Herbert")
 Bert.desc = "He's just a nondescript, ordinary-looking guy.  (But he just \
 might give you a sack if you tell him to.)"
+
+banana = pubobjs.Edible('banana')
+banana.poison = 'neural'
+
+
 
 bag = pubobjs.Container("bag,sack")
 bag.size = 30
@@ -56,7 +64,7 @@ barrel.desc = "A large wooden barrel has been set at the end of the street."
 barrel.canContainLiquid = TRUE
 barrel.size = 30
 
-water = pubobjs.Liquid("water,H2O")
+water = pubobjs.Drinkable("water,H2O")
 water.size = 5
 barrel.ContainNoCheck(water)
 
@@ -234,6 +242,8 @@ sewermain_u.light = 5
 #----------------------------------------------------------------------
 #	Run the game
 #
+
+
 pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
 pub.scheduler.AddEvent( 0, Event(pub.player, 'object.Act()') )

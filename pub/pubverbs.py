@@ -10,6 +10,7 @@ Defines the basic classes of verbs understood by the game. More
 verbs are interpreted via synonyms to these.
 """
 
+import code, sys
 import string
 
 import pub
@@ -635,6 +636,82 @@ class Say(Verb):
 say = Say('say,speak,talk')        # instantiate it
 
 #----------------------------------------------------------------------
+# eat -- used to... well eat stuff =)
+#
+
+class Eat(Verb):
+
+    """
+    Used to eat things. It is possible to make hunger and food have an effect
+    on a game even though at this time it's only a matter of numbers.
+
+    It should be up to the author what happens. 
+    You can essentially be poisoned by food but haven't added the code for it.
+    """
+    
+    def __init__(self,pNames=''):
+        Verb.__init__(self,pNames)
+        self.fail = "You can't eat <a dirobj>."
+	self.succ = "You eat <the dirobj>."
+        self.seefail = "What should I eat?."
+	
+    def Begin(self,cmd):
+	if not cmd.dirobj or not isInstance(cmd.dirobj):
+	    cmd.actor.Tell(self.seefail)
+	    return CANCEL
+	if not hasattr(cmd.dirobj, 'edible'): 
+	    cmd.Tell(self.fail)
+	    return CANCEL
+        if not cmd.dirobj.edible:
+	    cmd.Tell(self.fail)
+	    return CANCEL
+        if cmd.dirobj.container == cmd.actor: cmd.Tell(self.succ)
+        return Verb.Begin(self,cmd)
+    
+    def Finish(self,cmd):
+	cmd.dirobj.MoveTo('TRASH') # delete the object
+        return Verb.Finish(self,cmd)
+    
+eat = Eat('eat')
+
+#---------------------------------------------------------------------
+# drink -- verb for drinking. No! Really!
+#
+
+class Drink(Verb):
+    """
+    Drink -- Checks if an object can be drunk and then executes.
+    Quenching thirst at this time does nothing. 
+    The actor doesn't get thirstier even right now.
+
+    This is up to the author to play with for now.
+    """
+
+    def __init__(self,pNames=''):
+        Verb.__init__(self,pNames)
+	self.fail = "You can't drink <a dirobj>."
+	self.succ = "You drink <the dirobj>."
+        self.seefail = "You can't see any <dirobj> here."
+
+    def Begin(self,cmd):
+        if not cmd.dirobj or not isInstance(cmd.dirobj):
+            cmd.actor.Tell(self.seefail)
+            return CANCEL
+        if not hasattr(cmd.dirobj, 'drinkable'):
+            cmd.Tell(self.fail)
+	    return CANCEL
+        if not cmd.dirobj.drinkable:
+            cmd.Tell(self.fail)
+            return CANCEL
+        if cmd.dirobj.container == cmd.actor: cmd.Tell(self.succ)
+        return Verb.Begin(self,cmd)
+
+    def Finish(self,cmd):
+	cmd.dirobj.MoveTo('TRASH') # delete the object
+        return Verb.Finish(self,cmd)
+	
+drink = Drink('drink')
+#----------------------------------------------------------------------
 # @break -- sets line breaks, or turns them off
 #
 
@@ -756,3 +833,15 @@ class Restore(Verb):
 
 restore = Restore('restore')
 
+
+class Script(Verb):
+
+    def __init__(self,pNames=''):
+        Verb.__init__(self,pNames)
+
+    def Finish(self,cmd):
+        if self.DoPostchecks(cmd) == CANCEL: return OK
+	code.interact(banner='', local=sys.modules['__main__'].__dict__)
+	return OK
+
+script = Script('@script,@code')

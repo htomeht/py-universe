@@ -18,7 +18,7 @@ Also instantiates the "Universe" Room and the Player, named "Everyman"
 """
 
 # standard modules
-import whrandom
+import random
 import string
 import types
 import re
@@ -340,6 +340,9 @@ class Room(Container):
             isDark = FALSE
             out = '\n' + self.GetName() + '\n'
             out = out + Thing.GetDesc(self) + '\n'
+	if self.initialDesc:
+	    self.initialDesc = ''
+	    return out + '\n'
         for item in self.contents:
             if item != pLooker and (not pLooker or pLooker.CanSee(item)) and \
             (item.salient or (isDark and item.light>5)):
@@ -501,7 +504,9 @@ class Actor(Container):
         self.following = None    # whom we're following
         self.the = ''            # no article for Actors
         self.note = self(The) + " is here."
-
+        self.hunger = 0 # How hungry we are.
+        self.thirst = 0 # How thirsty we are
+	
     def GetName(self,article=0,pLooker=None):
         """
         Get the actor's name. --
@@ -1085,7 +1090,7 @@ class NPC(Actor):
         #print "@", pSpeaker, ' speaking to ', pSpeaker.speakingTo
         
         # if not speaking to me, then maybe ignore it
-        if pSpeaker.speakingTo != self and whrandom.randint(0,1): return
+        if pSpeaker.speakingTo != self and random.randint(0,1): return
         
         words = string.split( stripPunctuation(pSpeech) )
         if not words: return
@@ -1116,7 +1121,7 @@ class NPC(Actor):
             return self.HearCommand( pSpeaker, string.join(words[w:]) )
             
         # no verbs either?  Give null reply (or nothing at all)
-        if whrandom.randint(0,2): self.Announce( self.noReply )
+        if random.randint(0,2): self.Announce( self.noReply )
 
     def HearCommand(self, pCommander, pCmdStr ):
         """
@@ -1143,13 +1148,129 @@ class NPC(Actor):
         """
         # nothing for now...
         return
+#----------------------------------------------------------------------
+# edible - object that can be eaten.
+#
+class Edible(Thing):
 
+    """
+    Edible -- An object that can be eaten like bananas or lime even.
+        
+	self.edible - If TRUE can be eaten if FALSE can't
+	self.poison  - A string including the name of the poison
+	             can be very differing things not only poisons
+		     You may choose one from this list
+		     - Neural
+		     - Toxic
+		     - Bad - meaning the food has gone bad
+        self.pStrength - The strengt of the poison. 1 for weak 5 for strong
+        self.sates - How satiating the food is.
+    """
+    
+    def __init__(self,pNames=''):
+        Thing.__init__(self,pNames)
+	self.edible = TRUE
+        self.poison = ''
+	self.pStrength = 0
+        self.sates = 1
+	
+    def Poison(self,pPoison,pStrength):
+        """
+	Used to actually do the poisoning. What happens depends on the poison
+	named in self.poison.
+	"""
+
+	poison = cap(pPoison)
+
+	if poison == 'Alchohol': 
+            out = "You're getting drunk"
+	    return out
+	if poison == 'Bad':
+            out = 'The food is truly bad'
+	    return out
+	if poison == 'Neural':
+            out = 'Neural Poisoning'
+	    return out
+	if poison == 'Toxic':
+	    out = 'Toxic'
+            return out
+
+    
+    def PreObj(self,cmd):
+        if cmd.verb == pubverbs.eat and cmd.dirobj == self:
+	    if self.container != cmd.actor:
+	        cmd.Tell("You don't have <the dirobj>.")
+		return CANCEL
+            if not cmd.actor.hunger:
+	        cmd.Tell("You're not hungry.")
+		return CANCEL
+	return Thing.PreObj(self,cmd)
+
+    def PostObj(self,cmd):
+	if cmd.verb == pubverbs.eat and cmd.dirobj == self:
+	    if self.poison: cmd.Tell(self.Poison(self.poison,self.pStrength))
+            if hasattr(cmd.actor, 'hunger'): 
+	        if cmd.actor.hunger > 0:
+                    cmd.actor.hunger = cmd.actor.hunger - self.sates
+	            if cmd.actor.hunger > 0:
+		        cmd.Tell("You feel less hungry.")
+	                return CANCEL
+                    if cmd.actor.hunger == 0:
+		        return cmd.Tell("You feel content.")
+        return Thing.PostObj(self,cmd)
+	    
+#---------------------------------------------------------------------
+# drinkable - an object that you can drink
+#
+class Drinkable(Liquid,Edible):
+    """
+    A class to handle liquids which should be possible to drink.
+    It inherits from Liquid.
+
+    self.drinkable - Says if we can drink it
+    self.quenches - How thirstquenching we are
+    self.poison - see Edible
+    self.pStrength - see Edible
+    """
+
+    def __init__(self,pNames=''):
+        Liquid.__init__(self,pNames)
+	Edible.__init__(self,pNames)
+	self.drinkable = TRUE
+	self.quenches = 1
+	self.sates = 0
+	self.edible = TRUE
+	
+    def PreObj(self,cmd):
+        if cmd.verb == pubverbs.drink and cmd.dirobj == self:
+	    if self.container.container != cmd.actor:
+	        cmd.Tell("You don't have <the dirobj>")
+		return CANCEL
+	    if not cmd.actor.thirst:
+	        cmd.Tell("You're not thirsty")
+		return CANCEL
+	return Liquid.PreObj(self,cmd) and Edible.PreObj(self,cmd)
+	
+    def PostObj(self,cmd):
+        if cmd.verb == pubverbs.drink and cmd.dirobj == self:
+	    if self.poison: cmd.Tell(self.Poison(self.poison,self.pStrength))
+	    if hasattr(cmd.actor, 'thirst'): 
+	        if cmd.actor.thirst > 0:
+	            cmd.actor.thirst = cmd.actor.thirst - self.quenches
+                    if cmd.actor.thirst > 0:
+                        cmd.Tell("You feel less thirsty.")
+                        return CANCEL
+                    if cmd.actor.thirst == 0:
+                        cmd.Tell("You feel refreshed.")
+                        return CANCEL
+        return Liquid.PostObj(self,cmd) and Edible.PostObj(self,cmd)
 #----------------------------------------------------------------------
 #
 # create the two required objects
 #
 
 pub.universe = Room("Universe")
+
 pub.player = Player("Everyman")
 
 #----------------------------------------------------------------------
