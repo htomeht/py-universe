@@ -1,18 +1,16 @@
-
 @contents me
 @con bert 
 @con spam
 @con rock
-
 @examine me
 @ex bert
 @ex spam
 @ex rock
-
 @break 10
 @break
 @break arm
 @break 200
+save
 
 @prompt
 import sys
