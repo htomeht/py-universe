@@ -481,6 +481,7 @@ class StateMachineNPC(pubobjs.NPC):
 		),
 	    'sleeping': (
 		(2, 'wake up', 'normal', 'say "hmm? oh, sorry."'),
+		(0, '', None, 'say "zzzzzzz..."'),
 		),
 	    'bribed': (
 		(2, 'sleep', 'sleeping', 'say "zzz..."'),
