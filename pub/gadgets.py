@@ -490,6 +490,9 @@ class StateMachineNPC(pubobjs.NPC):
 
 	def __init__(self,pNames='',pStates=__sampledef):
 		pubobjs.NPC.__init__(self,pNames)
+		# doesn't make a lot of sense to have a state machine that will just do whatever you say
+		self.obedient = FALSE
+		# initialize the machine
 		self.SetStates(pStates)
 		self.state = 'normal'
 		self.statedesc = {'sleeping': 'sleeping'}
