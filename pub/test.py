@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from os import system
-from os.path import dirname, join as pathjoin, split as pathsplit, abspath
+from os import system, listdir
+from os.path import join as pathjoin, split as pathsplit, dirname, abspath
 from sys import path as pythonpath, argv, exit
 
 #Establish some useful global variables.
@@ -12,7 +12,8 @@ from sys import path as pythonpath, argv, exit
 #relative to that root.
 #
 pubdir = abspath(dirname(argv[0]))
-pythonpath = pathsplit(pubdir)[0]
+PYTHONPATH = pathsplit(pubdir)[0]
+pythonpath.insert(0, PYTHONPATH)
 testdir = pathjoin(pubdir, 'test')
 gamesdir = pathjoin(pubdir, 'games')
 
@@ -22,7 +23,7 @@ def runtest(name, gamepath, makeoutput):
     outputfile = pathjoin(testdir, '%s-output' % name)
     if makeoutput: testfile = outputfile
     else: testfile = pathjoin(testdir, '%s-testout' % name)
-    system('PYTHONPATH=%s PUBTESTING=true python %s <%s >%s' % (pythonpath,
+    system('PYTHONPATH=%s PUBTESTING=true python %s <%s >%s' % (PYTHONPATH,
         gamepath, inputfile, testfile))
     system('rm pub.dat')
     if makeoutput: return
@@ -36,6 +37,20 @@ def runtest(name, gamepath, makeoutput):
 if len(argv)>1: makeoutput = argv[1]=='makeoutput'
 else: makeoutput = False
 
+#First, run the unit tests.
+from unittest import TextTestRunner, TestSuite
+tests = TestSuite()
+for candidate in listdir(testdir):
+    if candidate[:4] == 'test' and candidate[-3:]=='.py':
+        modname = candidate[:-3]
+        testmod = __import__('pub.test.%s' % modname)
+        tests.addTest(getattr(testmod.test,modname).suite)
+TextTestRunner().run(tests)
+
+
+#Now run the integration tests.
+print "Running Integration Tests.  No output is good output:"
+
 #pubdemo test
 pubdemo = pathjoin(pubdir, 'pubdemo.py')
 runtest('pubdemo', pubdemo, makeoutput)
@@ -43,3 +58,6 @@ runtest('pubdemo', pubdemo, makeoutput)
 #Gredgar
 gredgar = pathjoin(gamesdir, 'gredgar.py')
 runtest('gredgar', gredgar, makeoutput)
+
+
+print "\nTesting Complete."
