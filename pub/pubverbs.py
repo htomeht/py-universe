@@ -703,7 +703,7 @@ class Drink(Verb):
         if not cmd.dirobj.drinkable:
             cmd.Tell(self.fail)
             return CANCEL
-        if cmd.dirobj.container == cmd.actor: cmd.Tell(self.succ)
+        if cmd.dirobj.container.container == cmd.actor: cmd.Tell(self.succ)
         return Verb.Begin(self,cmd)
 
     def Finish(self,cmd):
