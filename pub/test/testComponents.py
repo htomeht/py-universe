@@ -15,7 +15,7 @@
 
 # On another note I'm thinking of letting the Command object take a bigger place
 # in evaluation of an action. ALL methods on a component should support (self,
-# chain, cmd) and each object will have to determine how they will use cmd.
+# chain).
 
 from unittest import main, TestCase, TestSuite, MakeSuite
 
@@ -31,12 +31,566 @@ from pub.core import invoke
 
 
 #--------------------------------------------------------------------
-# Unit Tests
+#Listener Tests
+# Here we test components that support listeners.
+# like door supports IOpenL
 
+class TestListener(TestCase):
+    """
+    Main test for listeners.
+    Provides a setup that sets everything we might need for a generic test.
+    """
+
+    def setUp(self):
+        self.obj = pub.objs.Thing()
+
+        self.room = pub.objs.Room()
+        self.actor = pub.objs.Actor()
+
+        self.obj.moveTo(self.room)
+
+        self.cmd = pub.core.Command()
+        self.cmd.actor = self.actor
+
+   #XXX: There should be a few generic tests here that check what happens if the
+   # object doesn't exist, if you can't see it or if the word is unknown to the
+   # engine.
+
+#--------------------------------------------------------------------
+class TestAskL(TestListener):
+    """
+    A testcase for objects that support or have components that support the ask
+    listener.
+    Subclass for objects that support the ask listener.
+    Also provide a topic named "shrubbery".
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.cmd.aboutobj = 'shrubbery'
+        
+    def testAskDone(self):
+        """check that we can ask about things in the topics"""
+
+        self.assert_(invoke(self.obj, IAskL, 'ask', self.cmd, False))
+        
+
+    def testAskFailNoAboutObj(self):
+        """check that not having an aboutobj raises an error"""
+
+        self.cmd.aboutobj = ''
+        try: invoke(self.obj, IAskL, 'ask', self.cmd, False)
+        except pub.errors.ObjError: pass
+        else: self.fail("Expected an ObjError")
+
+
+#--------------------------------------------------------------------
+class TestCloseL(TestListener):
+    """
+    Tests for objects and components that support the ICloseL
+    Subclass for components that support the close listener.
+    Always name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+        
+        self.com.isOpen = True
+        
+    def testCloseDone(self):
+        """check that the component can be closed, given that it is open"""
+        self.assert_(invoke(self.obj, ICloseL, 'close', self.cmd, False) )
+
+    def testCloseFailOpen(self):
+        """check that the test fails if the object is closed"""
+        self.com.isOpen = False
+        try: invoke(self.obj, ICloseL, 'close', self.cmd, False)
+        except pub.errors.StateError: pass
+        else: self.fail("Expected a StateError")
+        
+
+#--------------------------------------------------------------------
+class TestDrinkL(TestListener):
+    """
+    Tests for components that support IDrinkL
+    
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+
+    def testDrinkDone(self):
+        """check that we can drink the object"""
+        self.assert_(invoke(self.obj, IDrinkL, 'drink', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestDropL(TestListener):
+    """
+    Tests for components that support IDropL
+    
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.obj.moveTo(self.actor)
+
+    def testDropDone(self):
+        """check that the object can be dropped under normal circumstances"""
+
+        self.assert_(invoke(self.obj, IDrinkL, 'drink', self.cmd, False) )
+
+    def testDropFailNoInventory(self):
+        """check that you can't drop what you don't have"""
+        self.obj.moveTo(self.actor.getRoom())
+        try: invoke(self.obj, IDropL, 'drop', self.cmd, False)
+        except pub.errors.InventoryError: pass
+        else: self.fail("Expected an InventoryError")
+
+
+#--------------------------------------------------------------------
+class TestEatL(TestListener):
+    """
+    Tests for components that provide IEatL
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+
+    def testEatDone(self):
+        """check that the object can be eaten"""
+
+        self.assert_(invoke(self.obj, IEatL, 'eat', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestExamineL(TestListener):
+    """
+    Tests for components that provide IExamineL
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testExamineDone(self):
+        """check that the object can be examined"""
+
+        self.assert_(invoke(self.obj, IExamineL, 'examine', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestFollowL(TestListener):
+    """
+    Tests for IFollowL components
+    
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        
+    def testFollowDone(self):
+        """check that an object can be followed"""
+        self.assert_(invoke(self.obj, IFollowL, 'follow', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestGetL(TestListener):
+    """
+    Tests for IGetL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testGetDone(self):
+        """checks that you can pick up the object"""
+
+        self.assert_(invoke(self.obj, IGetL, 'get', self.cmd, False) )
+
+    #XXX: Tests for getting to big items, or items that simply won't be able to
+    # pick up.
+
+
+#--------------------------------------------------------------------
+class TestGiveL(self):
+    """
+    Tests for IGiveL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.a2 = pub.objs.Actor()
+        self.cmd.toObj = self.a2
+
+    def testGiveDone(self):
+        """check that we can give away the object"""
+        self.assert_(invoke(self.obj, IGiveL, 'give', self.cmd, False) )
+
+    def testGiveFailNoToObj(self):
+        """check that having no toObj raises an error"""
+        self.cmd.toObj = ''
+        try: invoke(self.obj, IGiveL, 'give', self.cmd, False) 
+        except pub.errors.ToError: pass
+        else: self.fail("Expected a ToError")
+
+
+#--------------------------------------------------------------------
+class TestGoL(TestListener):
+    """
+    Tests for IGoL components 
+
+    Subclass for component testting
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testGoDone(self):
+        """checks that an actor can go the object"""
+
+        self.assert_(invoke(self.obj, IGoL, 'go', self.cmd, False) )
+
+    def testGoFailNoDest(self):
+        """checks that you get an error when the exit doesn't have a room
+        reference"""
+
+        self.obj.dest = None
+
+        try: invoke(self.obj, IGo, 'go', self.cmd, False)
+        except pub.errors.DestinationError: pass
+        else: self.fail('Expected a DestinationError')
+    
+#--------------------------------------------------------------------
+class TestLockL(TestListener):
+    """
+    Tests for ILockL components
+
+    Subclass for component testing
+    name the component self.com
+
+    When subclassing for testing create a keyobject and move it to the actor
+    self.key = pub.objs.Thing()
+    self.key.moveTo(self.actor)
+
+    also make sure the lock knows about the key.
+    self.com.keys = [self.key]
+    
+    """
+
+    #XXX: Add a key
+    
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.com.isLocked = False
+
+    def testLockDone(self):
+        """checks that the object can be locked"""
+        self.assert_(invoke(self.obj, ILockL, 'lock', self.cmd, False) )
+
+    def testLockFailLocked(self):
+        """checks that a locked object returns an error if locked."""
+        self.com.isLocked = True
+
+        try: invoke(self.obj, ILockL, 'lock', self.cmd, False)
+        except pub.errors.StateError: pass
+        else: self.fail("Expected a StateError")
+
+
+#--------------------------------------------------------------------
+class TestILookL(TestListener):
+    """
+    Tests for ILookL components
+    
+    Subclass for component testing
+    name the component self.com.
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testLookDone(self)
+        """check that the object can be looked upon"""
+        
+        self.assert_(invoke(self.obj, ILookL, 'look', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestOpenL(TestListener):
+    """
+    Tests for IOpenL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.com.isOpen = False
+
+    def testOpenDone(self):
+        """checks that the object can be opened"""
+
+        self.assert_(invoke(self.obj, IOpenL, 'open', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestIPullL(TestListener):
+    """
+    Tests for IPullL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testPullDone(self):
+        """checks that the object can be pulled."""
+        self.assert_(invoke(self.obj, IPullL, 'pull', False) )
+
+    #XXX: Tests for making sure you can't pull too heavy objects, or objects
+    # that are in other ways stuck.
+
+    
+#--------------------------------------------------------------------
+class TestPushL(TestListener):
+    """
+    Tests for IPushL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+
+    def testPushDone(self):
+        """checks that the object can be pushed."""
+        self.assert_(invoke(self.obj, IPushL, 'push', False) )
+                        
+    #XXX: Test that check you can't push heavy objects.
+
+#--------------------------------------------------------------------
+class TestPutL(TestListener):
+    """
+    Tests for IPutL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.cont = pub.objs.Container()
+        self.cmd.inobj = self.cont
+        
+    def testPutLDone(self):
+        """checks that you can put the object in another."""
+        self.assert_(invoke(self.obj, IPutL, 'put', False) )
+
+    #XXX: Tests that check you need an indirect object.
+
+
+#--------------------------------------------------------------------
+class TestTalkL(TestListener):
+    """
+    Tests for ITalkL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.actor2 = pub.objs.Actor()
+
+    def testTalkLDone(self):
+        """checks that you can talk"""
+        self.assert_(invoke(self.obj, ITalkL, 'talk', False) )
+
+##XXX: Write tests for talking to objects
+
+
+#--------------------------------------------------------------------
+class TestTellL(TestListener):h
+    """
+    Tests for ITellL components
+
+    Subclass for component testing
+    name the component self.com
+    
+    provide a topic named 'shrubbery' 
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.actor2 = pub.objs.Actor()
+        
+        self.cmd.dirobj = self.actor2
+        self.cmd.aboutobj = 'shrubbery'
+        
+    def testTellDone(self)
+        """checks that you can tell actors about shrubberies"""
+        self.assert_(invoke(self.obj, ITellL, 'tell', self.cmd, False) )
+
+#XXX: Add tests for telling actors to do things
+
+
+#--------------------------------------------------------------------
+class TestReceiveL(TestListener):
+    """
+    Tests for IReceiveL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testReceiveDone(self);
+        """test that you can receive an object."""
+        
+        self.assert_(invoke(self.obj, IReceiveL, 'receive', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestRemoveL(TestListener):
+    """
+    Tests for IRemoveL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testRemoveDone(self):
+        """tests that an object can be removed"""
+
+        self.assert_(invoke(self.obj, IRemoveL, 'remove', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestTurnL(TestListener): 
+    """
+    Tests for ITurnL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testTurnL(self):
+        """check that an object can be turned."""
+
+        self.assert_(invoke(self.obj, ITurnL, 'turn', self.cmd, False) )
+
+
+#--------------------------------------------------------------------
+class TestIUnlockL(TestListener):
+    """
+    Tests for IUnlockL components
+
+    Subclass for component testing
+    name the component self.com
+    
+    When subclassing for testing create a keyobject and move it to the actor
+    self.key = pub.objs.Thing()
+    self.key.moveTo(self.actor)
+
+    also make sure the lock knows about the key.
+    self.com.keys = [self.key]
+    """
+    
+
+    #XXX: Add a key
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+        self.obj.isLocked = True
+
+    def testUnlockLDone(self):
+        """check that an object can be unlocked."""
+
+        self.assert_(invoke(self.obj, IUnlockL, 'unlock', self.cmd, False) )
+
+    def testUnlockFailNotLocked(self):
+        """check that unlocking a not locked object will result in an error"""
+        
+        self.obj.isLocked = False
+
+        try: invoke(self.obj, IUnlockL, 'unlock', self.cmd, False)
+        except pub.errors.StateError: pass
+        else: self.fail("Expected a StateError")
+
+#--------------------------------------------------------------------
+class TestIWearL(TestListener):
+    """
+    Tests for IWearL components
+
+    Subclass for component testing
+    name the component self.com
+    """
+
+    def setUp(self):
+        TestListener.setUp(self)
+
+    def testWearL(self):
+        """check that an object can be worn."""
+
+        self.assert_(invoke(self.obj, IWearL, 'wear', self.cmd, False) )
+
+
+
+#-------------------------------------------------------------------- 
+# Unit Tests
+#  These tests are really not finished, just there for the sake of it.
+#
+#  Bla bla
+#
 class TestICarriable(TestCase):
-    """Test ICarriable:
-        Subclass this class for each component that supports
-        ICarriable.
+    """
+    Test ICarriable:
+    
+    Subclass this class for each component that supports
+    ICarriable.
     """
 
     def setUp(self):
@@ -53,7 +607,7 @@ class TestICarriable(TestCase):
         """check that you are able to pick up an object."""
         self.obj.moveTo(self.room)
         #Test it
-        self._assert(invoke(self.obj, ICarriable, 'get', self.cmd) == True)
+        self.assert_(invoke(self.obj, ICarriable, 'get', self.cmd) )
         
     
     def testGetFailSize(self):
@@ -68,7 +622,7 @@ class TestICarriable(TestCase):
         """check that you can put the object into your own container."""
         self.obj.moveTo(self.actor)
         #Test it
-        self._assert(invoke(self.obj, ICarriable, 'drop', self.cmd) == True)
+        self.assert_(invoke(self.obj, ICarriable, 'drop', self.cmd) )
 
     def testDropFailNotHave(self):
         """check that you need to have the object in your inventory"""
@@ -85,7 +639,7 @@ class TestICarriable(TestCase):
         self.actor2.moveTo(self.room)
         self.cmd.dirobj = self.actor2
         #Test it
-        self._assert(invoke(self.obj, ICarriable, 'give', self.cmd) == True)
+        self.assert_(invoke(self.obj, ICarriable, 'give', self.cmd) )
 
 
     def testGiveFailNotHave(self):
@@ -120,13 +674,12 @@ class TestIContainer(TestCase):
         
     def testCanContain(self):
         """check that the container can contain the direct object"""
-        self._assert(invoke(self.obj, IContainer, 'canContain', self.cmd)
-        == True)
+        self.assert_(invoke(self.obj, IContainer, 'canContain', self.cmd) )
 
     def testContainNoCheck(self):
         """move direct object into container"""
-        self._assert(invoke(self.obj, IContainer, 'containNoCheck', self.cmd) 
-        == True)
+        self.assert_(invoke(self.obj, IContainer, 'containNoCheck', self.cmd) 
+        )
 
     def testGetContentsDesc(self):
         pass
@@ -137,7 +690,7 @@ class TestIContainer(TestCase):
     def testPutDone(self):
         """check that you can put an object somewhere."""
         self.cmd.dirobj = self.normObj
-        self._assert(invoke(self.obj, IContainer, 'put', self.cmd) == True)
+        self.assert_(invoke(self.obj, IContainer, 'put', self.cmd) )
 
     def testPutFailOnSelf(self):
         """check that you can't put an object into itself."""
@@ -150,61 +703,6 @@ class TestIContainer(TestCase):
         self.cmd.dirobj = actor1
         try: invoke(self.obj, IContainer, 'put', self.cmd, False)
         except pub.errors.SizeError
-
-        
-#--------------------------------------------------------------------
-class TestIEdible(TestCase):
-    """Test IEdible"""
-    def setUp(self):
-        self.obj = pub.objs.Thing()
-
-        self.room = pub.objs.Room()
-        self.actor = pub.objs.Actor()
-        self.actor.moveTo(self.room)
-        
-        self.cmd = pub.core.Command()
-        self.cmd.actor = self.actor
-
-    def testEatDone(self):
-        """check that an object can be eaten."""
-        self.obj.moveTo(self.actor)
-        self._assert(invoke(self.obj, IEdible, 'eat', self.cmd, False)
-        == True)
-
-    def testDrinkDone(self):
-        """check that the object can be drunk"""
-        self.obj.moveTo(self.actor)
-        self._assert(invoke(self.obj, IEdible, 'drink', self.cmd, False) 
-        == True)
-
-
-
-#--------------------------------------------------------------------
-class TestIEnterable(TestCase):
-    """
-    Test IEnterable Components
-
-    Needs to have another room into which the object connects.
-    """
-
-    def setUp(self):
-        self.obj = pub.objs.Thing()
-        
-        self.room = pub.objs.Room()
-        self.actor = pub.objs.Actor()
-        self.actor.moveTo(self.room)
-        
-        self.cmd = pub.core.Command()
-        self.cmd.actor = self.actor
-        
-    def testGoDone(self):
-        """check that we can enter the object"""
-        self._assert(invoke(self.obj, IEnterable, 'go', self.cmd, False) 
-        == True)
-
-    def testGoFailClosed:
-        """check that you can't pass through a closed door"""
-        pass
 
 
 #--------------------------------------------------------------------
@@ -235,8 +733,7 @@ class TestILockable(TestCase):
     def testLockDone(self):
         """check that you can lock the obj"""
         invoke(self.obj, ILockable, 'unlock')
-        self._assert(invoke(self.obj, ILockable, 'lock', self.cmd, False) 
-        == True)
+        self.assert_(invoke(self.obj, ILockable, 'lock', self.cmd, False) )
 
     def testLockFailNoKey(self):
         """check that not having the key returns an error"""
@@ -254,8 +751,7 @@ class TestILockable(TestCase):
     def testUnlockDone(self):
         """check that the object can be unlocked"""
         invoke(self.obj, ILockable, 'lock')
-        self._assert(invoke(self.obj, ILockable, 'unlock', self.cmd, False) 
-        == True)
+        self.assert_(invoke(self.obj, ILockable, 'unlock', self.cmd, False) )
             
     def testUnlockFailNoKey(self):
         """check that not having the key returns an error"""
@@ -270,29 +766,6 @@ class TestILockable(TestCase):
         try: invoke(self.obj, ILockable, 'unlock', self.cmd, False)
         except pub.errors.StateError: pass
 
-
-#--------------------------------------------------------------------
-class TestIMobile(TestCase):
-    """
-    Test IMobile
-    
-    Just a frame as of yet
-    """
-
-    def setUp(self):
-        self.obj = pub.objs.Thing()
-        self.obj.addComponents([pub.components.Mobile]
-        self.actor = pub.objs.Actor()
-        
-        self.cmd = pub.core.Command()
-
-    def testFollowDone(self):
-        self.cmd.actor = self.actor
-        self._assert(invoke(self.obj, IMobile, 'follow', self.cmd, False) 
-        == True)
-
-    def testFollowFailNoTarget(self):
-        pass                        
 
 #---------------------------------------------------------------------
 class TestIOpenable(TestCase):
@@ -311,8 +784,7 @@ class TestIOpenable(TestCase):
 
     def testOpenDone(self):
         invoke(self.obj, IOpenable, 'close') # No cmdObject
-        self._assert(invoke(self.obj, IOpenable, 'open', self.cmd, False)
-        == True)
+        self.assert_(invoke(self.obj, IOpenable, 'open', self.cmd, False) )
 
     def testOpenFailOpen(self):
         invoke(self.obj, IOpenable, 'open') # No cmdObject
@@ -322,8 +794,7 @@ class TestIOpenable(TestCase):
     
     def testCloseDone(self):
         invoke(self.obj, IOpenable, 'open')
-        self._assert(invoke(self.obj, IOpenable, 'close', self.cmd, False)
-        == True)
+        self.assert_(invoke(self.obj, IOpenable, 'close', self.cmd, False) )
 
     def testCloseFailClosed(self):
         invoke(self.obj, IOpenablel, 'close') # No cmdObject
@@ -360,8 +831,7 @@ class TestISentience(TestCase):
         pass
     
     def testReceiveDone(self):
-        self._assert(invoke(self.obj, ISentience, 'receive', self.cmd, False)
-        == True)
+        self.assert_(invoke(self.obj, ISentience, 'receive', self.cmd, False) )
 
     def testTalkDone(self):
         pass
@@ -370,37 +840,3 @@ class TestISentience(TestCase):
         pass
 
 
-
-
-#---------------------------------------------------------------------
-class TestISwitchable(TestCase):
-    """Test ISwitchable"""
-
-    def setUp(self):
-        self.obj = pub.objs.Thing()
-        
-        self.room = pub.Objs.Room()
-        self.actor = pub.objs.Actor()
-        self.actor.moveTo(self.room)
-
-        self.cmd = pub.core.Command()
-        self.cmd.actor = self.actor
-        
-    def testActivateDone(self):
-        invoke(self.obj, ISwitchable, 'deactivate') 
-        self._assert(invoke(self.obj, ISwitchable, 'activate', self.cmd, False)
-        == True)
-
-    def testActivateFailActive(self):
-        invoke(self.obj, ISwitchable, 'activate') 
-        self._assert(invoke(self.obj, ISwitchable, 'activate', self.cmd, False)
-        == True)
-        
-
-    def testDeActivateDone(self):
-        invoke(self.obj, ISwitchable, 'activate') 
-        self._assert(invoke(self.obj, ISwitchable, 'deactivate', self.cmd, False        ) == True)
-
-    def testDeActivateFailActive(self):
-        invoke(self.obj, ISwitchable, 'deactivate') 
-        self._assert(invoke(self.obj, ISwitchable, 'deactivate', self.cmd, False        ) == True)
