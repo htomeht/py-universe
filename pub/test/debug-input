@@ -1,0 +1,21 @@
+
+@contents me
+@con lamp
+@con spam
+@con pool
+
+@examine me
+@ex lamp
+@ex spam
+@ex pool
+
+@break 10
+@break
+@break arm
+@break 200
+
+@prompt
+import sys
+sys.exit()
+q
+y
