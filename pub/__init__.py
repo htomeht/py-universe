@@ -37,7 +37,7 @@ def Debugging(mode='on'):
 
     Turn if off with pub.Debugging('off')
     """
-    if mode.lower() == 'on'
+    if mode.lower() == 'on':
         if 'pubdebug' not in locals():
             try: import pubdebug
             except: pass
