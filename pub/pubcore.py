@@ -39,6 +39,12 @@ from constants import *
 
 # import the PUB module which declares "global" variables
 import pub
+from interfaces import ISymbol, ILang, IParser
+import adapters
+
+
+# import from peak
+from protocols import adapt, advise
 
 
 cap = string.capitalize # function to capitalize a string
@@ -125,6 +131,95 @@ def restoregame(filename='pub.dat', quiet=FALSE):
     picklemod.restore(f, pubverbs, pub, sys.modules['__main__'])
     f.close()
     if not quiet: print '  Game', filename, 'restored'
+
+#--------------------------------------------------------------------
+# chainLinker -- Used by the component driven object system
+#
+def chainLinker(obj, proto, default=None):
+    """
+    a function that generates a chain
+    used by, for instance invoke to get at all verb methods in an object.
+    we can add more functionality here but it's probably best to keep it to 
+    a minimum.
+    """
+
+    if hasattr(obj, 'components'):
+        for com in obj.components:
+            for adapted in chainLinker(com, proto):
+                yield adapted
+
+    adapted = adapt(obj, proto, None)
+    if adapted is not None:
+        yield adapted
+
+    if default is not None:
+        yield default
+
+#--------------------------------------------------------------------
+# invoke -- used by the component driven object system
+#
+def invoke(obj, proto, meth, cmd=None, output=True):
+    """
+    invoke is used to run methods in an objects components that can be adapted
+    to a interface of choice. It can also be used to generate output based on
+    cmd, or to suppress it.
+
+    Note: invoke is only use for verb methods. If you want to access other
+    methods in other ways use chainLinker or other functions that might be
+    provided.
+
+    calling invoke without a cmd gives different responses depending on the
+    actuall method called. All methods should be able to handle None as value.
+    Mostly it will result in either an error or immediate execution.
+    like: invoke(door, IOpen, 'open') will try to set the doors state to isOpen
+    and just let everyone know that the door was opened.    
+    """
+    chain = chainLinker(obj, proto) # link a chain of methods in components 
+    try: first = chain.next()
+    except StopIteration: raise AttributeError, "Attribute can't be found"
+    # The method can't be found on the object, return an error
+    
+    try: getattr(first,meth)(chain,cmd)
+    except StopIteration: 
+        #  Currently checks for the end of the chain and says what next to do.
+        # This way puts the heavy load on writing a good Command.
+        # Also it expects that all methods know what they are doing with cmd.
+        if not output: return
+        else: 
+            cmd.tell()
+            return True # Tells the command it has finished processing
+                        # and that it was succesfull.
+    
+
+#--------------------------------------------------------------------
+# find -- used by the component driven object system
+#
+def find(obj,proto,default=None):
+    """
+    minimal interface to chainLinker that simply finds out if an object has a
+    component that matches the protocol and returns it. If there are more or
+    less than one an error is raised.
+    """
+
+    out = chainLinker(obj, proto, default)
+    test = len(list(out))
+
+    if test < 1: raise pub.errors.ComponentError, "No such component"
+    if test > 1: raise pub.errors.ComponentError, "Too many components match"
+
+    else: return out.next()
+
+
+def lingo(obj,proto):
+    """
+    lingo is used for instances when we want to find the right language.
+    """
+
+    adapted = adapt(obj, ILang, None)
+    if adapted != None:
+        adapted = adapted.initiate()
+
+    return adapt(adapted, proto, None)
 
 #----------------------------------------------------------------------
 # event -- a class which keeps something to be executed in the future
@@ -398,6 +493,7 @@ class Parser:
             breaks a string into a command or set of commands
     """
 
+    
     def __init__(self):
         self.words = []
         self.cmd = Command()
@@ -1008,4 +1104,87 @@ class BaseThing:
         self.PostMove()
         return OK
                     
+
 #----------------------------------------------------------------------
+# Symbol -- Base class for nouns and components -- used by the
+#           component based object system
+#
+class Symbol:
+    """
+    Symbol:
+        Base class of componets and nouns/things.
+        It contains methods and variables to handle components 
+        mostly.
+    """
+
+    advise(instancesProvide=[ISymbol])
+
+    def __init__(self):
+        
+        self._components = [] # PRIVATE variable
+                              # a list of classes or instances
+                              # that should be added to the object when
+                              # initialized.
+
+        self.components = [] # a list that contains references 
+                             # to components after it has been initialized.
+                             # this is the variable that the outside uses.
+        
+        if self._components: self.addComponents(self._components)
+            
+
+    def addComponents(self,com):
+        """
+        method that adds components to the components list.
+        checks three possible ways it can be called, with either a list, a class
+        or an instance. Only when called with an instance does the component get
+        added to the list, in other cases it's converted into an instance and
+        resent to addComponents
+        """
+
+        
+        if type(com) == types.ListType:
+            for each in com: self.addComponents(each)
+
+        if type(com) == types.ClassType: 
+            self.addComponents(com())
+
+        if type(com) == types.InstanceType and isinstance(com, Symbol): 
+            self.components.append(com)
+        
+        else: raise TypeError('%com must be of type List, Class or Instance')
+
+        # there might well be more issues to deal with but this is a start.
+
+    def delComponents(self,com):
+        """
+        Can be called in the same way as addComponents, with a list, class or
+        instance. However dealing with deleting componets is a bit harder.
+        When given a list the list is looped through and calls to delComponents
+        are made.
+        When given a class all classinstances are deleted.
+        When given an instance just that instance is removed.        
+        """
+
+        if type(com) == types.ListType: 
+            for each in com: self.delComponents(each)
+
+        if type(com) == types.ClassType: 
+            delete = []
+            for item in self.components:
+                if item.__class__ == com:
+                    delete.append(item)
+
+            #delete all occurences of the class
+            for item in delete:
+                self.components.remove(item)
+                    
+
+        if type(com) == types.InstanceType: 
+            if com in self.components:
+                self.components.remove(com)
+            
+
+        else: raise TypeError('%com must be  of type List, Class or Instance')
+        
+        #XXX: Not sure about the details here yet. 

@@ -218,5 +218,5 @@ pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
 
 while pub.gameStatus == RUNNING:
 	try: pub.scheduler.Update()
-	except pub.BailOutError: pass
+	except pub.errors.BailOutError: pass
 

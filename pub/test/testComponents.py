@@ -17,11 +17,11 @@
 # in evaluation of an action. ALL methods on a component should support (self,
 # chain).
 
-from unittest import main, TestCase, TestSuite, MakeSuite
+from unittest import main, TestCase, TestSuite, makeSuite
 
 import pub
 
-from pub.core import invoke
+from pub.pubcore import invoke
 
 
 
@@ -232,7 +232,7 @@ class TestGetL(TestListener):
 
 
 #--------------------------------------------------------------------
-class TestGiveL(self):
+class TestGiveL(TestListener):
     """
     Tests for IGiveL components
 
@@ -254,8 +254,8 @@ class TestGiveL(self):
         """check that having no toObj raises an error"""
         self.cmd.toObj = ''
         try: invoke(self.obj, IGiveL, 'give', self.cmd, False) 
-        except pub.errors.ToError: pass
-        else: self.fail("Expected a ToError")
+        except pub.errors.ObjError: pass
+        else: self.fail("Expected an ObjError")
 
 
 #--------------------------------------------------------------------
@@ -334,7 +334,7 @@ class TestILookL(TestListener):
     def setUp(self):
         TestListener.setUp(self)
 
-    def testLookDone(self)
+    def testLookDone(self):
         """check that the object can be looked upon"""
         
         self.assert_(invoke(self.obj, ILookL, 'look', self.cmd, False) )
@@ -443,7 +443,7 @@ class TestTalkL(TestListener):
 
 
 #--------------------------------------------------------------------
-class TestTellL(TestListener):h
+class TestTellL(TestListener):
     """
     Tests for ITellL components
 
@@ -461,7 +461,7 @@ class TestTellL(TestListener):h
         self.cmd.dirobj = self.actor2
         self.cmd.aboutobj = 'shrubbery'
         
-    def testTellDone(self)
+    def testTellDone(self):
         """checks that you can tell actors about shrubberies"""
         self.assert_(invoke(self.obj, ITellL, 'tell', self.cmd, False) )
 
@@ -480,7 +480,7 @@ class TestReceiveL(TestListener):
     def setUp(self):
         TestListener.setUp(self)
 
-    def testReceiveDone(self);
+    def testReceiveDone(self):
         """test that you can receive an object."""
         
         self.assert_(invoke(self.obj, IReceiveL, 'receive', self.cmd, False) )
@@ -696,13 +696,13 @@ class TestIContainer(TestCase):
         """check that you can't put an object into itself."""
         self.cmd.dirobj = self.obj
         try: invoke(self.obj, IContainer, 'put', self.cmd, False)
-        except pub.errors.TargetError
+        except pub.errors.TargetError: pass
 
     def testPutFailWrongSize(self):
         """check that you can't put too big an object in"""
         self.cmd.dirobj = actor1
         try: invoke(self.obj, IContainer, 'put', self.cmd, False)
-        except pub.errors.SizeError
+        except pub.errors.SizeError: pass
 
 
 #--------------------------------------------------------------------
@@ -740,7 +740,7 @@ class TestILockable(TestCase):
         invoke(self.obj, ILockable, 'unlock')
         self.key.moveTo(self.room)
         try: invoke(self.obj, ILockable, 'lock', self.cmd, False)
-        except pub.errors.KeyError: pass
+        except pub.errors.InventoryError: pass
 
     def testLockFailLocked(self):
         """check that you can't lock what is locked"""
@@ -758,7 +758,7 @@ class TestILockable(TestCase):
         invoke(self.obj, ILockable, 'lock')
         self.key.moveTo(self.room)
         try: invoke(self.obj, ILockable, 'unlock', self.cmd, False)
-        except pub.errors.KeyError: pass
+        except pub.errors.InventoryError: pass
 
     def testUnlockFailNotLocked(self):
         """check that you can't unlock what is not locked"""
@@ -799,7 +799,7 @@ class TestIOpenable(TestCase):
     def testCloseFailClosed(self):
         invoke(self.obj, IOpenablel, 'close') # No cmdObject
         try: invoke(self.obj, IOpenable, 'close', self.cmd, False)
-        except pub.errors.StateError
+        except pub.errors.StateError: pass
 
 
 #--------------------------------------------------------------------
@@ -840,3 +840,5 @@ class TestISentience(TestCase):
         pass
 
 
+suitelist = []
+suite =  TestSuite([makeSuite(suite) for suite in suitelist])

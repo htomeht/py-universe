@@ -4,9 +4,10 @@ import pub
 
 class TestDebug(TestCase):
 
+    
     def setUp(self):
         #this is one reason global variables are a bad idea:
-        #  they make unit testing difficult.
+        #they make unit testing difficult.
         reload(pub)
 
     def testDebugOn(self):
@@ -56,6 +57,7 @@ class TestDebug(TestCase):
         self.failIf(pub.debugging)        
 
 
-suite = TestSuite([makeSuite(TestDebug)])
+suitelist = []
+suite = TestSuite([makeSuite(suite) for suite in suitelist])
 
 if __name__ == '__main__': main()

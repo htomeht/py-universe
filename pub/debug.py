@@ -3,6 +3,8 @@
 #  This module contains and defines several functions useful for 
 #  debugging
 
+
+
 """debug
 Includes several in game verbs
 DbgContents, DbgExamine SetBreak and DbgPrompt 
@@ -18,12 +20,12 @@ possible for you to use debugging facilities.
 
 import code, sys
 
-
 import pub
 from constants import OK, CANCEL
 from pubcore import Verb
 import pubverbs 
-#----------------------------------------------------------------------
+
+#--------------------------------------------------------------------
 
 class SetBreak(Verb):
     """
@@ -102,4 +104,3 @@ class DbgPrompt(Verb):
         return OK
 
 pubverbs.dbgPrompt = DbgPrompt('@prompt')
-

@@ -38,12 +38,15 @@ if len(argv)>1: makeoutput = argv[1]=='makeoutput'
 else: makeoutput = False
 
 #First, run the unit tests.
-from unittest import TextTestRunner, TestSuite
+from unittest import TextTestRunner, TestSuite 
 tests = TestSuite()
 for candidate in listdir(testdir):
+    print candidate
     if candidate[:4] == 'test' and candidate[-3:]=='.py':
+        print candidate
         modname = candidate[:-3]
         testmod = __import__('pub.test.%s' % modname)
+        repr(getattr(testmod.test,modname))
         tests.addTest(getattr(testmod.test,modname).suite)
 TextTestRunner().run(tests)
 print

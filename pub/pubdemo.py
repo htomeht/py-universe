@@ -3,12 +3,12 @@
 #   This file demonstrates a few simple objects.
 #
 
-import pub                  # import global variables
-from pubcore import *       # import core datatypes, functions, & constants
-import pubobjs              # import standard object library
-import gadgets              # import wierd & wonderful things
+import pub                      # import global variables
+from pub.pubcore import *       # import core datatypes, functions, & constants
+from pub import pubobjs         # import standard object library
+from pub import gadgets         # import wierd & wonderful things
 
-import debug
+import getopt,sys
 
 # create shortcuts for most common object types
 Room = pubobjs.Room
@@ -242,11 +242,51 @@ sewermain_u.light = 5
 #   Run the game
 #
 
+# print help message
+def usage():
+    print """usage: <game name> [option]
+             
+Options:
+-d, --debug              : set mode to debugging mode.
+-h, --help               : print this help message and exit
+-l, --language           : specify which language to run ie English.
+          """ 
 
-pub.player.Tell(pub.player.container.GetDesc(pub.player))
+def rungame():
+    """Start the engine."""
+    pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
-pub.scheduler.AddEvent( 0, Event(pub.player, 'object.Act()') )
+    pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
 
-while pub.gameStatus == RUNNING:
-    try: pub.scheduler.Update()
-    except pub.BailOutError: pass
+    while pub.gameStatus == RUNNING:
+        try: pub.scheduler.Update()
+        except pub.errors.BailOutError: pass
+
+
+def main():
+    """parse commandline options."""
+    
+    s_args = "dhl:"
+    l_args = ["debug", "help", "language="]
+    
+    try:
+        opts, args = getopt.gnu_getopt(sys.argv[1:],s_args, l_args)
+        
+    except getopt.GetoptError:
+        #print help and exit
+        usage()
+        sys.exit(2)
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit()
+        if o in ("-l", "--language"):
+            import pub
+            pub.language = str(a)
+        if o in ("-d", "--debug"):
+            import pub.debug  
+            pub.debugging = True 
+
+    rungame()
+
+if __name__ == "__main__": main()

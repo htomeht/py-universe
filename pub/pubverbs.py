@@ -768,6 +768,6 @@ class Restore(Verb):
         else: restoregame(file)
         cmd.actor = pub.player
         cmd.actor.DoCommandString("look")
-        raise pub.BailOutError, "Resetting stack to restore game"
+        raise pub.errors.BailOutError, "Resetting stack to restore game"
 
 restore = Restore('restore')

@@ -1,6 +1,6 @@
 #   interfaces.py    contains interfaces for pub/pyuniverse 04/03/24
 #
-#   Copyright (C) 2004 Gabriel Jägenstedt
+#   Copyright (C) 2004 Gabriel Jagenstedt
 #
 #    This library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU Lesser General Public
@@ -46,7 +46,137 @@ these methods.
 
 #protocols imports
 
-from protocols import Interface,advise
+from protocols import Interface, advise
+
+
+#-------------------------------------------------------------------#
+# Language interfaces.
+#
+
+class ILang(Interface):
+    """
+    ILang documents what a language module needs to be accepted as such
+
+    A language module should contain a number of classes that provide certain
+    protocols.
+
+    Classes whose instances provide the following as adapters for ex IEnglish
+
+    IParser
+    ICommand
+    IThing (IDescribable and ISyntax to be exact)
+
+    other language dependent protocols.
+    
+    english.py should provide ILang like: 
+
+    advise(moduleProvides=[ILang])
+
+    as should all other language modules.
+    """
+    
+#--------------------------------------------------------------------
+#
+class IEnglish(Interface):
+    """
+    IEnglish doesn't ask anything of it's users.
+    """
+
+#--------------------------------------------------------------------
+#
+class IParser(Interface):
+    """
+    All IParser providers should provide the Parse() method.
+    """
+    #Actually this should be parse but to maintain funktionality this will
+    #do for now.
+
+    def Parse(pSt): 
+        """
+        method to parse a string and return a functional command.
+        this method does all the calling and such.
+        """
+
+
+#--------------------------------------------------------------------
+#
+class ISymbol(Interface):
+    """
+    Interface for Symbol and classes that need to provide component handling.
+    """
+
+    def addComponents(com):
+        """
+        method that adds components listed in com if of the right type.
+        """
+
+    def delComponents(com):
+        """
+        method that removes components listed in com if it can be found.
+        """
+
+#--------------------------------------------------------------------
+#
+class IThing(Interface):
+    """
+    Interface for Things.
+
+    IThing is a so called marker interface. It doesnt have any methods or
+    attributes. 
+    """
+    advise(protocolExtends=[ISymbol])
+
+
+#-----------------------# THING INTERFACES #------------------------#
+# This Section contains interfaces that might be added to Things, like
+# IDescribable and ILocatable.
+#
+# These interfaces will probably be provided by adapters like so:
+#     class ThingDescribableAdapter:
+#         advise(instancesProvide=[IDescribable], 
+#                asAdapterForProtocols=[IThing]
+# 
+# It should be simple to make new Thing interfaces.
+
+#--------------------------------------------------------------------
+# IDescribable
+class IDescribable(Interface):
+    """
+    Classes that provide IDescribable can be given descriptions and have 
+    methods for evaluating them. IDescribable components are most likely 
+    language specific.
+    """
+
+
+#--------------------------------------------------------------------
+#ILocatable
+class ILocatable(Interface):
+    """
+    Classes that provide ILocatable are used to show where an item is situated
+    and if any items are contained within the obj it's a part of.
+    """
+
+
+#--------------------------------------------------------------------
+#ISyntax
+class ISyntax(Interface):
+    """
+    Classes that provide ISyntax are the base of an objects language related 
+    interface. Providing articles, names for singular, plural and whatever a
+    specific language parser would need. IDescribable components are likely
+    language specific.
+    """
+
+
+#--------------------------------------------------------------------
+#ITangible
+class ITangible(Interface):
+    """
+    Classes that provide ITangible have size and weight and ways to deal with
+    these attributes.
+    """
+
+
 
 #------------------------# VERB LISTENERS #-------------------------#
 # The next Section contains Verb Listener Interfaces

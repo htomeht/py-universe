@@ -13,8 +13,9 @@ gameStatus = 1      # game is RUNNING
 lastroom = None     # last room created; default location for new objects
 universe = None     # room which contains all other rooms
 player = None       # game player (esp. for single-user games)
-debugging = 0       # are we dubugging?  Don't set this, see 'Debugging' below
-dbgverbs = []       # a list of verbs for debugging
+debugging = False   # are we debugging?  Don't set this, see 'Debugging' below
+language = ''       # a string containing a language ie 'English'
+
 
 from pubcore import *           # import core datatypes, functions, & constants
 import pubverbs                 # import standard verbs
@@ -24,34 +25,34 @@ objs = pubobjs
 import gadgets
 import pubtcp
 tcp = pubtcp
+import lang
+import errors
 
-class BailOutError(Exception):  # exception to raise to bail out of current
-    pass                        # stack frame (used when restoring, etc.)
 
-def Debugging(mode='on'):
-    """
-    to enable debugging mode
-    used by putting pub.Debugging() after import pub like so:
-
-        import pub; pub.Debugging()
-
-    in your game file when doing the importing.
-
-    Turn if off with:
-
-        pub.Debugging('off')
-
-    """
-    global debugging
-    if mode.lower() == 'on':
-        if 'pubdebug' not in locals():
-            try: import pubdebug
-            except ImportError: pass
-        debugging = 1
-        print 'Debugging On'
-    if mode.lower() == 'off':
-        try: del pubdebug
-        except NameError: pass
-        #XXX: need to delete debug verbs here, but to do that
-        # we need to add the ability to delete verbs
-        debugging = 0
+#def Debugging(mode='on'):
+#    """
+#    to enable debugging mode
+#    used by putting pub.Debugging() after import pub like so:
+#
+#        import pub; pub.Debugging()
+#
+#    in your game file when doing the importing.
+#
+#    Turn if off with:
+#
+#        pub.Debugging('off')
+#
+#    """
+#    global debugging
+#    if mode.lower() == 'on':
+#        if 'pubdebug' not in locals():
+#            try: import pubdebug
+#            except ImportError: pass
+#        debugging = 1
+#        print 'Debugging On'
+#    if mode.lower() == 'off':
+#        try: del pubdebug
+#        except NameError: pass
+#        #XXX: need to delete debug verbs here, but to do that
+#        # we need to add the ability to delete verbs
+#        debugging = 0
