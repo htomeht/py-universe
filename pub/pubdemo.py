@@ -1,12 +1,12 @@
-#	PUB Demo			8/27/96 JJS
+#   PUB Demo                                                8/27/96 JJS
 #
-#	This file demonstrates a few simple objects.
+#   This file demonstrates a few simple objects.
 #
 
-import pub				# import global variables
-from pubcore import *		# import core datatypes, functions, & constants
-import pubobjs				# import standard object library
-import gadgets				# import wierd & wonderful things
+import pub                  # import global variables
+from pubcore import *       # import core datatypes, functions, & constants
+import pubobjs              # import standard object library
+import gadgets              # import wierd & wonderful things
 
 # create shortcuts for most common object types
 Room = pubobjs.Room
@@ -14,10 +14,10 @@ Exit = pubobjs.Exit
 Thing = pubobjs.Thing
 NPC = pubobjs.NPC
 
-pub.scheduler = Scheduler("12:00")		# start the clock!
+pub.scheduler = Scheduler("12:00")      # start the clock!
 
 #----------------------------------------------------------------------
-#	Create some objects
+#   Create some objects
 #
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -117,10 +117,10 @@ trans2 = gadgets.Transceiver('Transceiver2,trans2,tran2')
 
 guard = gadgets.ScriptPlayer("Guard")
 guard.script = [
-	'DELAY 10', 'DO go north', 'The Guard marches up and down the square.',
-	'DELAY 10', 'DO go north',
-	'DELAY 10', 'DO go south', 'The Guard marches up and down the square.',
-	'DELAY 10', 'DO go south']
+    'DELAY 10', 'DO go north', 'The Guard marches up and down the square.',
+    'DELAY 10', 'DO go north',
+    'DELAY 10', 'DO go south', 'The Guard marches up and down the square.',
+    'DELAY 10', 'DO go south']
 guard.desc = "It's a tall, lean man in a crisp uniform, who has decorated \
 his face with a neatly trimmed mustache and a perpetual scowl."
 
@@ -187,13 +187,13 @@ lamp.onListLine = "a lamp (lit)"
 
 TV = gadgets.ScriptPlayer('TV,telley,television')
 TV.script = [
-	"DELAY 4", 'On the TV, John says "Marsha, Darling, I love you so much!"',
-	'"Don\'t you wish we were married?" says John on the TV.',
-	'DELAY 2',
-	'"But Darling," Marsha replies, "we are!"',
-	'"...or did you mean to each other?"',
-	'DELAY 5', 'The TV takes a commercial break.',
-	'DELAY 5', 'DO say And now back to our program...']
+    "DELAY 4", 'On the TV, John says "Marsha, Darling, I love you so much!"',
+    '"Don\'t you wish we were married?" says John on the TV.',
+    'DELAY 2',
+    '"But Darling," Marsha replies, "we are!"',
+    '"...or did you mean to each other?"',
+    'DELAY 5', 'The TV takes a commercial break.',
+    'DELAY 5', 'DO say And now back to our program...']
 TV.a = 'a'
 
 camera = gadgets.Camera('camera,cam')
@@ -237,7 +237,7 @@ of the manhole.  You can just barely reach it to climb out."
 sewermain_u.light = 5
 
 #----------------------------------------------------------------------
-#	Run the game
+#   Run the game
 #
 
 
@@ -246,5 +246,5 @@ pub.player.Tell(pub.player.container.GetDesc(pub.player))
 pub.scheduler.AddEvent( 0, Event(pub.player, 'object.Act()') )
 
 while pub.gameStatus == RUNNING:
-	try: pub.scheduler.Update()
-	except pub.BailOutError: pass
+    try: pub.scheduler.Update()
+    except pub.BailOutError: pass
