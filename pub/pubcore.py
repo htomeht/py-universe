@@ -1,4 +1,4 @@
-#    pubcore.py			6/01/98 JJS
+#    pubcore.py               6/01/98 JJS
 #
 #    This module defines datatypes used by most other
 #    PUB modules.  You shouldn't mess with this file unless you
@@ -60,20 +60,17 @@ def isInt(x):
     function to determine whether it's a number, or interpretable as one
     """
     try:
-    	string.atoi(x)
-    	return TRUE
-    except:
-    	return type(x) == types.IntType
+       string.atoi(x)
+       return TRUE
+    except: return type(x) == types.IntType
 
 def toInt(x):
     """
     function to force it to be a number
     """
     if type(x) == types.IntType: return x
-    try:
-    	return string.atoi(x)
-    except:
-    	return 0
+    try: return string.atoi(x)
+    except: return 0
 
 
 def stripPunctuation(str):
@@ -97,7 +94,7 @@ def savegame(filename='pub.dat'):
     pub.lastroom = None    # (to prevent auto-placement of objects)
     if os.path.isfile(filename): 
         answer = raw_input('  File exists, do you wish to overwrite it?\
-	Y/y/N/n : ')
+                              Y/y/N/n : ')
         if answer in 'Yy': pass
         else:
             print '  Aborting!'
@@ -117,13 +114,13 @@ def restoregame(filename='pub.dat'):
     import pubverbs
     import picklemod
 
-    pub.lastroom = None		# (to prevent auto-placement of objects)
+    pub.lastroom = None    # (to prevent auto-placement of objects)
     try: 
         f = open(filename, 'r') 
     except:
         print '  Error:', filename, "doesn't exist or is not readable."
-	print '  Aborting!'
-	return CANCEL
+        print '  Aborting!'
+        return CANCEL
     picklemod.restore(f, pubverbs, pub, sys.modules['__main__'])
     f.close()
     print '  Game', filename, 'restored'
@@ -141,31 +138,31 @@ class Event:
     """
 
     def __init__(self,pObject=None,pCode=None,pCmd=None):
-    	if not pObject: return	# must be unpickling
-    	self.object = pObject
-    	self.cmd = copy.copy(pCmd)
-    	self.code = pCode
-#    	print "Event created: " + str(self)
+        if not pObject: return    # must be unpickling
+        self.object = pObject
+        self.cmd = copy.copy(pCmd)
+        self.code = pCode
+#       print "Event created: " + str(self)
 
     def __str__(self):
         """
-	prints an Event and code to be executed, called with str(self)
-	"""
-    	return '< Event: ' + str(self.object) + ',' + str(self.code) + ' >'
+        prints an Event and code to be executed, called with str(self)
+        """
+        return '< Event: ' + str(self.object) + ',' + str(self.code) + ' >'
 
     def Perform(self):
         """
-	execute the code in self.code
-	"""
-#    	print 'Performing: ' + str(self)
-    	object = self.object
-    	cmd = self.cmd
-    	exec self.code
+        execute the code in self.code
+        """
+#       print 'Performing: ' + str(self)
+        object = self.object
+        cmd = self.cmd
+        exec self.code
 
     def RefersTo(self,pWhom):
-    	if self.object == pWhom or \
-    	self.cmd and self.cmd.actor == pWhom: return TRUE
-    	return FALSE
+        if self.object == pWhom or \
+        self.cmd and self.cmd.actor == pWhom: return TRUE
+        return FALSE
 
 #----------------------------------------------------------------------
 # scheduler -- keeps track of the world clock, calls events, etc.
@@ -174,74 +171,79 @@ class Scheduler:
     """
     Scheduler:
         keeps track of the world clock, calls events, etc.
-    	
+        
         Basically, it controls 'Event's.
 
         Appears to work on a realtime model, not sure how
         turns figure in.
 
-        Most actions take 1 minute even though there are exceptions like
-        wait can take up to 15 minutes for example
+        Most actions should take 1 minute 
+        This is not true however, for some reason every time I look at a
+        clock it take 2 minutes. I don't know why.
+        In addition wait can take up to 15 minutes for example
+
+        for some reason it always take an extra minute for an action.
+        could be a problem since we don't have any 12:01, 12:03 and
+        so forth.
     """
     # initialization method
     def __init__(self,pTimeString='12:00'):
-    	timeparts = string.split(pTimeString,':')
-    	self.minutes = string.atoi(timeparts[0])*60 \
-    		     + string.atoi(timeparts[1])
-    	self.events = {}
+        timeparts = string.split(pTimeString,':')
+        self.minutes = string.atoi(timeparts[0])*60 \
+                       + string.atoi(timeparts[1])
+        self.events = {}
     
     def __str__(self):
         """
-	Tells the current time and number of events to be processed
-	Called with str(self)
-	"""
-    	return '< Scheduler at time ' + self.GetTime() \
-    		+ ' and ' + str(len(self.events)) + ' events >'
+        Tells the current time and number of events to be processed
+        Called with str(self)
+        """
+        return '< Scheduler at time ' + self.GetTime() \
+                + ' and ' + str(len(self.events)) + ' events >'
 
     def GetTime(self):
         """
-	Get the time of day
-	"""
-    	day = self.minutes / 1440
-    	hour = (self.minutes%1440) / 60
-    	minute = self.minutes%1440 % 60
-    	if day: return "%d:%02d (Day %s)" % (hour,minute,day)
-    	return "%d:%02d" % (hour,minute)
+        Get the time of day
+        """
+        day = self.minutes / 1440
+        hour = (self.minutes%1440) / 60
+        minute = self.minutes%1440 % 60
+        if day: return "%d:%02d (Day %s)" % (hour,minute,day)
+        return "%d:%02d" % (hour,minute)
 
     def AddAbsEvent(self,pAbsTime,pEvent):
-    	if pAbsTime < self.minutes:
-    		print "WARNING: scheduling event for a past time"
-    		self.minutes = pAbsTime
-    	if self.events.has_key(pAbsTime):
-    		self.events[pAbsTime].append(pEvent)
-    	else:
-    		self.events[pAbsTime] = [pEvent]
+        if pAbsTime < self.minutes:
+            print "WARNING: scheduling event for a past time"
+            self.minutes = pAbsTime
+        if self.events.has_key(pAbsTime):
+            self.events[pAbsTime].append(pEvent)
+        else:
+            self.events[pAbsTime] = [pEvent]
     
     def AddEvent(self,pRelTime,pEvent):
-    	time = self.minutes + pRelTime
-    	if self.events.has_key(time):
-    		self.events[time].append(pEvent)
-    	else:
-    		self.events[time] = [pEvent]
+        time = self.minutes + pRelTime
+        if self.events.has_key(time):
+            self.events[time].append(pEvent)
+        else: self.events[time] = [pEvent]
 
     def Update(self):
         """
-	update the scheduler
-	"""
-    	if not self.events: return
-    	eventkeys = self.events.keys()	# get event times
-    	eventkeys.sort()		# sort them
-    	nexteventkey = eventkeys[0]	# find earliest time
-    	self.minutes = nexteventkey	# update clock
-    	eventlist = self.events[nexteventkey]
-    	del self.events[nexteventkey]	# remove from the queue
-    	for e in eventlist:
+        update the scheduler
+        """
+        if not self.events: return
+        eventkeys = self.events.keys()        # get event times
+        eventkeys.sort()            # sort them
+        nexteventkey = eventkeys[0]        # find earliest time
+        self.minutes = nexteventkey        # update clock
+        eventlist = self.events[nexteventkey]
+        del self.events[nexteventkey]        # remove from the queue
+        for e in eventlist:
             # print '[' + self.GetTime() + '] ',
-            e.Perform()		# perform scheduled events
+            e.Perform()            # perform scheduled events
 
     def HasEventFor(self, pFor):
-    	if not self.events: return FALSE
-    	for eventlist in self.events.values():
+        if not self.events: return FALSE
+        for eventlist in self.events.values():
             if filter(lambda x,a=pFor: x.RefersTo(a), eventlist):
                 return TRUE
         return FALSE
@@ -252,71 +254,71 @@ class Scheduler:
 class Command:
     """
     Command:
-    	stores references for various parts of a command
+            stores references for various parts of a command
 
-    	Basically, this is the object that gets passed back
-    	and forth by objects (mainly actors?).  Parsed tokens?
-    	Seems to understand parts of speech in some way.
+            Basically, this is the object that gets passed back
+            and forth by objects (mainly actors?).  Parsed tokens?
+            Seems to understand parts of speech in some way.
 
-	Used by objects to see what they should do.
-	When an object get's passed a command, it checks for various thing.
-	for example;
-	    if cmd.verb == pubverbs.open:
-	        self.isOpen = TRUE
-		cmd.Tell('You open <the dirobj>.')
+        Used by objects to see what they should do.
+        When an object get's passed a command, it checks for various thing.
+        for example;
+            if cmd.verb == pubverbs.open:
+                self.isOpen = TRUE
+                cmd.Tell('You open <the dirobj>.')
 
-	pubverbs.open returns the name of open which is most likely 'open'
-	and cmd.verb holds the string open, taken from the players input.
-	It is quite simple to use but very efficient.
+        pubverbs.open returns the name of open which is most likely 'open'
+        and cmd.verb holds the string open, taken from the players input.
+        It is quite simple to use but very efficient.
 
-	dirobj is short for direct object
-	inobj is short for indirect object
-	all other objects are what they imply
+        dirobj is short for direct object
+        inobj is short for indirect object
+        all other objects are what they imply
     """
 
     def __init__(self):
-    	self.Clear()
-    	
+            self.Clear()
+
     def Clear(self):
         """
-	clear all references
-	"""
-    	self.actor = ''
-    	self.verb = ''
-    	self.dirobj = ''
-    	self.toobj = ''
-    	self.inobj = ''
-    	self.atobj = ''
-    	self.withobj = ''	
+        clear all references
+        """
+        self.actor = ''
+        self.verb = ''
+        self.dirobj = ''
+        self.toobj = ''
+        self.inobj = ''
+        self.atobj = ''
+        self.withobj = ''    
 
     def __str__(self):
-    	out = '<<'
-    	if (self.actor): out = out + '  Actor: ' + str(self.actor)
-    	if (self.verb): out = out + '  Verb: ' + str(self.verb)
-    	if (self.dirobj): out = out + '  Obj: ' + str(self.dirobj)
-    	if (self.toobj): out = out + '  To: ' + str(self.toobj)
-    	if (self.inobj): out = out + '  In: ' + str(self.inobj)
-    	if (self.atobj): out = out + '  At: ' + str(self.atobj)
-    	if (self.withobj): out = out + '  With: ' + str(self.withobj)
-    	out = out + '  >>'
-    	return out
+        out = '<<'
+        if (self.actor): out = out + '  Actor: ' + str(self.actor)
+        if (self.verb): out = out + '  Verb: ' + str(self.verb)
+        if (self.dirobj): out = out + '  Obj: ' + str(self.dirobj)
+        if (self.toobj): out = out + '  To: ' + str(self.toobj)
+        if (self.inobj): out = out + '  In: ' + str(self.inobj)
+        if (self.atobj): out = out + '  At: ' + str(self.atobj)
+        if (self.withobj): out = out + '  With: ' + str(self.withobj)
+        out = out + '  >>'
+        return out
 
     def StuffString(self,pStr,pFor=None):
         """
-	function to substitute references
-	used mainly in cmd.Tell of objects
+        function to substitute references
+        used mainly in cmd.Tell of objects
 
-	cmd.Tell("I'm a <dirobj>.") will end up printing:
-	I'm a shrubbery. If the dirobj in fact is a shrubbery.
-	"""
-    	if string.find(pStr,'<') < 0 or string.find(pStr,'>') < 0:
-    		return pStr
-    	str = pStr.replace('<actor>',self.actor(0,pFor))
-    	str = str.replace('<Actor>',cap(self.actor(0,pFor)))
-    	str = str.replace('<The actor>',self.actor(The,pFor))
-    	str = str.replace('<the actor>',self.actor(the,pFor))
-    	str = str.replace('<A actor>',self.actor(A,pFor))
-    	str = str.replace('<a actor>',self.actor(a,pFor))
+        cmd.Tell("I'm a <dirobj>.") will end up printing:
+        I'm a shrubbery. If the dirobj in fact is a shrubbery.
+        """
+        if string.find(pStr,'<') < 0 or string.find(pStr,'>') < 0:
+            return pStr
+        str = pStr.replace('<actor>',self.actor(0,pFor))
+        str = str.replace('<Actor>',cap(self.actor(0,pFor)))
+        str = str.replace('<The actor>',self.actor(The,pFor))
+        str = str.replace('<the actor>',self.actor(the,pFor))
+        str = str.replace('<A actor>',self.actor(A,pFor))
+        str = str.replace('<a actor>',self.actor(a,pFor))
 
         if isInstance(self.dirobj):
             str = str.replace('<dirobj>',self.dirobj(0,pFor))
@@ -325,9 +327,9 @@ class Command:
             str = str.replace('<the dirobj>',self.dirobj(the,pFor))
             str = str.replace('<A dirobj>',self.dirobj(A,pFor))
             str = str.replace('<a dirobj>',self.dirobj(a,pFor))
-#    	else: print "dirobj not an instance"
+#           else: print "dirobj not an instance"
 
-    	if isInstance(self.inobj):
+        if isInstance(self.inobj):
             str = str.replace('<inobj>',self.inobj(0,pFor))
             str = str.replace('<Inobj>',cap(self.inobj(0,pFor)))
             str = str.replace('<The inobj>',self.inobj(The,pFor))
@@ -335,7 +337,7 @@ class Command:
             str = str.replace('<A inobj>',self.inobj(A,pFor))
             str = str.replace('<a inobj>',self.inobj(a,pFor))
 
-    	if isInstance(self.toobj):
+        if isInstance(self.toobj):
             str = str.replace('<toobj>',self.toobj(0,pFor))
             str = str.replace('<Toobj>',cap(self.toobj(0,pFor)))
             str = str.replace('<The toobj>',self.toobj(The,pFor))
@@ -343,37 +345,37 @@ class Command:
             str = str.replace('<A toobj>',self.toobj(A,pFor))
             str = str.replace('<a toobj>',self.toobj(a,pFor))
 
-    	str = str.replace('<time>',string.split(pub.scheduler.GetTime())[0])
+        str = str.replace('<time>',string.split(pub.scheduler.GetTime())[0])
 
-    	return str
+        return str
 
     def Tell(self, pToActor='', pToOthers='', pToThird='', pWhoIsThird=None ):
-    	"""
-	The commands Tell Method:
-	    usually called with cmd.Tell from objects
-	    used by objects to tell us what happens to them
-	    
-	    for example:
-	        cmd.Tell(self.succ,self.osucc)
-	    
-	        will print self.succ to the actor and self.osucc to others in 
-		room who are listening.
+        """
+        The commands Tell Method:
+            usually called with cmd.Tell from objects
+            used by objects to tell us what happens to them
+    
+            for example:
+                cmd.Tell(self.succ,self.osucc)
 
-	    curious... only things which we can see, can see what we do. 
-	    rather much a childs point of view =) 
-	    will have to fix this 
-	"""
-	room = self.actor.container
-#    	if hasattr(room,'ComputeTotalLight'): room.ComputeTotalLight()
-    	if pToActor:
-    		self.actor.Tell( self.StuffString(pToActor,self.actor) )
-    	if pToThird and pWhoIsThird.listening:
-    		pWhoIsThird.Tell( self.StuffString(pToThird,pWhoIsThird) )
-    	if pToOthers:
-    		for item in self.actor.LocalNouns():
-    			if item != self.actor and item != self.actor.container \
-    			and item != pWhoIsThird and item.listening:
-    				item.Tell( self.StuffString(pToOthers,item) )
+            will print self.succ to the actor and self.osucc to others in 
+            room who are listening.
+
+            curious... only things which we can see, can see what we do. 
+            rather much a childs point of view =) 
+            will have to fix this 
+        """
+        room = self.actor.container
+#       if hasattr(room,'ComputeTotalLight'): room.ComputeTotalLight()
+        if pToActor:
+            self.actor.Tell( self.StuffString(pToActor,self.actor) )
+        if pToThird and pWhoIsThird.listening:
+            pWhoIsThird.Tell( self.StuffString(pToThird,pWhoIsThird) )
+        if pToOthers:
+            for item in self.actor.LocalNouns():
+                if item != self.actor and item != self.actor.container \
+                and item != pWhoIsThird and item.listening:
+                    item.Tell( self.StuffString(pToOthers,item) )
 
 #----------------------------------------------------------------------
 #    Parser -- breaks a string into a command or set of commands
@@ -381,73 +383,74 @@ class Command:
 class Parser:
     """
     Parser:
-    	breaks a string into a command or set of commands
+            breaks a string into a command or set of commands
     """
 
     def __init__(self):
-    	self.words = []
-    	self.cmd = Command()
-    	self.it = ''
-    	self.me = ''
+        self.words = []
+        self.cmd = Command()
+        self.it = ''
+        self.me = ''
 
     def NounWords(self,words):
         """
-	given a set of words, see how many words you can lump together
-	as a single noun from the beginning of the string. Thus,
-	    given: "give bucket of fish to bob"  we return: 0
-	           "bucket of fish to bob"       ==>        3
-		   "bucket to bob"               ==>        1
-	"""
+        given a set of words, see how many words you can lump together
+        as a single noun from the beginning of the string. Thus,
+            given: "give bucket of fish to bob"  we return: 0
+                   "bucket of fish to bob"       ==>        3
+               "bucket to bob"               ==>        1
+        """
 
-    	# the first word must be an integer, "it", or in our noun list
-    	if not words: return 0    # no words
-    	if words[0] == 'it': return 1    # "it"
-	if words[0][0] == '"': return 1    # quoted string
-	if isInt(words[0]):    # integer
-	    # first word is an integer; convert to generic form
-    	    words[0] = "#"
-    	if words[0]=="#" or words[0] in nouns:
-    	    # first word is in nouns; how many more words can we munch?
-    	    a = string.join(words)
-    	    matches = filter(lambda x,a=a: a[:len(x)] == x, nouns)
-    	    if not matches: return 1		# (must be a number)
-    	    # we now have a set of potential matches; find the longest
-    	    matches.sort(lambda a,b: cmp(len(a),len(b)))
-    	    longest = matches[len(matches)-1]
-    	    return len(string.split(longest))
-    	return 0
+        # the first word must be an integer, "it", or in our noun list
+        if not words: return 0    # no words
+        if words[0] == 'it': return 1    # "it"
+        if words[0][0] == '"': return 1    # quoted string
+        if isInt(words[0]):    # integer
+            # first word is an integer; convert to generic form
+            words[0] = "#"
+        if words[0]=="#" or words[0] in nouns:
+            # first word is in nouns; how many more words can we munch?
+            a = string.join(words)
+            matches = filter(lambda x,a=a: a[:len(x)] == x, nouns)
+            if not matches: return 1        # (must be a number)
+            # we now have a set of potential matches; find the longest
+            matches.sort(lambda a,b: cmp(len(a),len(b)))
+            longest = matches[len(matches)-1]
+            return len(string.split(longest))
+        return 0
 
     def FindPrep(self,words):
-	"""
-	print "Looking for prep in", words
-	return the position of the first preposition in words,
+        """
+        print "Looking for prep in", words
+        return the position of the first preposition in words,
         not looking past the first verb.
         Return -1 if no preposition is found
-	"""
-	
+        """
+        
         for i in range(0,len(words)):
-    	    if words[i] in verbs: return -1
-    	    if words[i] in preps: return i
+            if words[i] in verbs: return -1
+            if words[i] in preps: return i
         return -1
 
     def MunchNouns(self,w):
-    	"""
+        """
         starting at w, munch a set of nouns joined by conjunctions
         return the set, and remove them from self.words
-	"""
-	
-    	if w >= len(self.words): return []
-    	out = []
-    	nounwords = self.NounWords(self.words[w:])
-    	while nounwords:
-    	    if self.words[w] == 'it': out = out + self.it
-    	    else: out.append(string.join(self.words[w:w+nounwords]))
-    	    self.words = self.words[:w] + self.words[w+nounwords:]
-    	    if w >= len(self.words) or self.words[w] not in conjs: return out
-    	    while self.words[w] in conjs:
-    		self.words = self.words[:w] + self.words[w+1:]
-    	    nounwords = self.NounWords(self.words[w:])
-    	return out	
+        """
+        
+        if w >= len(self.words): return []
+        out = []
+        nounwords = self.NounWords(self.words[w:])
+        while nounwords:
+            if self.words[w] == 'it': out = out + self.it
+            else: out.append(string.join(self.words[w:w+nounwords]))
+            self.words = self.words[:w] + self.words[w+nounwords:]
+            if w >= len(self.words) or self.words[w] not in conjs: 
+                return out
+            while self.words[w] in conjs:
+                self.words = self.words[:w] + self.words[w+1:]
+            nounwords = self.NounWords(self.words[w:])
+        return out    
 
     def WordEnd(self,pStr,pStart):
         """
@@ -461,9 +464,9 @@ class Parser:
         else:
             space = string.find(pStr,' ',pStart)
             comma = string.find(pStr,',',pStart)
-        if comma < 0 or (space >= 0 and space < comma):
-            if space >= 0: return space
-        elif comma >= 0: return comma
+            if comma < 0 or (space >= 0 and space < comma):
+                if space >= 0: return space
+            elif comma >= 0: return comma
         return len(pStr)
     
     def BreakString(self,pStr):
@@ -472,7 +475,7 @@ class Parser:
         - filter garbage and reduce non-quoted stuff to lower case
         - convert commas to conjunctions
         """
-    	
+            
         w = []
         # loop through string, building list w
         wordstart = 0
@@ -486,29 +489,28 @@ class Parser:
             else:
                 # copy it into the list (unless it's garbage)
                 word = string.lower(pStr[wordstart:wordend])
-    	        if word:
+                if word:
                     if wordend < strlen and pStr[wordend] == ',':
-                        if word and word not in garbs: 
-                            w.append(word)
-                            w.append('and')
-                            wordend = wordend-1
+                        if word and word not in garbs: w.append(word)
+                        w.append('and')
+                        wordend = wordend-1
                     else:
                         if word not in garbs: w.append(word)
             # repeat from the new starting point
             wordstart = wordend+1
-    	return w
+        return w
     
     def Parse(self,pStr=''):
         """
         Ok so let's start parsing
         first we send a pStr through the ParseCore which does most of the
         real work. 
-	
+        
         Eventually returns a list of quantal commands.
-	"""
-    	cmdlist = []
-    	cmdtext = pStr
-    	while cmdtext:
+        """
+        cmdlist = []
+        cmdtext = pStr
+        while cmdtext:
             # call the ParseCore routine, to strip one verb's worth
             cmdtext = self.ParseCore(cmdtext)
 
@@ -521,144 +523,144 @@ class Parser:
             if not self.cmd.toobj: self.cmd.toobj = ['']
             if not self.cmd.inobj: self.cmd.inobj = ['']
             if not self.cmd.atobj: self.cmd.atobj = ['']
-       	    if not self.cmd.withobj: self.cmd.withobj = ['']
+            if not self.cmd.withobj: self.cmd.withobj = ['']
             for a in self.cmd.dirobj:
               for b in self.cmd.toobj:
                 for c in self.cmd.inobj:
                   for d in self.cmd.atobj:
                     for e in self.cmd.withobj:
-                	cm.dirobj = a
-                	cm.toobj = b
-                	cm.inobj = c
-                	cm.atobj = d
-                	cm.withobj = e
-                	#print cm
-                	cmdlist.append(copy.copy(cm))
+                        cm.dirobj = a
+                        cm.toobj = b
+                        cm.inobj = c
+                        cm.atobj = d
+                        cm.withobj = e
+                        #print cm
+                        cmdlist.append(copy.copy(cm))
         # now we have a nice list of quantal commands; return it
-       	return cmdlist
+        return cmdlist
     
     def ParseCore(self,pStr):
         """
         Does all the namecalling, cleaning up and findind our verbs,
         prepositions and so on. 
         """
-    	#print "Parsing:",pStr
-    	self.cmd.Clear()
+        #print "Parsing:",pStr
+        self.cmd.Clear()
 
         # special case: check for "say" with no quotes and other shortcuts
         if pStr[0] == '"': pStr = "say "+pStr
-       	elif len(pStr)>5 and \
-       	string.lower(pStr[:4]) == "say " and pStr[4] != '"':
-       		pStr = 'say "'+pStr[4:]
-        	
+        elif len(pStr)>5 and \
+        string.lower(pStr[:4]) == "say " and pStr[4] != '"':
+            pStr = 'say "'+pStr[4:]
+                
         # get words; strip out garbage
-       	self.words = self.BreakString(pStr)
+        self.words = self.BreakString(pStr)
        
-       # apply translations
-       	if self.me: translations['me'] = self.me
-       	for i in range(0,len(self.words)):
-       		if translations.has_key(self.words[i]):
-       			self.words[i] = translations[self.words[i]]
-       	
-       	# first word should be a verb -- if not, supply 'defverb'
-       	w = 0
-       	if len(self.words)>w and self.words[w] in verbs:
-       		self.cmd.verb = self.words[w]
-       		w = w + 1
-       	else:	self.cmd.verb = 'defverb'
+        # apply translations
+        if self.me: translations['me'] = self.me
+        for i in range(0,len(self.words)):
+            if translations.has_key(self.words[i]):
+                self.words[i] = translations[self.words[i]]
+               
+        # first word should be a verb -- if not, supply 'defverb'
+        w = 0
+        if len(self.words)>w and self.words[w] in verbs:
+            self.cmd.verb = self.words[w]
+            w = w + 1
+        else:    self.cmd.verb = 'defverb'
         
         # after verb: nothing, adverb, noun or conjuction
-       	if len(self.words) < w+1: return ''		# no more words
+        if len(self.words) < w+1: return ''        # no more words
         
         # look for verb modifiers
-       	if self.words[w] in adverbs:
-       		self.cmd.verb = self.cmd.verb + ' ' + self.words[w]
-       		self.words = self.words[:w] + self.words[w+1:]
-       		if w >= len(self.words): return ''
+        if self.words[w] in adverbs:
+            self.cmd.verb = self.cmd.verb + ' ' + self.words[w]
+            self.words = self.words[:w] + self.words[w+1:]
+            if w >= len(self.words): return ''
         
         # munch conjunctions
-       	while self.words[w] in conjs:
-       		self.words = self.words[:w] + self.words[w+1:]
+        while self.words[w] in conjs:
+            self.words = self.words[:w] + self.words[w+1:]
         
         # munch a direct object
-       	self.cmd.dirobj = self.MunchNouns(w)
+        self.cmd.dirobj = self.MunchNouns(w)
         
-	# if there's another noun phrase, then it's the DO and we had IO before
-       	temp = self.MunchNouns(w)
-       	if temp:
-       	    self.cmd.toobj = self.cmd.dirobj
-       	    self.cmd.dirobj = temp
-       	
-       	if self.cmd.dirobj: self.it = self.cmd.dirobj
-       	if len(self.words) < w+1: return ''		# no more words
-       	while self.words[w] in preps:
-       	    # find the object of the preposition, and assign appropriately
-       	    objs = self.MunchNouns(w+1)
-       	    if not objs:
-       	        print "..." + self.words[w] + " WHAT?!?"
-       	        return '' 
-       		
-       	    if self.words[w] == 'at': self.cmd.atobj = objs
-       	    elif self.words[w] == 'in' or self.words[w] == 'into' \
-       	      or self.words[w] == 'from': self.cmd.inobj = objs
-       	    elif self.words[w] == 'with': self.cmd.withobj = objs
-       	    elif self.words[w] == 'to': self.cmd.toobj = objs
-       	    else: print "ERROR: unknown preposition " + self.words[w]
+        # if there's another noun phrase, then it's the DO and we had IO before
+        temp = self.MunchNouns(w)
+        if temp:
+            self.cmd.toobj = self.cmd.dirobj
+            self.cmd.dirobj = temp
+
+        if self.cmd.dirobj: self.it = self.cmd.dirobj
+        if len(self.words) < w+1: return ''        # no more words
+               
+        while self.words[w] in preps:
+            # find the object of the preposition, and assign appropriately
+            objs = self.MunchNouns(w+1)
+            if not objs:
+                print "..." + self.words[w] + " WHAT?!?"
+                return '' 
+                   
+            if self.words[w] == 'at': self.cmd.atobj = objs
+            elif self.words[w] == 'in' or self.words[w] == 'into' \
+              or self.words[w] == 'from': self.cmd.inobj = objs
+            elif self.words[w] == 'with': self.cmd.withobj = objs
+            elif self.words[w] == 'to': self.cmd.toobj = objs
+            else: print "ERROR: unknown preposition " + self.words[w]
                 
             # munch preposition
             self.words = self.words[:w] + self.words[w+1:]
-       		
+
             self.it = objs
             if len(self.words) < w+1: return ''    # no more words
-        	
+                
         # look for dangling verb modifiers
-       	if self.words[w] in adverbs:
-       	    self.cmd.verb = self.cmd.verb + ' ' + self.words[w]
-       	    self.words = self.words[:w] + self.words[w+1:]
-       	    if w >= len(self.words): return ''
-       	    # munch conjunctions
-       	    while self.words[w] in conjs:
-       	        self.words = self.words[:w] + self.words[w+1:]
-       		
+        if self.words[w] in adverbs:
+            self.cmd.verb = self.cmd.verb + ' ' + self.words[w]
+            self.words = self.words[:w] + self.words[w+1:]
+            if w >= len(self.words): return ''
+            # munch conjunctions
+            while self.words[w] in conjs:
+                self.words = self.words[:w] + self.words[w+1:]
+                   
         # next word should be a verb
-       	if self.words[w] in verbs:
-      	    return string.join(self.words[w:])
+        if self.words[w] in verbs:
+            return string.join(self.words[w:])
         
         # if not, something's wrong -- might be unknown word
-       	print 'Warning: unknown word '+self.words[w]
-       	return '' 
-	
+        print 'Warning: unknown word '+self.words[w]
+        return '' 
+        
         def Test(self):
-	    """
-	    Test the parser
-	    """
-       	    if "fish" not in nouns: nouns.append("fish")
-       	    if "fish bucket" not in nouns: nouns.append("fish bucket")
-    	    print "Nouns: ",nouns
-    	    print "Verbs: ",verbs
-    	    done = FALSE
-    	    while not done:
+            """
+            Test the parser
+            """
+            if "fish" not in nouns: nouns.append("fish")
+            if "fish bucket" not in nouns: nouns.append("fish bucket")
+            print "Nouns: ",nouns
+            print "Verbs: ",verbs
+            done = FALSE
+            while not done:
                 command = raw_input("Parser Test>")
                 if command == "quit": done = TRUE
-                else:
-                    print string.join(map(str,self.Parse(command)),'\n')
+                else: print string.join(map(str,self.Parse(command)),'\n')
 
 #----------------------------------------------------------------------
 # add a verb or list of verbs, singly, as a list, or separated with commas
 def AddVerb( *pVerbs ):
     """
     AddVerb:
-    	add a verb or list of verbs, singly, as a list, or 
-    	separated with commas
+            add a verb or list of verbs, singly, as a list, or 
+            separated with commas
     """
     for item in pVerbs:
-    	if type(item) == types.StringType:
-    	    if item not in verbs: verbs.append(item)
-    	else:
-    	    for subitem in item:
-    	        if subitem not in verbs: verbs.append(subitem)
+        if type(item) == types.StringType:
+            if item not in verbs: verbs.append(item)
+        else:
+            for subitem in item:
+                if subitem not in verbs: verbs.append(subitem)
     verbs.sort()
-    	
+            
 #----------------------------------------------------------------------
 
 verbs = ['drop','get','go','inv','look','eat','give','put','use']
@@ -675,37 +677,36 @@ translations = {}
 class Verb:
     """
     Verb:
-    	base class of any Verb object
-    	Verbs have various methods which are involved in
-    	executing them -- checking possibilities, etc.
+            base class of any Verb object
+            Verbs have various methods which are involved in
+            executing them -- checking possibilities, etc.
     """
 
     def __init__(self,pNames=''):
-    	self.synonyms = string.split(string.lower(pNames),',')
-    	self.duration = 1	# time (in minutes) to execute
-    	self.succ = 'You ' + self.synonyms[0] + '.'
-    	self.osucc = '<The actor> ' + self.synonyms[0] + 's.'
-    	AddVerb(self.synonyms)
-    	for i in self.synonyms:
-    		pub.verbdict[i] = self
+        self.synonyms = string.split(string.lower(pNames),',')
+        self.duration = 1        # time (in minutes) to execute
+        self.succ = 'You ' + self.synonyms[0] + '.'
+        self.osucc = '<The actor> ' + self.synonyms[0] + 's.'
+        AddVerb(self.synonyms)
+        for i in self.synonyms:
+            pub.verbdict[i] = self
 
     def __str__(self):
         """
         returns a string containing Verb: 
-	followed by a verbs primary name
+        followed by a verbs primary name
 
-	called with str(self)
+        called with str(self)
         """
         return '< Verb: ' + self.synonyms[0] + ' >'
 
     def GetDuration(self, cmd):
-    
         return self.duration
 
-    def DoPrechecks(self, cmd):	# return OK or CANCEL
+    def DoPrechecks(self, cmd):        # return OK or CANCEL
         """
         check that everything is ok, calls all relevant PreChecks
-	PreWitness, PreObj, PreAct
+        PreWitness, PreObj, PreAct
         """
         # call room hierarchy's PreWitness method, if any
         obj = cmd.actor.container
@@ -726,13 +727,13 @@ class Verb:
         # if all checks have passed, return OK
         return OK
 
-    def DoPostchecks(self,cmd):	# return OK or CANCEL
+    def DoPostchecks(self,cmd):        # return OK or CANCEL
         """
         finish up
-	calls all relevant PostChecks
-	PostWitness, PostObj, PostAct
+        calls all relevant PostChecks
+        PostWitness, PostObj, PostAct
         """
-	# call room hierarchy's PostWitness method, if any
+        # call room hierarchy's PostWitness method, if any
         obj = cmd.actor.container
         while obj:
             if hasattr(obj, 'PostWitness'):
@@ -753,8 +754,8 @@ class Verb:
 
     def Do(self,cmd):
         """
-	schedule command for execution, if actor isn't busy
-	initiate immediatly
+        schedule command for execution, if actor isn't busy
+        initiate immediatly
         """ 
         if cmd.actor.busytill > pub.scheduler.minutes:
             pub.scheduler.AddAbsEvent(cmd.actor.busytill, \
@@ -766,16 +767,20 @@ class Verb:
     def Begin(self,cmd):
         """
         handle the command
-	"""
+        """
         # do pre-checks; see if the command will even work
         if self.DoPrechecks(cmd) == CANCEL: return CANCEL
+        
         # finish executing the command
         self.Finish(cmd)
+        
         # make the actor pause appropriately before next comman
         delay = self.GetDuration(cmd)
+        
         if cmd.actor.busytill > pub.scheduler.minutes:
             cmd.actor.busytill = cmd.actor.busytill + delay
         else: cmd.actor.busytill = pub.scheduler.minutes + delay
+        
         return OK
 
     def Finish(self,cmd):
@@ -797,39 +802,39 @@ class Verb:
 class BaseThing:
     """
     BaseThing:
-    	base class of any noun in the game
-    	(why not 'Noun'?)
+        base class of any noun in the game
+        (why not 'Noun'?)
     """
         
     # initialization method
     def __init__(self,pName=''):
-    	self.a = 'a'		# article to use for 'a'
-    	self.blind = FALSE	# if TRUE, can't see anything
-    	self.container = None	# its location
-    	self.defverb = None	# no default verb
-    	self.desc = ''		# description
-    	self.initialDesc = ''	# desc, before it's moved (if different)
-    	self.initialNote = ''	# note, before it's moved (if different)
-    	self.invisible = 0	# invisibilty level (0 = plainly visible)
-    	self.invisName = "something"	# perceived "name" when invisible
-    	self.light = 0		# light given off (100 = sunlight)
-    	self.listening = FALSE	# wants Tell() calls?
-    	self.listLine = ''	# line to print in contents list
-    	self.name = string.split(pName,',')[0]	# main name
-    	self.note = ''	    # line to print in room contents (if nonstandard)
-    	self.salient = TRUE	# show in room contents list?
-    	self.seesDark = 0	# bonus to room light when this is seeing
-    	self.seesInvisible = 0	# invisibility level which this can see
-    	self.size = 10			# size (100=human)
-    	self.synonyms = string.split(string.lower(pName),',')
-    	self.the = 'the'		# article to use for 'the'
-    	
-    	# special initialization
-    	self.desc = 'It looks like an ordinary '+self.name+'.'
+        self.a = 'a'    # article to use for 'a'
+        self.blind = FALSE    # if TRUE, can't see anything
+        self.container = None    # its location
+        self.defverb = None    # no default verb
+        self.desc = ''   # description
+        self.initialDesc = ''    # desc, before it's moved (if different)
+        self.initialNote = ''    # note, before it's moved (if different)
+        self.invisible = 0    # invisibilty level (0 = plainly visible)
+        self.invisName = "something"    # perceived "name" when invisible
+        self.light = 0    # light given off (100 = sunlight)
+        self.listening = FALSE    # wants Tell() calls?
+        self.listLine = ''    # line to print in contents list
+        self.name = string.split(pName,',')[0]    # main name
+        self.note = ''    # line to print in room contents (if nonstandard)
+        self.salient = TRUE    # show in room contents list?
+        self.seesDark = 0    # bonus to room light when this is seeing
+        self.seesInvisible = 0    # invisibility level which this can see
+        self.size = 10    # size (100=human)
+        self.synonyms = string.split(string.lower(pName),',')
+        self.the = 'the'    # article to use for 'the'
+        
+        # special initialization
+        self.desc = 'It looks like an ordinary '+self.name+'.'
 
-    	# add names to the parser's list of nouns
+        # add names to the parser's list of nouns
         for n in self.synonyms:
-    	    if n not in nouns: nouns.append(n)
+            if n not in nouns: nouns.append(n)
 
     
     def __getinitargs__(self):
@@ -837,21 +842,21 @@ class BaseThing:
         get arguments (used by copy.copy)
         """
         return (string.join(self.synonyms,','),)
-    	
+ 
     
     def GetName(self, article=0, pLooker=None):
         """
         get name
-	"""
+        """
         if pLooker and not pLooker.CanSee(self):
-    		if article==The or article==A: return cap(self.invisName)
-    		return self.invisName
-    	if not article: return self.name
-    	if article==the: return self.the + ' ' + self.name
-    	if article==a: return self.a + ' ' + self.name
-    	if article==The: return cap(self.the) + ' ' + self.name
-    	if article==A: return cap(self.a) + ' ' + self.name
-     	return self.name
+            if article==The or article==A: return cap(self.invisName)
+            return self.invisName
+        if not article: return self.name
+        if article==the: return self.the + ' ' + self.name
+        if article==a: return self.a + ' ' + self.name
+        if article==The: return cap(self.the) + ' ' + self.name
+        if article==A: return cap(self.a) + ' ' + self.name
+        return self.name
 
     
     def __call__(self,article=0,pLooker=None):
@@ -859,78 +864,82 @@ class BaseThing:
         allow treating an object like a function,
         as a shorthand for GetName
         """
-    	return self.GetName(article,pLooker)
+        return self.GetName(article,pLooker)
 
     
     def NameMatch(self, pName):
         """
         check for a name match
-	"""
-    	return pName in self.synonyms
+        """
+        return pName in self.synonyms
 
 
     def GetNote(self):
         """
         get note (for when listing the contents of a room)
-	"""
-    	if self.initialNote: return self.initialNote
-    	if self.note: return self.note
+        """
+        if self.initialNote: return self.initialNote
+        if self.note: return self.note
         return random.choice( ['You see ' + self(a) + ' lying here.',
                                self(A) + ' is lying here.',
                                'There is ' + self(a) + ' here.'] )
         
-        	
+                
     
     def GetDesc(self,pDepth=0):
         """
         get description
         """
-    	if self.initialDesc: return self.initialDesc
-    	return self.desc
+        if self.initialDesc: return self.initialDesc
+        return self.desc
 
     
     def GetRoom(self):
         """
         get room (not just any container, but the first ROOM container)
-	"""
-    	cont = self
-    	while cont and not hasattr(cont,'ComputeTotalLight'):
-    		cont = cont.container
-    	return cont
+        """
+        cont = self
+        while cont and not hasattr(cont,'ComputeTotalLight'):
+            cont = cont.container
+        return cont
 
     
     def GetListLine(self): 
         """
         get line to be printed in a list of items (e.g., for inventory)
+        when an item should have a listline you either have to write it
+        like so:
+            '  - a shrubbery of sorts' or
+            self.Getname(a) + ' of sorts' if the main name is shrubbery.
         """
-    	if self.listLine: return '   - ' + self.listLine	
-    	return '   - ' + self.GetName(a)
+        if self.listLine: return self.listLine        
+        return '   - ' + self.GetName(a)
 
-    
+
     def CanSee(self, pWhat):
         """
         can we see the given object? (assuming it's present)
         """
-    	# if we're blind, automatically return FALSE
-    	if self.blind: return FALSE
-    	
-    	# figure effect of lighting and night vision...
-    	
-    	effectiveLight = self.GetRoom().light + self.seesDark
-    	# anything which gives off light can always be seen
-    	# (unless it's the room itself)
-    	if pWhat.light > 0 and pWhat != self.container:
-    		effectiveLight = 100
+        # if we're blind, automatically return FALSE
+        if self.blind: return FALSE
 
-    	# figure effect of invisibility and counter-invisibility vision...
-    	
-    	visible = 1 - pWhat.invisible + self.seesInvisible
-    	
-    	# return TRUE only if both light and visibility are good
-    	
-    	return effectiveLight > 20 and visible > 0
+        # figure effect of lighting and night vision...
 
-    
+        effectiveLight = self.GetRoom().light + self.seesDark
+        # anything which gives off light can always be seen
+        # (unless it's the room itself)
+        if pWhat.light > 0 and pWhat != self.container:
+            effectiveLight = 100
+
+            # figure effect of invisibility and counter-invisibility vision...
+
+        visible = 1 - pWhat.invisible + self.seesInvisible
+            
+        # return TRUE only if both light and visibility are good
+            
+        return effectiveLight > 20 and visible > 0
+
+
     def CanContain(self, pWhat): 
         """
         can we contain something?
@@ -940,44 +949,45 @@ class BaseThing:
 
     def Tell(self, pWhat,pCmd=None):
         """
-	let the object hear something
-	
-	by default, do nothing
-    	the pCmd parameter allows substitution of various
-    	object names, depending on whether this object can see 'em
-    	"""
-	return
+        let the object hear something
+        
+        by default, do nothing
+        the pCmd parameter allows substitution of various
+        object names, depending on whether this object can see 'em
+        """
+        return
 
     # checks, before and after this object is used as the object of a command
+    
     def PreObj(self, cmd): return OK
 
     def PostObj(self, cmd): return OK
 
     # checks before and after this object is moved
     def PreMove(self):
-    	self.GetRoom().ComputeTotalLight()
-    	return OK
+        self.GetRoom().ComputeTotalLight()
+        return OK
     
     def PostMove(self):
-    	self.GetRoom().ComputeTotalLight()
-    	return OK
+        self.GetRoom().ComputeTotalLight()
+        return OK
     
     def MoveTo(self, pWhere):
         """
         move objects to destination in pWhere if checks pass
-        
-	if the destination is 'TRASH' delete object
+
+        if the destination is 'TRASH' delete object
         """
-	if pWhere == 'TRASH': 
-	    if self.container: 
-	        self.container.contents.remove(self)
-	        del self
-	        return CANCEL 
-    	if not pWhere.CanContain(self) \
-    	or not self.PreMove():
-    		return CANCEL
-    	pWhere.ContainNoCheck(self)
-    	self.PostMove()
-    	return OK
-    			
+        if pWhere == 'TRASH': 
+            if self.container: 
+                self.container.contents.remove(self)
+                del self
+                return CANCEL 
+        if not pWhere.CanContain(self) \
+        or not self.PreMove():
+            return CANCEL
+        pWhere.ContainNoCheck(self)
+        self.PostMove()
+        return OK
+                    
 #----------------------------------------------------------------------
