@@ -79,7 +79,7 @@ def stripPunctuation(str):
     """
     for char in ",.!?": 
         str = str.replace(char, '')
-        return str
+    return str
 
 def savegame(filename='pub.dat'):
     """
