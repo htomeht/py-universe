@@ -1,19 +1,21 @@
-2002-11/21:
-This is a tentative "Alpha" release of the PUB aka PyUniverse
-package.  It *is* now a package thanks to Lalo Martins. <applause/>
+04/04/29
 
-It only recently occured to me that I really ought to make a
-downloadable package of this work.  I have been meaning to
-write more documentation and/or experiment with the package,
-but I have been really busy on other projects, so no dice.
+This is a "Alpha2" release of the PUB aka PyUniverse package.  
+It *is* now a package thanks to Lalo Martins. <applause/>
 
-However ...
 
-Extremely quick starter notes:
+Quick starter notes:
+
+Dependencies:
+ python2.3
+ distutils -- distutils is released as a seperate package, for most
+ distributions it should be named along the line of python-devXX where XX is the
+ python version.
 
 1) You can install the package with distutils like so:
 
-python setup.py install
+from the pub directory:
+ python setup.py install
 
 It's pure python, so don't worry about building extensions -- there
 aren't any.
@@ -37,7 +39,16 @@ The official website is on Sourceforge: http://py-universe.sourceforge.net
 
 There's a mailing list (very low volume): py-universe-main@lists.sourceforge.net
 
-The current maintainer is me: Terry Hancock hancock@anansispaceworks.com
+There is a wiki currently located at:
+ http://www.narya.net/PyUniverse_SF_Net/PyUniverse/FrontPage
+
+We also have a irc channel on irc.freenode.net:: #py-universe
+
+The current maintainer is: Terry Hancock hancock@anansispaceworks.com
+
+The rest of the team should be reachable through the mailing-list which is
+almost always the best way to go unless you have a specific maintainer 
+question.
 
 Python Universe Builder was originally written by Joseph Strout.
 
