@@ -1,0 +1,422 @@
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+  There is a banana here.
+  There is a rock here.
+
+
+>He's just a nondescript, ordinary-looking guy.  (But he just might give you a
+sack if you tell him to.)
+
+>It looks like an ordinary banana.
+
+>It looks like an ordinary rock, except that it glows very faintly.
+
+>It looks like an ordinary rock, except that it glows very faintly.
+
+>It looks like an ordinary west.
+
+>It looks like an ordinary north.
+
+>It looks like an ordinary south.
+Guard enters from the south.
+
+>It's a tall, lean man in a crisp uniform, who has decorated his face with a
+neatly trimmed mustache and a perpetual scowl.
+The Guard marches up and down the square.
+
+>You say "bert, give me sack"
+Bert gives you a bag.
+
+>It looks like an ordinary bag.
+
+>The bag appears to be empty.
+
+>You get the banana.
+
+>You get the rock.
+Guard exits to the north.
+
+>It looks like an ordinary rock, except that it glows very faintly.
+
+>You put the rock into the bag.
+
+>It looks like the bag contains:
+   - a rock
+
+>You are carrying:
+   - a bag
+   - a banana
+
+>You put the banana into the bag.
+
+>You are carrying:
+   - a bag
+Guard enters from the north.
+
+>It looks like the bag contains:
+   - a rock
+   - a banana
+The Guard marches up and down the square.
+
+>You head north.
+
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+
+
+>You say "blarg"
+
+>You say "blarg"
+
+>You say "blarg"
+
+>A large wooden barrel has been set at the end of the street.
+
+>It looks like the barrel contains:
+   - some water
+
+>It looks like an ordinary water.
+
+>You don't have the water
+
+>You'll have to put it in something.
+
+>North leads nowhere.
+
+>You head east.
+
+The Flaming Python
+This pub is dark, loud, and smells of spirits.
+
+  There's an abandoned mug on one of the tables.
+  You see 10 chips here.
+
+
+>It's an ordinary beer mug, lying abandoned in a puddle of solitude which is
+probably exceeded only by that surrounding its former owner.
+
+>The mug appears to be empty.
+
+>You get the mug.
+
+>Potato chips is potato chips -- what would you expect?
+
+>You can't eat 10 chips.
+
+>You get 10 chips.
+
+>You put 10 chips into the bag.
+
+>
+The Flaming Python
+This pub is dark, loud, and smells of spirits.
+
+
+
+>Huh?!?
+
+>You head west.
+
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+  Guard is here.
+
+
+>  Enter a name for this game, default is pub.dat.  Saving game to disk...
+  Game saved as pub.dat
+
+>You put the water into the mug.
+
+>You drink the water.
+You feel less thirsty.
+
+>The barrel appears to be empty.
+
+>  Enter a save game to load, default is pub.dat.  Restoring game from disk...
+  Game pub.dat restored
+
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+  Guard is here.
+
+
+>It looks like the barrel contains:
+   - some water
+
+>You put the water into the mug.
+
+>It looks like an ordinary mug.
+
+>It looks like the mug contains:
+   - some water
+Guard exits to the south.
+
+>You head west.
+
+Magic Shop
+You're in a small building filled with arcane magic items.
+
+  There is a cloak here.
+
+
+>This magic cloak will make you invisible.  It says so, right there on the tag.
+
+>You get the cloak.
+
+>It looks like an ordinary Everyman.
+Everyman looks at you.
+
+>You wear the cloak.
+
+>Look at what?!?
+
+>You remove the cloak.
+
+>You put the cloak into the bag.
+
+>You head east.
+
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+
+
+>You head south.
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+
+
+>You head south.
+
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
+
+  There is a Transceiver2 here.
+  Guard is here.
+
+Guard exits to the north.
+
+>It looks like an ordinary Transceiver2.
+
+>The Transceiver2 is now on.
+
+>You head east.
+
+Invisibility Shop
+This shop has shelves upon shelves of, well, nothing. At least, nothing that
+you can see.
+
+
+
+>You head west.
+
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
+
+  There is a Transceiver2 here.
+
+
+>West leads nowhere.
+
+>South leads nowhere.
+
+>You head north.
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+  Guard is here.
+
+Guard exits to the north.
+
+>You head west.
+
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
+
+  A large clock against the wall reads 13:57.
+  There is a pair of glasses here.
+  There is a Transceiver1 here.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
+
+"Don't you wish we were married?" says John on the TV.
+
+>It's a dark rosewood grandfather clock, which reads 13:59. The pendulum swings
+methodically back and forth.
+
+>These magic glasses will let you see invisible objects.
+"But Darling," Marsha replies, "we are!"
+"...or did you mean to each other?"
+
+>You get the pair of glasses.
+
+>You wear the pair of glasses.
+
+>
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
+
+  A large clock against the wall reads 14:07.
+  There is a Transceiver1 here.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
+
+The TV takes a commercial break.
+
+>It looks like an ordinary Transceiver1.
+
+>You get the Transceiver1.
+
+>The Transceiver1 is now on.
+ TV says, "And now back to our program..."
+
+>You head east.
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+  Guard is here.
+
+
+>You give the Transceiver1 to Bert.
+
+>You head west.
+
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
+
+  A large clock against the wall reads 14:19.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
+
+"Don't you wish we were married?" says John on the TV.
+
+>It looks like an ordinary blindfold.
+
+>It looks like an ordinary jack-in-the-box.
+"But Darling," Marsha replies, "we are!"
+"...or did you mean to each other?"
+
+>You get the jack-in-the-box.
+
+>You push Jack into his box, forcing the crank around.
+
+>The Jack-in-the-box is ticking softly, as the little crank whirls round.
+The TV takes a commercial break.
+
+>Jack leaps out of his box with a loud SPROING!
+ TV says, "And now back to our program..."
+
+>On the TV, John says "Marsha, Darling, I love you so much!"
+"Don't you wish we were married?" says John on the TV.
+
+>It looks like an ordinary lamp.
+
+>You get the lamp.
+"But Darling," Marsha replies, "we are!"
+"...or did you mean to each other?"
+
+>You turn on the lamp, and it glows brightly.
+
+>It looks like an ordinary TV.
+
+>It looks like an ordinary camera.
+The TV takes a commercial break.
+
+>You get the camera.
+
+>You snap a picture.
+
+>You are carrying:
+   - a bag
+   - a mug
+   - a pair of glasses (worn)
+   - a jack-in-the-box
+   - a lamp (lit)
+   - a camera
+   - a photo of Gadget Shop
+ TV says, "And now back to our program..."
+
+>The photograph depicts:
+
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
+
+  A large clock against the wall reads 14:59.
+  There is a blindfold here.
+  TV is here.
+
+
+>You head east.
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+  Guard is here.
+
+
+>You head south.
+
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
+
+  There is a Transceiver2 here.
+
+
+>You head east.
+
+Invisibility Shop
+This shop has shelves upon shelves of, well, nothing. At least, nothing that
+you can see.
+
+  There is a ring here.
+
+
+>You see a shimmering, transparent ring.
+
+>  Are you sure you want to quit? Y/y/N/n (Default No): Quitting game.
