@@ -10,7 +10,6 @@ Defines the basic classes of verbs understood by the game. More
 verbs are interpreted via synonyms to these.
 """
 
-import code, sys
 import string
 
 import pub
@@ -711,65 +710,6 @@ class Drink(Verb):
         return Verb.Finish(self,cmd)
         
 drink = Drink('drink')
-#----------------------------------------------------------------------
-# @break -- sets line breaks, or turns them off
-#
-
-class SetBreak(Verb):
-    """
-    @break:    sets line breaks, or turns them off.
-    (for debugging)
-    It appears that the '@' prefix is used for
-    verbs the player isn't really supposed to use.
-    """
-
-    def Finish(self,cmd):
-        try: num = string.atoi(cmd.dirobj)
-        except: num = 0
-        cmd.actor.linebreak = num
-                
-        return OK
-        
-setBreak = SetBreak('@break')    # instantiate it
-
-
-#----------------------------------------------------------------------
-# @Examine -- a debugging verb which prints all attributes of an object
-#
-
-class DbgExamine(Transitive):
-    """
-    @Examine: Print all attributes of an object.
-    (for debugging)
-    """
-
-    def Finish(self,cmd):
-        print '\n', cmd.dirobj,'\n'
-        for att in dir(cmd.dirobj):
-            print '%20s' % att, ':', getattr(cmd.dirobj,att)
-        print
-                
-        return OK
-        
-dbgEx = DbgExamine('@ex,@examine')    # instantiate it
-
-#----------------------------------------------------------------------
-# @contents -- a debugging verb which prints all contents of an object
-#
-class DbgContents(Transitive):
-    """
-    @contents: Print all contents of an object.
-    (for debugging)
-    """
-    def Finish(self,cmd):
-        print '\nContents of', cmd.dirobj,'\n'
-        for item in cmd.dirobj.contents:
-            print item
-        print
-        
-        return OK
-
-dbgContents = DbgContents('@contents,@con')
 
 #----------------------------------------------------------------------
 # verbs -- print all known verbs
@@ -793,7 +733,6 @@ verbsVerb = VerbsVerb('verbs,help')
 
 
 #----------------------------------------------------------------------
-#----------------------------------------------------------------------
 # save -- save the game
 #
 class Save(Verb):
@@ -810,7 +749,6 @@ class Save(Verb):
 
 save = Save('save')
 
-#----------------------------------------------------------------------
 #----------------------------------------------------------------------
 # restore -- restore the game
 #
@@ -832,16 +770,3 @@ class Restore(Verb):
         raise pub.BailOutError, "Resetting stack to restore game"
 
 restore = Restore('restore')
-
-
-class Script(Verb):
-
-    def __init__(self,pNames=''):
-        Verb.__init__(self,pNames)
-
-    def Finish(self,cmd):
-        if self.DoPostchecks(cmd) == CANCEL: return OK
-        code.interact(banner='', local=sys.modules['__main__'].__dict__)
-        return OK
-
-script = Script('@script,@code')
