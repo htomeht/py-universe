@@ -8,6 +8,8 @@ from pubcore import *       # import core datatypes, functions, & constants
 import pubobjs              # import standard object library
 import gadgets              # import wierd & wonderful things
 
+import debug
+
 # create shortcuts for most common object types
 Room = pubobjs.Room
 Exit = pubobjs.Exit

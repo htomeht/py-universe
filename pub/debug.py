@@ -66,7 +66,7 @@ pubverbs.dbgEx = DbgExamine('@ex,@examine')    # instantiate it
 
 class DbgContents(pubverbs.Transitive):
     """
-    @contents: Print all contents of an object.
+   @contents: Print all contents of an object.
     (for debugging)
     """
     def Finish(self,cmd):
@@ -84,23 +84,26 @@ class DbgContents(pubverbs.Transitive):
 pubverbs.dbgContents = DbgContents('@contents,@con')
 
 #----------------------------------------------------------------------
-
-class DbgPrompt(Verb):
-    """@prompt:
-    Creates an interactive prompt from which we can check on our 
-    objects our try out instantiating things and using methods or 
-    whatever use it might be of.
-    """
-
-    def __init__(self,pNames=''):
-        Verb.__init__(self,pNames)
-        self.mod = sys.modules['__main__'].__dict__
-
-    def Finish(self,cmd):
-        if self.DoPostchecks(cmd) == CANCEL: return OK
-        mod = sys.modules['__main__'].__dict__
-        code.interact(banner='', local=mod)
-        return OK
-
-pubverbs.dbgPrompt = DbgPrompt('@prompt')
+# Unfortunatly I have to comment out this for now.
+# code.interact breaks our save/restore functions.
+# I'll see if I can find a way to move round this later.
+#
+#class DbgPrompt(Verb):
+#    """@prompt:
+#    Creates an interactive prompt from which we can check on our 
+#    objects our try out instantiating things and using methods or 
+#    whatever use it might be of.
+#    """
+#
+#    def __init__(self,pNames=''):
+#        Verb.__init__(self,pNames)
+#        self.mod = sys.modules['__main__'].__dict__
+#
+#    def Finish(self,cmd):
+#        if self.DoPostchecks(cmd) == CANCEL: return OK
+#        mod = sys.modules['__main__'].__dict__
+#        code.interact(banner='', local=mod)
+#        return OK
+#
+#pubverbs.dbgPrompt = DbgPrompt('@prompt')
 
