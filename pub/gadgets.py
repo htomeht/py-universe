@@ -466,3 +466,102 @@ class Camera(pubobjs.Thing):
 				"<The actor> snaps a picture.")
 			return CANCEL
 		return pubobjs.Thing.PostObj(self,cmd)
+
+				
+#--------------------------------------------------------------------------
+#	StateMachineNPC - a more complex NPC that answers based on a state machine
+#
+class StateMachineNPC(pubobjs.NPC):
+	# sample state definition
+	__sampledef = {
+	    'normal': (
+		(2, 'sleep', 'sleeping', 'say "zzz..."'),
+		(0, r'gives you some money\.$', 'bribed'),
+		(1, 'tell me the password', None, 'say "sorry, it is a secret"'),
+		),
+	    'sleeping': (
+		(2, 'wake up', 'normal', 'say "hmm? oh, sorry."'),
+		),
+	    'bribed': (
+		(2, 'sleep', 'sleeping', 'say "zzz..."'),
+		(1, 'tell me the password', 'normal', 'say "okay, but only once: it\'s Shruberry."'),
+		),
+	    }
+
+	def __init__(self,pNames='',pStates=__sampledef):
+		pubobjs.NPC.__init__(self,pNames)
+		self.SetStates(pStates)
+		self.state = 'normal'
+		self.statedesc = {'sleeping': 'sleeping'}
+
+	def SetStates(self, pStates):
+		machine = {}
+		for name, transitions in pStates.items():
+			m_transitions = ()
+			for transition in transitions:
+				while len(transition) < 4:
+					transition = transition + (None,)
+				m_transitions = m_transitions + (
+				    (transition[0], re.compile(transition[1])) + transition[2:],)
+			machine[name] = m_transitions
+		# we leave the assignment for last, so that if you set up exception handling,
+		# you can pass a bad spec and it won't mess up your machine
+		self.states = machine
+
+	def SwitchState(self, state):
+		if self.states.has_key(state):
+			self.state = state
+
+	def ProcessInput(self, i_type, i_text, i_who):
+		for transition in self.states[self.state]:
+			#print '@testing %s against %s' % ((i_type, i_text), transition)
+			if transition[0] <= i_type and transition[1].search(i_text):
+				if type(transition[3]) is type(''):
+					# we have a command to perform
+					if i_who:
+						who_name = string.capwords(i_who.synonyms[0])
+					else:
+						# wild guess
+						who_name = pubcore.stripPunctuation(i_text.split()[0])
+					cmdStr = transition[3].replace('$who', who_name)
+					self.DoCommandString(cmdStr)
+				elif callable(transition[3]):
+					transition[3]()
+				if transition[2] is not None:
+					self.SwitchState(transition[2])
+				return TRUE
+		return FALSE
+
+	def HearSpeech(self, pSpeaker, pSpeech):
+		"""
+		Hear speech from another actor --
+		A special case of Tell, when another actor is
+		speaking to me.
+		"""
+		# is the speaker speaking to me?
+		for word in self.synonyms:
+			if (pSpeech.lower().count(word)):
+				pSpeaker.speakingTo = self
+
+		if pSpeaker.speakingTo is self:
+			if self.ProcessInput(2, pSpeech, pSpeaker):
+				return
+		else:
+			if self.ProcessInput(1, pSpeech, pSpeaker):
+				return
+		# nothing on the state machine, try to react like a "normal" NPC
+		pub.objs.NPC.HearSpeech(self, pSpeaker, pSpeech)
+
+	def HearEffect(self, pStr):
+		self.ProcessInput(0, pStr, None)
+
+	# get description
+	def GetDesc(self,pDepth=0):
+		desc = pubcore.BaseThing.GetDesc(self, pDepth)
+		if self.statedesc.has_key(self.state):
+			desc = desc.strip()
+			if desc[-1] != '.':
+				desc = desc + '.'
+			desc = (desc + ' ' + self.synonyms[0].capitalize() + ' is now ' +
+				self.statedesc[self.state] + '.')
+		return desc
