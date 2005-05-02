@@ -6,8 +6,8 @@
 import pub
 from pub.constants import *
 
-pub.scheduler = pub.Scheduler("12:00")		# start the clock!
-print pub.scheduler
+#pub.scheduler = pub.Scheduler("12:00")		# start the clock!
+#print pub.scheduler
 
 #----------------------------------------------------------------------
 #	Define special object types used in this game
@@ -212,11 +212,11 @@ print "\n\n\n"
 #----------------------------------------------------------------------
 #	Run the game
 #
-pub.player.Tell(pub.player.container.GetDesc(pub.player))
-
-pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
-
-while pub.gameStatus == RUNNING:
-	try: pub.scheduler.Update()
-	except pub.errors.BailOutError: pass
-
+#pub.player.Tell(pub.player.container.GetDesc(pub.player))
+#
+#pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
+#
+#while pub.gameStatus == RUNNING:
+#	try: pub.scheduler.Update()
+#	except pub.errors.BailOutError: pass
+#

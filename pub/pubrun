@@ -1,0 +1,64 @@
+#! /usr/bin/env python
+
+import pub
+from pub.pubcore import *
+
+import getopt,sys
+
+pub.scheduler = Scheduler("12:00")
+
+#----------------------------------------------------------------------
+#   Run a game
+#----------------------------------------------------------------------
+
+# print help message
+def usage():
+    print """usage: pubrunner.py [options] -g <game name>
+
+Options:
+-d, --debug              : set mode to debugging mode.
+-h, --help               : print this help message and exit
+-l, --language           : specify which language to run ie English.
+-g, --game               : the name of the game.
+          """
+
+def rungame():
+    """Start the engine."""
+    pub.player.Tell(pub.player.container.GetDesc(pub.player))
+
+    pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
+
+    while pub.gameStatus == RUNNING:
+        try: pub.scheduler.Update()
+        except pub.errors.BailOutError: pass
+
+
+def main():
+    """parse commandline options."""
+
+    s_args = "dhl:g:"
+    l_args = ["debug", "help", "language=", "game="]
+
+    try:
+        opts, args = getopt.gnu_getopt(sys.argv[2:],s_args, l_args)
+
+    except getopt.GetoptError:
+        #print help and exit
+        usage()
+        sys.exit(2)
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            usage()
+            sys.exit(2)
+        if o in ("-l", "--language"):
+            import pub
+            pub.language = str(a)
+        if o in ("-d", "--debug"):
+            import pub.debug
+            pub.debugging = True
+    __import__(str(sys.argv[1])[:-3], globals, locals)
+    rungame()
+
+if __name__ == "__main__": main()
+
+
