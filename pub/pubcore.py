@@ -1,18 +1,40 @@
-#    pubcore.py               6/01/98 JJS
+#    pubcore.py                                           6/01/98 JJS
 #
-#    This module defines datatypes used by most other
-#    PUB modules.  You shouldn't mess with this file unless you
-#    really know what you're doing.
+#   Copyright (C) 1998 Joe Strout 
 #
-#    2002-5/10:
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# CHANGELOG
+#
+#   2002-5/10:
 #    Terry Hancock
 #       Added doc strings based on comments/code.
 #
-#    2004-21/01
+#   2004-21/01
 #    Gabriel J
 #       Went through the code adding more doc strings
 #       Most based on curent comments but some on own experience
+#
+#   2004-22/10: 
+#    Gabriel J
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
 """
+NOTE: Don't mess with this module unless you know what you're doing!
 
 Includes Scheduler, Event, Command, Parser, Verb, and BaseThing (=Noun?)
 
@@ -25,27 +47,29 @@ hand, if used frequently enough, it might clarify
 the code. If so, we need to add comments to define
 what these things do.
 """
-#
 #----------------------------------------------------------------------
 
-# import standard Python modules needed by the functions below
+# system imports
 
 import string
 import types
 import copy
 import random
 import re
+
+# pub imports
+
+import pub
+from interfaces import ISymbol, ILangMod 
+import adapters
 from constants import *
 
-# import the PUB module which declares "global" variables
-import pub
-from interfaces import ISymbol, ILang, IParser
-import adapters
 
+# protocols imports
 
-# import from peak
 from protocols import adapt, advise
 
+#--------------------------------------------------------------------
 
 cap = string.capitalize # function to capitalize a string
 
@@ -53,7 +77,7 @@ def isString(x):
     """
     function to determine whether something is a string
     """
-    return type(x) == types.StringType
+    return type(x) == type('')
 
 def isInstance(x):
     """
@@ -68,13 +92,13 @@ def isInt(x):
     try:
        string.atoi(x)
        return TRUE
-    except: return type(x) == types.IntType
+    except: return type(x) == type(1)
 
 def toInt(x):
     """
     function to force it to be a number
     """
-    if type(x) == types.IntType: return x
+    if isInt(x): return x
     try: return string.atoi(x)
     except: return 0
 
@@ -137,23 +161,54 @@ def restoregame(filename='pub.dat', quiet=FALSE):
 #
 def chainLinker(obj, proto, default=None):
     """
-    a function that generates a chain
+    A function that generates a chain
     used by, for instance invoke to get at all verb methods in an object.
-    we can add more functionality here but it's probably best to keep it to 
+    We can add more functionality here but it's probably best to keep it to 
     a minimum.
     """
 
-    if hasattr(obj, 'components'):
-        for com in obj.components:
+    # First loop through the obj to see if it has any components
+    adapted = adapt(obj, ISymbol, None)  
+    if adapted is not None:
+        for com in adapted.components:
             for adapted in chainLinker(com, proto):
                 yield adapted
 
+    # Second try to adapt those components to the relevant protocol
+    # This is the function that builds the chain even though it get's 
+    # passed through the above.
     adapted = adapt(obj, proto, None)
     if adapted is not None:
         yield adapted
 
+    # Third add a default method.
     if default is not None:
         yield default
+
+#--------------------------------------------------------------------
+# check -- used to run object checks
+#
+def check(obj, proto, meth, args = [], default = None):
+    """
+    check special functions on objects that should return True or False
+    depending on circumstances.
+    In most cases a default should be supplied. 
+    Ie if you want to check if something can contain water you do
+    
+    from pub import defaults as d
+    if not check(glass, IContainer, 'canContain', d.NoLiquid, [waterI]):
+        raise ContainError
+    
+    """
+    chain = chainLinker(obj, proto, default) # chain of methods in components 
+    try: first = chain.next()
+    except StopIteration: 
+        # The method can't be found on the object, return an error
+        raise pub.errors.ComponentError, "No such component can be found"
+    
+    try: getattr(first, meth)(chain, obj)
+    except StopIteration:
+        return True # If we get this far nothing has stopped us.
 
 #--------------------------------------------------------------------
 # invoke -- used by the component driven object system
@@ -164,68 +219,85 @@ def invoke(obj, proto, meth, cmd=None, output=True):
     to a interface of choice. It can also be used to generate output based on
     cmd, or to suppress it.
 
-    Note: invoke is only use for verb methods. If you want to access other
+    Note: invoke is only used for verb methods. If you want to access other
     methods in other ways use chainLinker or other functions that might be
     provided.
 
     calling invoke without a cmd gives different responses depending on the
     actuall method called. All methods should be able to handle None as value.
     Mostly it will result in either an error or immediate execution.
-    like: invoke(door, IOpen, 'open') will try to set the doors state to isOpen
-    and just let everyone know that the door was opened.    
+    like: invoke(door, IOpen, 'open') will try to set the doors isOpen=True
     """
     chain = chainLinker(obj, proto) # link a chain of methods in components 
     try: first = chain.next()
-    except StopIteration: raise AttributeError, "Attribute can't be found"
-    # The method can't be found on the object, return an error
+    except StopIteration: 
+        # The method can't be found on the object, return an error
+        raise pub.errors.ComponentError, "No such component can be found"
     
     try: getattr(first,meth)(chain,cmd)
-    except StopIteration: 
-        #  Currently checks for the end of the chain and says what next to do.
-        # This way puts the heavy load on writing a good Command.
-        # Also it expects that all methods know what they are doing with cmd.
-        if not output: return
+    except StopIteration: # Check for the end of the chain.
+                          # This means that the command was successful
+                          
+        if not output: raise pub.errors.NoOutput
         else: 
-            cmd.tell()
-            return True # Tells the command it has finished processing
+            return True # Tells the caller it has finished processing
                         # and that it was succesfull.
     
 
 #--------------------------------------------------------------------
 # find -- used by the component driven object system
 #
-def find(obj,proto,default=None):
-    """
-    minimal interface to chainLinker that simply finds out if an object has a
-    component that matches the protocol and returns it. If there are more or
-    less than one an error is raised.
-    """
-
-    out = chainLinker(obj, proto, default)
-    test = len(list(out))
-
-    if test < 1: raise pub.errors.ComponentError, "No such component"
-    if test > 1: raise pub.errors.ComponentError, "Too many components match"
-
-    else: return out.next()
-
+#def find(obj,proto,default=None):
+#    """
+#    minimal interface to chainLinker that simply finds out if an object has a
+#    component that matches the protocol and returns it. If there are more or
+#    less than one an error is raised.
+#    """
+#
+#    out = chainLinker(obj, proto, default)
+#    test = len(list(out))
+#
+#    if test < 1: raise pub.errors.ComponentError, "No such component"
+#    if test > 1: raise pub.errors.ComponentError, "Too many components match"
+#
+#    else: return out.next()
+#
 #--------------------------------------------------------------------
 # lingo -- a language finder
 #
-def lingo(obj,proto):
+def lingo(lang, cls, args = []):
     """
-    lingo is used for instances when we want to find the right language.
+    method to access a couple of dictionaries and dig out a language
+    and subsequently a specific class.
+
+    lang should be a string like 'english' or 'swedish'
+    cls should be a string containing something like 'parser' 
     """
 
-    adapted = adapt(obj, ILang, None)
-    if adapted != None:
-        adapted = adapted.initiate()
-        if pub.debugging: print adapted
+    try: temp = pub.lang.mods[lang.lower()] # a language module
+    except KeyError: raise pub.errors.PubError, "Language doesn't exist."
 
-    if pub.debugging: print obj, proto
-
-    return adapt(adapted, proto, None)
-
+    if adapt(temp, ILangMod, None) != None: 
+        try: out = temp.get[cls.lower()] # get the named class
+        except KeyError: raise pub.errors.PubError, "Can't find class"
+    
+        return out(*args) # if args is not empty args will be passed. 
+                           # else temp will be called without args.
+    
+#def lingo(obj,proto):
+#    """
+#    lingo is used for instances when we want to find the right language.
+#    """
+#
+#    adapted = adapt(obj, ILang, None)
+#    if adapted != None:
+#        adapted = adapted.initiate()
+#        if pub.debugging: print adapted
+#
+#    if pub.debugging: print obj, proto
+#
+#    return adapt(adapted, proto, None)
+#
 #----------------------------------------------------------------------
 # event -- a class which keeps something to be executed in the future
 #
@@ -329,7 +401,7 @@ class Scheduler:
         self.AddEvent(5, event) will add a new event 5 minutes from now. 
         
         """
-        time = self.minutes + pRelTime
+        time = int(self.minutes) + int(pRelTime)
         if self.events.has_key(time):
             self.events[time].append(pEvent)
         else: self.events[time] = [pEvent]
@@ -1135,7 +1207,7 @@ class Symbol:
                              # to components after it has been initialized.
                              # this is the variable that the outside uses.
         
-        if self._components: self.addComponents(self._components)
+        self.addComponents(self._components) # Add the components
             
 
     def addComponents(self,com):
@@ -1148,9 +1220,9 @@ class Symbol:
         """
 
         
-        if type(com) == types.ListType:
+        if com and type(com) == types.ListType:
             for each in com: self.addComponents(each)
-
+            
         if type(com) == types.ClassType: 
             self.addComponents(com())
 
@@ -1183,7 +1255,7 @@ class Symbol:
             #delete all occurences of the class
             for item in delete:
                 self.components.remove(item)
-                    
+            del delete        
 
         if type(com) == types.InstanceType: 
             if com in self.components:
@@ -1191,5 +1263,3 @@ class Symbol:
             
 
         else: raise TypeError('%com must be  of type List, Class or Instance')
-        
-        #XXX: Not sure about the details here yet. 

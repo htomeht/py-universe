@@ -23,12 +23,15 @@ def runtest(name, gamepath, makeoutput):
     outputfile = pathjoin(testdir, '%s-output' % name)
     if makeoutput: testfile = outputfile
     else: testfile = pathjoin(testdir, '%s-testout' % name)
-    system('PYTHONPATH=%s PUBTESTING=true python %s <%s >%s' % (PYTHONPATH,
+    system('PYTHONPATH=%s PUBTESTING=true python pubrun %s <%s >%s' % (PYTHONPATH,
         gamepath, inputfile, testfile))
     system('rm pub.dat')
     if makeoutput: return
-    system('diff %s %s' % (outputfile, testfile))
-    system('rm %s' % testfile)
+    system("sed -e 's/0x.*c//' %s > diff1" % testfile)
+    system("sed -e 's/0x.*c//' %s > diff2" % outputfile)
+#    system('diff %s %s' % (outputfile, testfile))
+    system('diff diff1 diff2')
+    system('rm %s diff1 diff2' % testfile)
 
 
 ### Main program ###
@@ -71,6 +74,7 @@ runtest('gredgar', gredgar, makeoutput)
 
 #Debugging test
 debug = pathjoin(pubdir, 'pubdemo.py')
-runtest('debug', debug, makeoutput)
+runtest('debug', debug + ' -d', makeoutput)
+
 
 print "\nTesting Complete."

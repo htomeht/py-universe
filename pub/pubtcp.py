@@ -1,21 +1,44 @@
-#   pubtcp.py                                               8/05/96 JJS
+#    pubtcp.py                                            8/05/96 JJS
 #
-#   This module defines an Actor which connects to the
-#   game via TCP/IP -- in effect, turning PUB into MUD.
+#   Copyright (C) 1996 Joe Strout
 #
-#   Use this module with:  import pubtcp
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
 #
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
 #
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# CHANGELOG
+# 
 #   2002-5/10:
-#       Terry Hancock
+#     Terry Hancock
 #       I'm not going to support this, because:
 #       1) It's probably been superceded by JJS's MUD project
 #       2) I'm not planning on using it, since I'm more interested
 #       in adding AI players.
 #
+#   2004-22/10: Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
+"""
+This module defines an Actor which connects to the
+game via TCP/IP -- in effect, turning PUB into MUD.
+"""
+
+
 #----------------------------------------------------------------------
 
-# standard modules
+# standard imports
 import whrandom
 import string
 import types
@@ -23,11 +46,15 @@ import re
 import copy
 from socket import *
 
-# PUB modules
+
+# PUB imports
+
 import pub
 from pubcore import *
 import pubverbs
 from pubobjs import Actor
+
+# protocols imports
 
 #----------------------------------------------------------------------
 # global (module) vars

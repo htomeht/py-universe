@@ -1,4 +1,4 @@
-#   interfaces.py    contains interfaces for pub/pyuniverse 04/03/24
+#   interfaces.py    contains interfaces for PUB         04/03/24  GJ
 #
 #   Copyright (C) 2004 Gabriel Jagenstedt
 #
@@ -15,6 +15,14 @@
 #    You should have received a copy of the GNU Lesser General Public
 #    License along with this library; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# CHANGELOG
+#
+#   2004-22/10: Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
 """
 This module should contain all interfaces for pub. An interface is a class
 which documents how other classes or class instances should work. 
@@ -43,8 +51,11 @@ callable with the minimum of (chain). This ensures that invoke works with all
 these methods.
 """
 
+# system imports 
 
-#protocols imports
+# pub imports
+
+# protocols imports
 
 from protocols import Interface, advise
 
@@ -53,51 +64,20 @@ from protocols import Interface, advise
 # Language interfaces.
 #
 
-class ILang(Interface):
+
+class ILangMod(Interface):
     """
-    ILang documents what a language module needs to be accepted as such
+    ILangMod documents what a language module needs to be accepted as such
 
-    A language module should contain a number of classes that provide certain
-    protocols.
+    english.py should provide ILangMod like: 
 
-    Classes whose instances provide the following as adapters for ex IEnglish
-
-    IParser
-    ICommand
-    IThing (IDescribable and ISyntax to be exact)
-
-    other language dependent protocols.
-    
-    english.py should provide ILang like: 
-
-    advise(moduleProvides=[ILang])
+    advise(moduleProvides=[ILangMod])
 
     as should all other language modules.
+
+    This is to ensure that the module is really a language.
     """
     
-#--------------------------------------------------------------------
-#
-class IEnglish(Interface):
-    """
-    IEnglish doesn't ask anything of it's users.
-    """
-
-#--------------------------------------------------------------------
-#
-class IParser(Interface):
-    """
-    All IParser providers should provide the Parse() method.
-    """
-    #Actually this should be parse but to maintain funktionality this will
-    #do for now.
-
-    def Parse(pSt): 
-        """
-        method to parse a string and return a functional command.
-        this method does all the calling and such.
-        """
-
-
 #--------------------------------------------------------------------
 #
 class ISymbol(Interface):
@@ -115,17 +95,6 @@ class ISymbol(Interface):
         method that removes components listed in com if it can be found.
         """
 
-#--------------------------------------------------------------------
-#
-class IThing(Interface):
-    """
-    Interface for Things.
-
-    IThing is a so called marker interface. It doesnt have any methods or
-    attributes. 
-    """
-    advise(protocolExtends=[ISymbol])
-
 
 #-----------------------# THING INTERFACES #------------------------#
 # This Section contains interfaces that might be added to Things, like
@@ -137,9 +106,10 @@ class IThing(Interface):
 #                asAdapterForProtocols=[IThing]
 # 
 # It should be simple to make new Thing interfaces.
-
+#
 #--------------------------------------------------------------------
 # IDescribable
+#
 class IDescribable(Interface):
     """
     Classes that provide IDescribable can be given descriptions and have 
@@ -150,6 +120,7 @@ class IDescribable(Interface):
 
 #--------------------------------------------------------------------
 #ILocatable
+#
 class ILocatable(Interface):
     """
     Classes that provide ILocatable are used to show where an item is situated
@@ -159,17 +130,20 @@ class ILocatable(Interface):
 
 #--------------------------------------------------------------------
 #ISyntax
-class ISyntax(Interface):
-    """
-    Classes that provide ISyntax are the base of an objects language related 
-    interface. Providing articles, names for singular, plural and whatever a
-    specific language parser would need. IDescribable components are likely
-    language specific.
-    """
+# 
+# Makes more sense to include this in IDescribable
+#class ISyntax(Interface):
+#    """
+#    Classes that provide ISyntax are the base of an objects language related 
+#    interface. Providing articles, names for singular, plural and whatever a
+#    specific language parser would need. ISyntax components are likely
+#    language specific.
+#    """
 
 
 #--------------------------------------------------------------------
 #ITangible
+#
 class ITangible(Interface):
     """
     Classes that provide ITangible have size and weight and ways to deal with
@@ -279,7 +253,7 @@ class IGiveL(Interface):
     Provides the give method.
     """
 
-    def get(chain,cmd):
+    def give(chain,cmd):
         """method that listens for give events"""
 
 #--------------------------------------------------------------------
@@ -298,7 +272,7 @@ class IGoL(Interface):
 class ILockL(Interface):
     """
     Used on objects which wish to be lockable.
-    Components could be combiantion locks, key locks, password locks and so on.
+    Components could be combination locks, key locks, password locks and so on.
     """
 
     def lock(chain,cmd):
@@ -448,7 +422,7 @@ class IWearL(Interface):
 #
 # We will use advise to tell the framework that these packages are subclasses
 # of others.
-# advise(protocolIsSubsetOf = [IOpenL, ICloseL] for some openable package.
+# advise(protocolExtends = [IOpenL, ICloseL] for some openable package.
 
 class IContainer(Interface):
     """
@@ -456,7 +430,7 @@ class IContainer(Interface):
     be requitered by all containers.
     """
     
-    advise(protocolIsSubsetOf = [IPutL])
+    advise(protocolExtends = [IPutL])
 
     
     def containNoCheck(chain,*pThing):
@@ -469,8 +443,24 @@ class IContainer(Interface):
     def put(chain,cmd):
         """the put listener method"""
 
+        
+
+
+#--------------------------------------------------------------------
+# Verb Interfaces --
+#   Verb interfaces tells us how a verb should do its work.
+#   For example it says what errors a verb should be able to handle.
+#   Like Open should be able to handle StateError, ObjError, LockError
+ 
+#--------------------------------------------------------------------
+# ITest -- Used to test adaption in different places.
+#
+#  Amonst others used inside language modules for adapters.
+#  Should also be used heavily by the testing framework.
+#
 class ITest(Interface):
-    """A Test Interface Facilit, use where you deem fit."""
+    """A Test Interface Facility, use where you deem fit."""
 
     def test(obj,proto):
         """should just print out that everything worked out."""
+        print 'aok'

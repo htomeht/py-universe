@@ -13,20 +13,36 @@ pub.scheduler = Scheduler("12:00")
 
 # print help message
 def usage():
-    print """usage: pubrunner.py [options] -g <game name>
+    print
+    print """usage: pubrun <game name> [options]
 
 Options:
--d, --debug              : set mode to debugging mode.
--h, --help               : print this help message and exit
--l, --language           : specify which language to run ie English.
--g, --game               : the name of the game.
+  -d,   --debug          : set mode to debugging mode.
+  -h,   --help           : print this help message and exit.
+  -l,   --language       : specify which language to run ie English.
+  -u,   --user-interface : specify an available user interface, ie ncurses.
           """
 
 def rungame():
-    """Start the engine."""
+    """
+    Start the engine. 
+    Set up the world and start the clock.
+    """
+    # Game Banner
+    print
+    print "  #----------------------------------------------------#"
+    print "  # This game was created with Python Universe Builder #"
+    print "  #                                                    #"
+    print "  # 'PUB' is freely available under the LGPL           #"
+    print "  #                                                    #"
+    print "  #    py-universe.sourceforge.net                     #"
+    print "  #----------------------------------------------------#"
+    print
+    
     pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
     pub.scheduler.AddEvent( 0, pub.Event(pub.player, 'object.Act()') )
+
 
     while pub.gameStatus == RUNNING:
         try: pub.scheduler.Update()
@@ -36,8 +52,8 @@ def rungame():
 def main():
     """parse commandline options."""
 
-    s_args = "dhl:g:"
-    l_args = ["debug", "help", "language=", "game="]
+    s_args = "dhl:u:"
+    l_args = ["debug", "help", "language=", "user-interface="]
 
     try:
         opts, args = getopt.gnu_getopt(sys.argv[2:],s_args, l_args)
@@ -56,8 +72,22 @@ def main():
         if o in ("-d", "--debug"):
             import pub.debug
             pub.debugging = True
-    __import__(str(sys.argv[1])[:-3], globals, locals)
-    rungame()
+        if o in ("-u", "user-interface"):
+            pub.ui = str(a)
+       
+    for x in sys.argv[2:]:
+        if x[0] != '-': 
+            usage()
+            sys.exit(2)
+    #import the actuall game
+    try: 
+        
+        __import__(str(sys.argv[1])[:-3], globals, locals)
+    except ImportError,IndexError: 
+        usage()
+        sys.exit(2)
+    
+    rungame() # start it
 
 if __name__ == "__main__": main()
 

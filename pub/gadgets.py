@@ -1,19 +1,39 @@
-#   gadgets.py                                              6/01/98 JJS
+#    gadgets.py    contains various gadgets                  6/01/98 JJS
 #
-#   This module defines a number of handy (or at least cool) gadgets.
+#   Copyright (C) 1998 Joe Strout
 #
-#   Use this module with:  import gadgets
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# CHANGELOG:
 #
 #   2002-5/10: Terry Hancock
 #       Copy brief comments into doc strings.
 #
-#----------------------------------------------------------------------
+#   2004-22/10: Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
 """
 Extended collection of 'Thing's useful in making games.
 
 These are convenience objects which implement various useful
 things you might want in a game. They can be used as is or
 inherited into even more specialized objects.
+
+
 """
 
 # standard modules

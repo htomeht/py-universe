@@ -1,19 +1,45 @@
-#    pubcgi.py                                             5/21/04 CSM
+#    pubcgi.py                                            5/21/04 CSM
 #
-#    This module enables a PUB session to occur using CGI.
-#    demonstation: http://csm.freeshell.org/if/gargoyle/gredgar.cgi
+#   Copyright (C) 2004 Clint McCulloch
 #
-#    Use this module with:
-#       1) import pubcgi
-#       2) setup the player using the CGIPlayer
-#       3) call handle_request() with the relevant arguments. 
-#          see games/gredgar.cgi for example usage 
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
 #
-#    2004-5/21:
-#    Clint S. McCulloch (CSM) 
-#       Baseline.
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
 #
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
+# CHANGELOG
+#
+#   2004-5/21: Clint McCulloch
+#       Baseline
+#
+#   2004-22/10: Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
+"""
+    This module enables a PUB session to occur using CGI.
+    demonstation: http://csm.freeshell.org/if/gargoyle/gredgar.cgi
+
+    Use this module with:
+       1) import pubcgi
+       2) setup the player using the CGIPlayer
+       3) call handle_request() with the relevant arguments. 
+          see games/gredgar.cgi for example usage 
+
+"""
 #----------------------------------------------------------------------
+
+# system imports 
 
 import cgitb; cgitb.enable()
 import cgi, Cookie, random, pickle, os, sys, time, string
@@ -25,13 +51,17 @@ from cPickle import load, dump
 from os.path import isdir, isfile
 from os import remove
 
-# PUB modules
+# PUB imports
 import pub
 from pubcore import *
 import pubobjs
 
+# protocols imports
+
+#--------------------------------------------------------------------
 # settings
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+
 # cookie name
 id = 'gid'
 # cookie
@@ -47,8 +77,9 @@ max_saved_game_age = 60 * 60 * 24 * 7
 # erase temporary saves after 1 day
 max_tmp_game_age = 60 * 60 * 24
 
+#--------------------------------------------------------------------
 # functions
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
 
 def cleanupsaves(filelist, maxage = 86400):
     """
@@ -66,9 +97,9 @@ def cleanupsaves(filelist, maxage = 86400):
             except:
                 pass
 
-
+#--------------------------------------------------------------------
 # classes
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
 
 class CGIPlayer(pubobjs.Actor):
 
@@ -147,9 +178,11 @@ class CGIPlayer(pubobjs.Actor):
         
         # set global restored flag
         restored = TRUE
-        
+
+
+#--------------------------------------------------------------------
 # processing
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
 def handle_request(savedir, title='PUB', 
     header='', midder='', footer='', updates=3):
     """
