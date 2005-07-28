@@ -1,6 +1,6 @@
 from unittest import main, TestCase, TestSuite, makeSuite
 
-import pub.pubcore as core
+import pub
 
 
 class TestMain(TestCase):
@@ -11,17 +11,21 @@ class TestMain(TestCase):
     def testStrip(self):
         """Check that stripPunctuation does it's job"""
         mystr = 's,.!?'
-        out = core.stripPunctuation(mystr)
+        out = pub.stripPunctuation(mystr)
         assert out == 's' 
-
+ 
+    def testLingo(self):
+        """check that we can find a language instance of a class"""
+        pub.lingo('english', 'test')
+ 
 class TestEvent(TestCase):
     """
     Tests for Event 
     """
     def setUp(self):
         """Create some objects"""
-        self.obj = core.BaseThing('shrubbery')
-        self.event = core.Event(self.obj, 'self.x = 2')
+        self.obj = pub.BaseThing('shrubbery')
+        self.event = pub.Event(self.obj, 'self.x = 2')
 
     def testPerform(self):
         """check that perform really executes code"""
@@ -44,9 +48,9 @@ class TestScheduler(TestCase):
     
     def setUp(self):
         """Create some objects used by several methods of TestScheduler."""
-        self.scheduler = core.Scheduler()
-        self.obj = core.BaseThing('obj')
-        self.event = core.Event(self.obj, "")
+        self.scheduler = pub.Scheduler()
+        self.obj = pub.BaseThing('obj')
+        self.event = pub.Event(self.obj, "")
 
     def testTime(self):
         """Check that default time is set correctly"""
@@ -77,9 +81,14 @@ class TestParser(TestCase):
 
     def setUp(self):
         """create the parsing object"""
-        self.par = core.Parser()
+        self.par = pub.lingo(pub.language, 'parser')
         self.str = 'We are the knights who say Ni!'
         self.str2 = 'open the shining door'
+
+    def testParseVerb(self):
+        cmd = self.par.parse(self.str2)
+        self.assert_(cmd.verb in pub.lang.mods[pub.language].verbs)
+        
 
 #   I'm not sure what to test on the parser yet.
         
@@ -91,7 +100,7 @@ class TestCommand(TestCase):
 
     def setUp(self):
         """create a command object"""
-        self.cmd = core.Command() 
+        self.cmd = pub.Command() 
 
     def testClear(self):
         """Check that the Clear function works"""
