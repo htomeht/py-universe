@@ -1,36 +1,57 @@
 #    pubobjs.py                                             6/01/98 JJS
 #
-#    This module defines the standard PUB objects (Things).
+#   Copyright (C) 1998 Joe Strout
 #
-#    Use this module with:  import pubobjs
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
 #
-#    2002-5/10:
-#    Terry Hancock
-#        Added docstrings based on comments and some simple
-#        code analysis.
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
 #
-#----------------------------------------------------------------------
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
 
+#--------------------------------------------------------------------
+# CHANGELOG
+#
+#   2002-5/10:
+#     Terry Hancock
+#       Added docstrings based on comments and some simple
+#       code analysis.
+#
+#   2004-22/10: 
+#     Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
 """
 Defines all the most basic objects (see Gadget for some more derivatives).
 Also instantiates the "Universe" Room and the Player, named "Everyman"
 (presumeably you can change the name afterwards).
 """
 
-# standard modules
+# standard imports 
 import random
 import string
 import types
 import re
 import copy
 
-# PUB modules
+# PUB imports
 import pub
 from pubcore import *
 import pubverbs
 
+# protocols imports
 
-#----------------------------------------------------------------------
+#--------------------------------------------------------------------
+
+#--------------------------------------------------------------------
 # Thing -- overrides BaseThing to provide some common PreObj checks
 #        (couldn't do this in BaseThing, since it references pubverbs)
 #

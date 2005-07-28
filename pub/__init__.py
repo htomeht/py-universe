@@ -1,11 +1,37 @@
-#       pub.py                                             8/27/96 JJS
+#    pub    contains "global" variables                   8/27/96 JJS
 #
-#       This module defines some "global" variables.
+#   Copyright (C) 1996 Joe Strout
 #
-#       To use it:   import pub
-#                    print pub.scheduler  (or whatever)
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
 #
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #----------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------
+# CHANGELOG
+#
+#   2004-22/10: Gabriel Jagenstedt
+#       Cleaned up and inserted a copyright notice
+#--------------------------------------------------------------------
+"""
+Main pub package 
+
+use by doing -- import pub
+
+Variables are declared first because module that are imported may actually call
+some of them.
+"""
 
 scheduler = None    # this should be set to a Scheduler at start-up time
 verbdict = {}       # dictionary, converts words to Verb objects
@@ -13,9 +39,13 @@ gameStatus = 1      # game is RUNNING
 lastroom = None     # last room created; default location for new objects
 universe = None     # room which contains all other rooms
 player = None       # game player (esp. for single-user games)
-debugging = False   # are we debugging?  Don't set this, see 'Debugging' below
+debugging = False   # are we debugging? 
 language = 'english'# a string containing a language default: 'english'
 
+
+# system imports
+
+# pub imports
 
 from pubcore import *           # import core datatypes, functions, & constants
 import pubverbs                 # import standard verbs
@@ -26,32 +56,7 @@ import gadgets
 import pubtcp
 tcp = pubtcp
 import lang
+import errors
+import adapters
 
-
-#def Debugging(mode='on'):
-#    """
-#    to enable debugging mode
-#    used by putting pub.Debugging() after import pub like so:
-#
-#        import pub; pub.Debugging()
-#
-#    in your game file when doing the importing.
-#
-#    Turn if off with:
-#
-#        pub.Debugging('off')
-#
-#    """
-#    global debugging
-#    if mode.lower() == 'on':
-#        if 'pubdebug' not in locals():
-#            try: import pubdebug
-#            except ImportError: pass
-#        debugging = 1
-#        print 'Debugging On'
-#    if mode.lower() == 'off':
-#        try: del pubdebug
-#        except NameError: pass
-#        #XXX: need to delete debug verbs here, but to do that
-#        # we need to add the ability to delete verbs
-#        debugging = 0
+# protocols imports
