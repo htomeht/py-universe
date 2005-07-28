@@ -1,23 +1,43 @@
+# englishLang
+#
+# module provides methods and functions that are specific for english
+# an English class used for adapting differnt things in adapters.
+
+# system imports
+
+# pub imports
+from pub.interfaces import ILangMod 
+import core
+#import components
+#import verbs
+#import objs
+#import gadgets
+
+# protocols imports
 from protocols import advise
 
-from pub.interfaces import ILang, IEnglish 
+advise(moduleProvides=[ILangMod])
 
-import adapters
-
-advise(moduleProvides=[ILang])
+#--------------------------------------------------------------------
+# Language specific variables
 
 name = 'english'
 
-class English:
-    """
-    Provides IEnglish.
-    """
+# words known to the parser
+adverbs = [] # might be provided in verbs or objs
+conjs = ['and', 'then'] 
+garbs = ['the', 'a']
+nouns = ['it', 'self', 'me', 'here', 'room'] 
+preps = [] # supplied by each obj
+verbs = []
+translations = {}
 
-    advise(instancesProvide=[IEnglish])
+get = {'parser': core.EnglishParser, 'test': core.EnglishTest}
 
-def initiate():
-    """
-    return a language. 
-    """
+#get = {'parser': core.EnglishParser, 'test': core.EnglishTest, 
+#       'objs': objs, 'verbs': verbs, 'components': components, 
+#       'gadgets': gadgets}
+#--------------------------------------------------------------------
 
-    return English()
+#--------------------------------------------------------------------
+# 

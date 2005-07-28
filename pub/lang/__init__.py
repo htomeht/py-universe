@@ -1,18 +1,27 @@
-#pub.langs
+# pub.lang
+#
+# module provides an interface to all languages supported by pub.
 
-import pub
-
+# system imports
 import os, os.path
 
+# pub imports
+import pub
+
+#protocols imports
+
 from protocols import adapt
+
+#--------------------------------------------------------------------
 
 
 def getListing(dir=None):
     """
     a function that returns a generator of language modules.
+    Each item returned consists of a language name and a module.
     """
     
-    lang = pub.interfaces.ILang
+    lang = pub.interfaces.ILangMod
     if dir == None: 
         
         pubdir = os.path.split(os.path.abspath(pub.__file__))[0]
@@ -32,7 +41,10 @@ def getListing(dir=None):
 
             if i != None:
                 if pub.debugging: print i
-                yield i
+                yield i.name, i
 
 
-#listing = [item for item in getListing()]
+# create language modules dictionary
+mods = {}
+for name, module in getListing():
+    mods[name] = module
