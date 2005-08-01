@@ -39,7 +39,7 @@ game via TCP/IP -- in effect, turning PUB into MUD.
 #----------------------------------------------------------------------
 
 # standard imports
-import whrandom
+import random
 import string
 import types
 import re

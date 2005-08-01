@@ -37,7 +37,7 @@ inherited into even more specialized objects.
 """
 
 # standard modules
-import whrandom
+import random
 import string
 import types
 import re
