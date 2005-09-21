@@ -96,6 +96,26 @@ class ISymbol(Interface):
         """
 
 
+#----------------------------------------------------------------------
+#
+class IVerb(Interface):
+    """
+    Documents what a verb has to do in PUB.
+    """
+
+    def do(cmd):
+        """
+        Initiates the command.
+        """
+
+    def begin(cmd):
+        """
+        """
+
+    def finish(cmd):
+        """
+        """
+
 #-----------------------# THING INTERFACES #------------------------#
 # This Section contains interfaces that might be added to Things, like
 # IDescribable and ILocatable.

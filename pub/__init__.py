@@ -58,5 +58,6 @@ tcp = pubtcp
 import lang
 import errors
 import adapters
+import components
 
 # protocols imports

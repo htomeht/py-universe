@@ -29,6 +29,7 @@ obj.addComponents(compo)
 # system imports
 
 # pub imports
+import pub
 from pubcore import Symbol
 from interfaces import *
 
@@ -50,7 +51,8 @@ class Component(Symbol):
     
     advise(instancesProvide=[ISymbol])
     
-
+#--------------------------------------------------------------------
+# Components -- 
 #--------------------------------------------------------------------
 class Askable(Component):
     """
@@ -60,11 +62,9 @@ class Askable(Component):
         
     advise(instancesProvide = [IAskL])
 
-    def __init__(self, obj, proto):
+    def __init__(self):
         Component.__init__(self)
-        self.obj = obj
-        self.proto = proto
-        
+      
         # Ask specifics 
         self.answerDict = {} # a dictionary with queries and answers
         
@@ -75,7 +75,7 @@ class Askable(Component):
         if cmd == None: pass 
 
         try: return chain.next().ask(chain,cmd)
-        except StopIteration
+        except StopIteration:
             try:
                 if self.answerDict[cmd.aboutobj]:
                     cmd.tell(answer = self.answerDict[cmd.aboutobj])
@@ -87,16 +87,22 @@ class Carriable(Component):
     """
     Component that enables the object to be carried about.
     Should activate picking up, dropping and giving it away.
+    In general this is all that is needed if one wants to make an object that
+    doesn't provide all the interfaces this does that is easily done.
     """
 
-    def __init__(self, obj, proto):
+    advise(instancesProvide=[IGetL,IGiveL,IDropL,IPutL])
+    
+    def __init__(self):
         """
         """
         Component.__init__(self)
-        self.obj = obj
-        self.proto = proto
 
         # Carriable specifics
+
+    def drop(self, chain, cmd):
+        """
+        """
         
     def get(self, chain, cmd):
         """
@@ -115,7 +121,8 @@ class Carriable(Component):
         except StopIteration: 
             self.obj.desc.initialDesc = ''
             self.obj.desc.initialNote = ''
-
+            #XXX: Here is needed the code for telling cmd that the command
+            # was succesfull.
             self.obj.moveTo(cmd.actor)
             raise
                 
@@ -123,10 +130,10 @@ class Carriable(Component):
         """
         """
     
-    def drop(self, chain, cmd):
-        """
-        """
 
+    def put(self, chain, cmd):
+        """
+        """
 
 class Drinkable(Component):
     """
@@ -135,10 +142,8 @@ class Drinkable(Component):
 
     advise(instancesProvide=[IDrinkL])
     
-    def __init_(self,obj,proto):
+    def __init_(self):
         Component.__init__(self)
-        self.obj = obj
-        self.proto = proto
 
         # Drink Specifics
         self.amount = 1 # How much liquid the object consist of. 
@@ -160,7 +165,7 @@ class Drinkable(Component):
             elif self.amount == 1:
                 cmd.dirobj.MoveTo('TRASH')
 
-            raise # reraise StopIteration
+            raise # reraise Errors and StopIteration
        
     
 class Edible(Component):
@@ -184,7 +189,9 @@ class Enterable(Component):
     """
     advise(instancesProvide=[IGoL])
 
-    def __init__(self, obj, proto)
+    def __init__(self):
+        """
+        """
     
     def go(self, chain, cmd):
         """
@@ -192,15 +199,12 @@ class Enterable(Component):
     
 class Lockable(Component):
     """
-    
     """
 
-    advise(instancesProvide=[ILockL,IUnlockL,IOpenL,ICloseL]
+    advise(instancesProvide=[ILockL,IUnlockL,IOpenL,ICloseL])
 
-    def __init__(self, obj, proto):
+    def __init__(self):
         Component.__init__(self)
-        self.obj = obj
-        self.proto = proto
 
         #Lockable specifics
         self.isLocked = False
@@ -231,15 +235,13 @@ class Openable(Component):
 
     advise(instancesProvide=[ICloseL,IOpenL])
 
-    def __init__(self, obj, proto):
+    def __init__(self):
        Component.__init__(self) 
-       self.obj = obj
-       self.proto = proto
 
        #Openable specifics
        self.isOpen = True
     
-   def close(self, chain, cmd):
+    def close(self, chain, cmd):
         """
         Tries to close itself.
         """
@@ -315,3 +317,13 @@ class TestComponent(Component):
     """
 
     advise(instancesProvide=[ITest])
+
+    def test(self, chain, cmd):
+        """
+        funtion that does nothing but returns
+        most likely this will raise a StopIteration error.
+        """
+
+        #print "Adaption and Invokation done"
+        
+        return chain.next().test(chain, cmd)

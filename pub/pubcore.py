@@ -970,12 +970,12 @@ class Verb:
 
     def Finish(self,cmd):
         """
-        execute and output the even
+        execute and output the event
         
         do the actual action, i.e. changes to the game objects
         
         do post-processing to provide alternate output
-        return OK in either case her, since command executed
+        return OK in either case here, since command executed
         """
         if self.DoPostchecks(cmd) == OK:
             cmd.Tell( self.succ, self.osucc )
@@ -1219,19 +1219,20 @@ class Symbol:
         resent to addComponents
         """
 
+        if com:
         
-        if com and type(com) == types.ListType:
-            for each in com: self.addComponents(each)
+            if type(com) == types.ListType:
+                for each in com: self.addComponents(each)
             
-        if type(com) == types.ClassType: 
-            self.addComponents(com())
+            elif type(com) == types.ClassType: 
+                self.addComponents(com())
 
-        if type(com) == types.InstanceType and isinstance(com, Symbol): 
-            self.components.append(com)
+            elif type(com) == types.InstanceType and isinstance(com, Symbol): 
+                self.components.append(com)
         
-        else: raise TypeError('%com must be of type List, Class or Instance')
+            else: raise TypeError('com must be of type List, Class or Instance')
 
-        # there might well be more issues to deal with but this is a start.
+            # there might well be more issues to deal with but this is a start.
 
     def delComponents(self,com):
         """
@@ -1242,24 +1243,25 @@ class Symbol:
         When given a class all classinstances are deleted.
         When given an instance just that instance is removed.        
         """
+        
+        if com:
 
-        if type(com) == types.ListType: 
-            for each in com: self.delComponents(each)
+            if type(com) == types.ListType: 
+                for each in com: self.delComponents(each)
 
-        if type(com) == types.ClassType: 
-            delete = []
-            for item in self.components:
-                if item.__class__ == com:
-                    delete.append(item)
+            elif type(com) == types.ClassType: 
+                delete = []
+                for item in self.components:
+                    if item.__class__ == com:
+                        delete.append(item)
 
-            #delete all occurences of the class
-            for item in delete:
-                self.components.remove(item)
-            del delete        
+                #delete all occurences of the class
+                for item in delete:
+                    self.components.remove(item)
+                del delete        
 
-        if type(com) == types.InstanceType: 
-            if com in self.components:
-                self.components.remove(com)
+            elif type(com) == types.InstanceType: 
+                if com in self.components:
+                    self.components.remove(com)
             
-
-        else: raise TypeError('%com must be  of type List, Class or Instance')
+            else: raise TypeError('com must be of type List, Class or Instance')
