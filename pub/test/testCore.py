@@ -18,6 +18,15 @@ class TestMain(TestCase):
         """check that we can find a language instance of a class"""
         pub.lingo('english', 'test')
  
+    def testInvoke(self):
+        """check that invoking works"""
+        basic = pub.components.Component()
+        addon = pub.components.TestComponent()
+        basic.addComponents(addon)
+        pub.invoke(basic, pub.interfaces.ITest, 'test')
+
+
+    
 class TestEvent(TestCase):
     """
     Tests for Event 

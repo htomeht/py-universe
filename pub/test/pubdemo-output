@@ -1,105 +1,84 @@
 
-Universe
-It looks like an ordinary Universe.
+  #----------------------------------------------------#
+  # This game was created with Python Universe Builder #
+  #                                                    #
+  # 'PUB' is freely available under the LGPL           #
+  #                                                    #
+  #    py-universe.sourceforge.net                     #
+  #----------------------------------------------------#
 
 
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
 
->...at WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->...at WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
+  Bert is here.
+  There is a banana here.
+  There is a rock here.
 
 
+>He's just a nondescript, ordinary-looking guy.  (But he just might give you a
+sack if you tell him to.)
 
->Look at what?!?
+>It looks like an ordinary banana.
 
->Look at what?!?
+>It looks like an ordinary rock, except that it glows very faintly.
 
->Warning: unknown word shop
+>It looks like an ordinary rock, except that it glows very faintly.
 
-Universe
-It looks like an ordinary Universe.
+>It looks like an ordinary west.
 
+>It looks like an ordinary north.
 
+>It looks like an ordinary south.
+Guard enters from the south.
 
->Warning: unknown word n
+>It's a tall, lean man in a crisp uniform, who has decorated his face with a
+neatly trimmed mustache and a perpetual scowl.
+The Guard marches up and down the square.
 
-Universe
-It looks like an ordinary Universe.
+>You say "bert, give me sack"
+Bert gives you a bag.
 
+>It looks like an ordinary bag.
 
+>The bag appears to be empty.
 
->Warning: unknown word s
+>You get the banana.
 
-Universe
-It looks like an ordinary Universe.
+>You get the rock.
+Guard exits to the north.
 
+>It looks like an ordinary rock, except that it glows very faintly.
 
+>You put the rock into the bag.
 
->Warning: unknown word guard
+>It looks like the bag contains:
+   - a rock
 
-Universe
-It looks like an ordinary Universe.
+>You are carrying:
+   - a bag
+   - a banana
 
+>You put the banana into the bag.
 
+>You are carrying:
+   - a bag
+Guard enters from the north.
 
->Warning: unknown word bert
-Huh?!?
+>It looks like the bag contains:
+   - a rock
+   - a banana
+The Guard marches up and down the square.
 
->Warning: unknown word sack
+>You head north.
 
-Universe
-It looks like an ordinary Universe.
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
 
+  There is a barrel here.
 
-
->...in WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word banana
-Get what?!?
-
->Get what?!?
-
->Look at what?!?
-
->...in WHAT?!?
-Put what where?!?
-
->...in WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->You are empty-handed.
-
->Warning: unknown word banana
-Put what where?!?
-
->You are empty-handed.
-
->...in WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word n
-Huh?!?
 
 >You say "blarg"
 
@@ -107,330 +86,353 @@ Huh?!?
 
 >You say "blarg"
 
->Warning: unknown word barrel
+>A large wooden barrel has been set at the end of the street.
 
-Universe
-It looks like an ordinary Universe.
+>It looks like the barrel contains:
+   - some water
 
+>It looks like an ordinary water.
 
+>You don't have the water
 
->...in WHAT?!?
+>You'll have to put it in something.
 
-Universe
-It looks like an ordinary Universe.
+>North leads nowhere.
 
+>You head east.
 
+The Flaming Python
+This pub is dark, loud, and smells of spirits.
 
->Warning: unknown word water
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word water
-You can't see any <dirobj> here.
-
->Warning: unknown word water
-Get what?!?
-
->Warning: unknown word n
-Huh?!?
-
->Warning: unknown word e
-Huh?!?
-
->Warning: unknown word mug
-
-Universe
-It looks like an ordinary Universe.
+  There's an abandoned mug on one of the tables.
+  You see 10 chips here.
 
 
+>It's an ordinary beer mug, lying abandoned in a puddle of solitude which is
+probably exceeded only by that surrounding its former owner.
 
->...in WHAT?!?
+>The mug appears to be empty.
 
-Universe
-It looks like an ordinary Universe.
+>You get the mug.
 
+>Potato chips is potato chips -- what would you expect?
 
+>You can't eat 10 chips.
 
->Warning: unknown word mug
-Get what?!?
+>You get 10 chips.
 
->Warning: unknown word chips
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word chips
-What should I eat?.
-
->Warning: unknown word chips
-Get what?!?
-
->Warning: unknown word chips
-Put what where?!?
+>You put 10 chips into the bag.
 
 >
-Universe
-It looks like an ordinary Universe.
+The Flaming Python
+This pub is dark, loud, and smells of spirits.
 
 
 
->Warning: unknown word n
-Huh?!?
+>Huh?!?
 
->Warning: unknown word w
-Huh?!?
+>You head west.
+
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+  Guard is here.
+
 
 >  Enter a name for this game, default is pub.dat.  Saving game to disk...
   Game saved as pub.dat
 
->Warning: unknown word water
-Put what where?!?
+>
+>You put the water into the mug.
 
->Warning: unknown word water
-You can't see any <dirobj> here.
+>You drink the water.
+You feel less thirsty.
 
->...in WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
+>The barrel appears to be empty.
+Guard exits to the south.
 
 >  Enter a save game to load, default is pub.dat.  Restoring game from disk...
   Game pub.dat restored
 
-Universe
-It looks like an ordinary Universe.
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
+
+  There is a barrel here.
+  Guard is here.
 
 
+>
+>It looks like the barrel contains:
+   - some water
 
->...in WHAT?!?
+>You put the water into the mug.
 
-Universe
-It looks like an ordinary Universe.
+>It looks like an ordinary mug.
+Guard exits to the south.
 
+>It looks like the mug contains:
+   - some water
 
+>You head west.
 
->Warning: unknown word water
-Put what where?!?
+Magic Shop
+You're in a small building filled with arcane magic items.
 
->...at WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->...in WHAT?!?
-
-Universe
-It looks like an ordinary Universe.
+  There is a cloak here.
 
 
+>This magic cloak will make you invisible.  It says so, right there on the tag.
 
->Warning: unknown word w
-Huh?!?
-
->Warning: unknown word cloak
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word cloak
-Get what?!?
+>You get the cloak.
 
 >It looks like an ordinary Everyman.
 Everyman looks at you.
 
->Warning: unknown word cloak
-You can see no way to do that.
+>You wear the cloak.
 
->It looks like an ordinary Everyman.
-Everyman looks at you.
+>Look at what?!?
 
->Warning: unknown word cloak
-You can see no way to do that.
+>You remove the cloak.
 
->Warning: unknown word cloak
-Put what where?!?
+>You put the cloak into the bag.
 
->Warning: unknown word e
-Huh?!?
+>You head east.
 
->Warning: unknown word s
-Huh?!?
+North End of Town
+Standing at the north end of the town, you have shops on three sides and the
+center of town to the south.
 
->Warning: unknown word s
-Huh?!?
-
->Warning: unknown word transceiver2
-
-Universe
-It looks like an ordinary Universe.
+  There is a barrel here.
 
 
+>You head south.
 
->Warning: unknown word transceiver2
-You can see no way to do that.
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
 
->Warning: unknown word e
-Huh?!?
+  Bert is here.
 
->Warning: unknown word w
-Huh?!?
 
->Warning: unknown word w
-Huh?!?
+>You head south.
 
->Warning: unknown word s
-Huh?!?
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
 
->Warning: unknown word n
-Huh?!?
+  There is a Transceiver2 here.
+  Guard is here.
 
->Warning: unknown word w
-Huh?!?
+Guard exits to the north.
 
->Warning: unknown word clock
+>It looks like an ordinary Transceiver2.
 
-Universe
-It looks like an ordinary Universe.
+>The Transceiver2 is now on.
+
+>You head east.
+
+Invisibility Shop
+This shop has shelves upon shelves of, well, nothing. At least, nothing that
+you can see.
 
 
 
->Warning: unknown word glasses
+>You head west.
 
-Universe
-It looks like an ordinary Universe.
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
 
-
-
->Warning: unknown word glasses
-Get what?!?
-
->Warning: unknown word glasses
-You can see no way to do that.
-
->
-Universe
-It looks like an ordinary Universe.
+  There is a Transceiver2 here.
 
 
+>West leads nowhere.
 
->Warning: unknown word transceiver1
+>South leads nowhere.
 
-Universe
-It looks like an ordinary Universe.
+>You head north.
 
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
 
+  Bert is here.
+  Guard is here.
 
->Warning: unknown word transceiver1
-Get what?!?
+Guard exits to the north.
 
->Warning: unknown word transceiver1
-You can see no way to do that.
+>You head west.
 
->Warning: unknown word e
-Huh?!?
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
 
->Warning: unknown word transceiver1
-Give <the dirobj> to whom?!?
+  A large clock against the wall reads 13:58.
+  There is a pair of glasses here.
+  There is a Transceiver1 here.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
 
->Warning: unknown word w
-Huh?!?
+"Don't you wish we were married?" says John on the TV.
 
->Warning: unknown word blindfold
+>It's a dark rosewood grandfather clock, which reads 14:00. The pendulum swings
+methodically back and forth.
+"But Darling," Marsha replies, "we are!"
 
-Universe
-It looks like an ordinary Universe.
+>These magic glasses will let you see invisible objects.
+"...or did you mean to each other?"
 
+>You get the pair of glasses.
 
-
->Warning: unknown word jack-in-the-box
-
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word jack
-Get what?!?
-
->Warning: unknown word jack
-You can see no way to do that.
-
->Warning: unknown word jack
-
-Universe
-It looks like an ordinary Universe.
-
-
+>You wear the pair of glasses.
+The TV takes a commercial break.
 
 >
->
->Warning: unknown word lamp
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
 
-Universe
-It looks like an ordinary Universe.
-
-
-
->Warning: unknown word lamp
-Get what?!?
-
->Warning: unknown word lamp
-You can see no way to do that.
-
->Warning: unknown word tv
-
-Universe
-It looks like an ordinary Universe.
+  A large clock against the wall reads 14:08.
+  There is a Transceiver1 here.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
 
 
+>It looks like an ordinary Transceiver1.
 
->Warning: unknown word camera
+>You get the Transceiver1.
+ TV says, "And now back to our program..."
 
-Universe
-It looks like an ordinary Universe.
+>The Transceiver1 is now on.
 
+>You head east.
 
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
 
->Warning: unknown word camera
-Get what?!?
-
->Warning: unknown word camera
-Use what?!?
-
->You are empty-handed.
-
->Warning: unknown word photo
-
-Universe
-It looks like an ordinary Universe.
+  Bert is here.
+  Guard is here.
 
 
+>You give the Transceiver1 to Bert.
+Guard exits to the south.
+On the transceiver: Guard enters from the north.
 
->Warning: unknown word e
-Huh?!?
+>You head west.
 
->Warning: unknown word s
-Huh?!?
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
 
->Warning: unknown word e
-Huh?!?
+  A large clock against the wall reads 14:20.
+  There is a blindfold here.
+  There is a jack-in-the-box here.
+  There is a lamp here.
+  TV is here.
+  There is a camera here.
 
->Warning: unknown word ring
+"Don't you wish we were married?" says John on the TV.
 
-Universe
-It looks like an ordinary Universe.
+>It looks like an ordinary blindfold.
+"But Darling," Marsha replies, "we are!"
+
+>It looks like an ordinary jack-in-the-box.
+"...or did you mean to each other?"
+
+>You get the jack-in-the-box.
+
+>You push Jack into his box, forcing the crank around.
+The TV takes a commercial break.
+
+>The Jack-in-the-box is ticking softly, as the little crank whirls round.
+
+>Jack leaps out of his box with a loud SPROING!
+ TV says, "And now back to our program..."
+
+>On the TV, John says "Marsha, Darling, I love you so much!"
+"Don't you wish we were married?" says John on the TV.
+
+>It looks like an ordinary lamp.
+"But Darling," Marsha replies, "we are!"
+
+>You get the lamp.
+"...or did you mean to each other?"
+
+>You turn on the lamp, and it glows brightly.
+
+>It looks like an ordinary TV.
+The TV takes a commercial break.
+
+>It looks like an ordinary camera.
+
+>You get the camera.
+
+>You snap a picture.
+ TV says, "And now back to our program..."
+
+>You are carrying:
+   - a bag
+   - a mug
+   - a pair of glasses (worn)
+   - a jack-in-the-box
+   - a lamp (lit)
+   - a camera
+   - a photo of Gadget Shop
+
+>The photograph depicts:
+
+Gadget Shop
+This shop is filled with all manner of inscrutable gizmos.  You have no idea
+what most of them could be.
+
+  A large clock against the wall reads 15:00.
+  There is a blindfold here.
+  TV is here.
 
 
+>You head east.
+
+Town Square
+You are in the center of town.  A "Gadget Shop" lies to the west, and the
+street runs north and south.  Wilderness lies to the east.
+
+  Bert is here.
+  Guard is here.
+
+
+>You head south.
+
+South End of Town
+You're at the south end of the town street.  There are buildings to the south,
+east, and west.  The center of town lies north.  There is a dusty manhole in
+the street.
+
+  There is a Transceiver2 here.
+
+On the transceiver: Guard exits to the south.
+Guard enters from the north.
+
+>You head east.
+
+Invisibility Shop
+This shop has shelves upon shelves of, well, nothing. At least, nothing that
+you can see.
+
+  There is a ring here.
+
+
+>You see a shimmering, transparent ring.
 
 >  Are you sure you want to quit? Y/y/N/n (Default No): Quitting game.

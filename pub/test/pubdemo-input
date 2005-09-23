@@ -41,10 +41,12 @@ n
 w
 save
 
+
 put water in mug
 drink water
 look in barrel
 restore
+
 
 look in barrel
 put water in mug
