@@ -1,0 +1,882 @@
+<html>
+<head>
+<title>Locale module naming in PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Locale module names in PUB 2.x+</h1>
+
+<body>
+<h3>Locale Names in PUB</h3>
+ISO 639 (-1, -2, and -3) provide officially designated codes for a large number of languages.
+Please use these codes to identify PUB locale modules:
+<ul>
+<li>If an ISO 639 2-LETTER code exists, use it: English --&gt; 'en'</li>
+<li>If not, then use an ISO 639 3-LETTER code: Cherokee --&gt; 'chr'</li>
+<li>Otherwise, use "x_" plus a name for the language: Sindarin --&gt; 'x_Sindarin'</li>
+</ul>
+Note that this does not provide for regional variations. Those are written
+using an underscore ("_"), followed by the region code in caps, like this:
+<pre>
+en_US  (United States English)
+en_UK  (United Kingdom English)
+</pre>
+<p>
+PUB will treat the characters before the "_" specially -- if no module
+exists with the exact name requested by the LOCALE, then one sharing the
+same language code will be used.
+</p>
+
+<table>
+<tr>
+<td>
+<H5><A NAME="2letter">2-letter codes</A></H5>
+<textarea rows=10 cols=15>
+AA Afar
+AB Abkhazian
+AF Afrikaans
+AM Amharic
+AR Arabic
+AS Assamese
+AY Aymara
+AZ Azerbaijani
+BA Bashkir
+BE Byelorussian
+BG Bulgarian
+BH Bihari
+BI Bislama
+BN Bengali Bangla
+BO Tibetan
+BR Breton
+CA Catalan
+CO Corsican
+CS Czech
+CY Welsh
+DA Danish
+DE German
+DZ Bhutani
+EL Greek
+EN English American
+EO Esperanto
+ES Spanish
+ET Estonian
+EU Basque
+FA Persian
+FI Finnish
+FJ Fiji
+FO Faeroese
+FR French
+FY Frisian
+GA Irish
+GD Gaelic Scots Gaelic
+GL Galician
+GN Guarani
+GU Gujarati
+HA Hausa
+HI Hindi
+HR Croatian
+HU Hungarian
+HY Armenian
+IA Interlingua
+IE Interlingue
+IK Inupiak
+IN Indonesian
+IS Icelandic
+IT Italian
+IW Hebrew
+JA Japanese
+JI Yiddish
+JW Javanese
+KA Georgian
+KK Kazakh
+KL Greenlandic
+KM Cambodian
+KN Kannada
+KO Korean
+KS Kashmiri
+KU Kurdish
+KY Kirghiz
+LA Latin
+LN Lingala
+LO Laothian
+LT Lithuanian
+LV Latvian Lettish
+MG Malagasy
+MI Maori
+MK Macedonian
+ML Malayalam
+MN Mongolian
+MO Moldavian
+MR Marathi
+MS Malay
+MT Maltese
+MY Burmese
+NA Nauru
+NE Nepali
+NL Dutch
+NO Norwegian
+OC Occitan
+OM Oromo Afan
+OR Oriya
+PA Punjabi
+PL Polish
+PS Pashto Pushto
+PT Portuguese
+QU Quechua
+RM Rhaeto-Romance
+RN Kirundi
+RO Romanian
+RU Russian
+RW Kinyarwanda
+SA Sanskrit
+SD Sindhi
+SG Sangro
+SH Serbo-Croatian
+SI Singhalese
+SK Slovak
+SL Slovenian
+SM Samoan
+SN Shona
+SO Somali
+SQ Albanian
+SR Serbian
+SS Siswati
+ST Sesotho
+SU Sudanese
+SV Swedish
+SW Swahili
+TA Tamil
+TE Tegulu
+TG Tajik
+TH Thai
+TI Tigrinya
+TK Turkmen
+TL Tagalog
+TN Setswana
+TO Tonga
+TR Turkish
+TS Tsonga
+TT Tatar
+TW Twi
+UK Ukrainian
+UR Urdu
+UZ Uzbek
+VI Vietnamese
+VO Volapuk
+WO Wolof
+XH Xhosa
+YO Yoruba
+ZH Chinese
+ZU Zulu
+</textarea>
+</td>
+
+
+<td>
+<H5><A NAME="3letter">3-letter codes</A></H5>
+<textarea rows=10 cols=40>
+abk      ab    Abkhazian
+ace            Achinese
+ach            Acoli
+ada            Adangme
+aar      aa    Afar
+afh            Afrihili
+afr      af    Afrikaans
+afa            Afro-Asiatic (Other)
+aka            Akan
+akk            Akkadian
+alb/sqi  sq    Albanian
+ale            Aleut
+alg            Algonquian languages
+tut            Altaic (Other)
+amh      am    Amharic
+apa            Apache languages
+ara      ar    Arabic
+arc            Aramaic
+arp            Arapaho
+arn            Araucanian
+arw            Arawak
+arm/hye  hy    Armenian
+art            Artificial (Other)
+asm      as    Assamese
+ath            Athapascan languages
+map            Austronesian (Other)
+ava            Avaric
+ave            Avestan
+awa            Awadhi
+aym      ay    Aymara
+aze      az    Azerbaijani
+nah            Aztec
+ban            Balinese
+bat            Baltic (Other)
+bal            Baluchi
+bam            Bambara
+bai            Bamileke languages
+bad            Banda
+bnt            Bantu (Other)
+bas            Basa
+bak      ba    Bashkir
+baq/eus  eu    Basque
+bej            Beja
+bem            Bemba
+ben      bn    Bengali
+ber            Berber (Other)
+bho            Bhojpuri
+bih      bh    Bihari
+bik            Bikol
+bin            Bini
+bis      bi    Bislama
+bra            Braj
+bre      be    Breton
+bug            Buginese
+bul      bg    Bulgarian
+bua            Buriat
+bur/mya  my    Burmese
+bel      be    Byelorussian
+cad            Caddo
+car            Carib
+cat      ca    Catalan
+cau            Caucasian (Other)
+ceb            Cebuano
+cel            Celtic (Other)
+cai            Central American Indian (Other)
+chg            Chagatai
+cha            Chamorro
+che            Chechen
+chr            Cherokee
+chy            Cheyenne
+chb            Chibcha
+chi/zho  zh    Chinese
+chn            Chinook jargon
+cho            Choctaw
+chu            Church Slavic
+chv            Chuvash
+cop            Coptic
+cor            Cornish
+cos      co    Corsican
+cre            Cree
+mus            Creek
+crp            Creoles and Pidgins (Other)
+cpe            Creoles and Pidgins, English-based (Other)
+cpf            Creoles and Pidgins, French-based (Other)
+cpp            Creoles and Pidgins, Portuguese-based (Other)
+cus            Cushitic (Other)
+         hr    Croatian
+ces/cze  cs    Czech
+dak            Dakota
+dan      da    Danish
+del            Delaware
+din            Dinka
+div            Divehi
+doi            Dogri
+dra            Dravidian (Other)
+dua            Duala
+dut/nla  nl    Dutch
+dum            Dutch, Middle (ca. 1050-1350)
+dyu            Dyula
+dzo      dz    Dzongkha
+efi            Efik
+egy            Egyptian (Ancient)
+eka            Ekajuk
+elx            Elamite
+eng      en    English
+enm            English, Middle (ca. 1100-1500)
+ang            English, Old (ca. 450-1100)
+esk            Eskimo (Other)
+epo      eo    Esperanto
+est      et    Estonian
+ewe            Ewe
+ewo            Ewondo
+fan            Fang
+fat            Fanti
+fao      fo    Faroese
+fij      fj    Fijian
+fin      fi    Finnish
+fiu            Finno-Ugrian (Other)
+fon            Fon
+fra/fre  fr    French
+frm            French, Middle (ca. 1400-1600)
+fro            French, Old (842- ca. 1400)
+fry      fy    Frisian
+ful            Fulah
+gaa            Ga
+gae/gdh  Gaelic (Scots)
+glg      gl    Gallegan
+lug            Ganda
+gay            Gayo
+gez            Geez
+geo/kat  ka    Georgian
+deu/ger  de    German
+gmh            German, Middle High (ca. 1050-1500)
+goh            German, Old High (ca. 750-1050)
+gem            Germanic (Other)
+gil            Gilbertese
+gon            Gondi
+got            Gothic
+grb            Grebo
+grc            Greek, Ancient (to 1453)
+ell/gre  el    Greek, Modern (1453-)
+kal      kl    Greenlandic
+grn      gn    Guarani
+guj      gu    Gujarati
+hai            Haida
+hau      ha    Hausa
+haw            Hawaiian
+heb      he    Hebrew
+her            Herero
+hil            Hiligaynon
+him            Himachali
+hin      hi    Hindi
+hmo            Hiri Motu
+hun      hu    Hungarian
+hup            Hupa
+iba            Iban
+ice/isl  is    Icelandic
+ibo            Igbo
+ijo            Ijo
+ilo            Iloko
+inc            Indic (Other)
+ine            Indo-European (Other)
+ind      id    Indonesian
+ina      ia    Interlingua (International Auxiliary language Association)
+ine      -     Interlingue
+iku      iu    Inuktitut
+ipk      ik    Inupiak
+ira            Iranian (Other)
+gai/iri  ga    Irish
+sga            Irish, Old (to 900)
+mga            Irish, Middle (900 - 1200)
+iro            Iroquoian languages
+ita      it    Italian
+jpn      ja    Japanese
+jav/jaw  jv/jw Javanese
+jrb            Judeo-Arabic
+jpr            Judeo-Persian
+kab            Kabyle
+kac            Kachin
+kam            Kamba
+kan      kn    Kannada
+kau            Kanuri
+kaa            Kara-Kalpak
+kar            Karen
+kas      ks    Kashmiri
+kaw            Kawi
+kaz      kk    Kazakh
+kha            Khasi
+khm      km    Khmer
+khi            Khoisan (Other)
+kho            Khotanese
+kik            Kikuyu
+kin      rw    Kinyarwanda
+kir      ky    Kirghiz
+kom            Komi
+kon            Kongo
+kok            Konkani
+kor      ko    Korean
+kpe            Kpelle
+kro            Kru
+kua            Kuanyama
+kum            Kumyk
+kur      ku    Kurdish
+kru            Kurukh
+kus            Kusaie
+kut            Kutenai
+lad            Ladino
+lah            Lahnda
+lam            Lamba
+oci      oc    Langue d'Oc (post 1500)
+lao      lo    Lao
+lat      la    Latin
+lav      lv    Latvian
+ltz            Letzeburgesch
+lez            Lezghian
+lin      ln    Lingala
+lit      lt    Lithuanian
+loz            Lozi
+lub            Luba-Katanga
+lui            Luiseno
+lun            Lunda
+luo            Luo (Kenya and Tanzania)
+mac/mak  mk    Macedonian
+mad            Madurese
+mag            Magahi
+mai            Maithili
+mak            Makasar
+mlg      mg    Malagasy
+may/msa  ms    Malay
+mal            Malayalam
+mlt      ml    Maltese
+man            Mandingo
+mni            Manipuri
+mno            Manobo languages
+max            Manx
+mao/mri  mi    Maori
+mar      mr    Marathi
+chm            Mari
+mah            Marshall
+mwr            Marwari
+mas            Masai
+myn            Mayan languages
+men            Mende
+mic            Micmac
+min            Minangkabau
+mis            Miscellaneous (Other)
+moh            Mohawk
+mol      mo    Moldavian
+mkh            Mon-Kmer (Other)
+lol            Mongo
+mon      mn    Mongolian
+mos            Mossi
+mul            Multiple languages
+mun            Munda languages
+nau      na    Nauru
+nav            Navajo
+nde            Ndebele, North
+nbl            Ndebele, South
+ndo            Ndongo
+nep      ne    Nepali
+new            Newari
+nic            Niger-Kordofanian (Other)
+ssa            Nilo-Saharan (Other)
+niu            Niuean
+non            Norse, Old
+nai            North American Indian (Other)
+nor      no    Norwegian
+nno            Norwegian (Nynorsk)
+nub            Nubian languages
+nym            Nyamwezi
+nya            Nyanja
+nyn            Nyankole
+nyo            Nyoro
+nzi            Nzima
+oji            Ojibwa
+ori      or    Oriya
+orm      om    Oromo
+osa            Osage
+oss            Ossetic
+oto            Otomian languages
+pal            Pahlavi
+pau            Palauan
+pli            Pali
+pam            Pampanga
+pag            Pangasinan
+pan      pa    Panjabi
+pap            Papiamento
+paa            Papuan-Australian (Other)
+fas/per  fa    Persian
+peo            Persian, Old (ca 600 - 400 B.C.)
+phn            Phoenician
+pol      pl    Polish
+pon            Ponape
+por      pt    Portuguese
+pra            Prakrit languages
+pro            Provencal, Old (to 1500)
+pus      ps    Pushto
+que      qu    Quechua
+roh      rm    Rhaeto-Romance
+raj            Rajasthani
+rar            Rarotongan
+roa            Romance (Other)
+ron/rum  ro    Romanian
+rom            Romany
+run      rn    Rundi
+rus      ru    Russian
+sal            Salishan languages
+sam            Samaritan Aramaic
+smi            Sami languages
+smo      sm    Samoan
+sad            Sandawe
+sag      sg    Sango
+san      sa    Sanskrit
+srd            Sardinian
+sco            Scots
+sel            Selkup
+sem            Semitic (Other)
+         sr    Serbian
+scr      sh    Serbo-Croatian
+srr            Serer
+shn            Shan
+sna      sn    Shona
+sid            Sidamo
+bla            Siksika
+snd      sd    Sindhi
+sin      si    Singhalese
+sit      -     Sino-Tibetan (Other)
+sio            Siouan languages
+sla            Slavic (Other)
+ssw      ss    Siswant
+slk/slo  sk    Slovak
+slv      sl    Slovenian
+sog            Sogdian
+som      so    Somali
+son            Songhai
+wen            Sorbian languages
+nso            Sotho, Northern
+sot      st    Sotho, Southern
+sai            South American Indian (Other)
+esl/spa  es    Spanish
+suk            Sukuma
+sux            Sumerian
+sun      su    Sudanese
+sus            Susu
+swa      sw    Swahili
+ssw            Swazi
+sve/swe  sv    Swedish
+syr            Syriac
+tgl      tl    Tagalog
+tah            Tahitian
+tgk      tg    Tajik
+tmh            Tamashek
+tam      ta    Tamil
+tat      tt    Tatar
+tel      te    Telugu
+ter            Tereno
+tha      th    Thai
+bod/tib  bo    Tibetan
+tig            Tigre
+tir      ti    Tigrinya
+tem            Timne
+tiv            Tivi
+tli            Tlingit
+tog      to    Tonga (Nyasa)
+ton            Tonga (Tonga Islands)
+tru            Truk
+tsi            Tsimshian
+tso      ts    Tsonga
+tsn      tn    Tswana
+tum            Tumbuka
+tur      tr    Turkish
+ota            Turkish, Ottoman (1500 - 1928)
+tuk      tk    Turkmen
+tyv            Tuvinian
+twi      tw    Twi
+uga            Ugaritic
+uig      ug    Uighur
+ukr      uk    Ukrainian
+umb            Umbundu
+und            Undetermined
+urd      ur    Urdu
+uzb      uz    Uzbek
+vai            Vai
+ven            Venda
+vie      vi    Vietnamese
+vol      vo    Volapuk
+vot            Votic
+wak            Wakashan languages
+wal            Walamo
+war            Waray
+was            Washo
+cym/wel  cy    Welsh
+wol      wo    Wolof
+xho      xh    Xhosa
+sah            Yakut
+yao            Yao
+yap            Yap
+yid      yi    Yiddish
+yor      yo    Yoruba
+zap            Zapotec
+zen            Zenaga
+zha      za    Zhuang
+zul      zu    Zulu
+zun            Zuni
+</textarea>
+</td>
+<td>
+<h5>Country Codes (ISO-3166)</h5>
+<textarea cols=70 rows="10">
+AFGHANISTAN                                     AF      AFG     004
+ALBANIA                                         AL      ALB     008
+ALGERIA                                         DZ      DZA     012
+AMERICAN SAMOA                                  AS      ASM     016
+ANDORRA                                         AD      AND     020
+ANGOLA                                          AO      AGO     024
+ANGUILLA                                        AI      AIA     660
+ANTARCTICA                                      AQ      ATA     010
+ANTIGUA AND BARBUDA                             AG      ATG     028
+ARGENTINA                                       AR      ARG     032
+ARMENIA                                         AM      ARM     051   
+ARUBA                                           AW      ABW     533
+AUSTRALIA                                       AU      AUS     036
+AUSTRIA                                         AT      AUT     040
+AZERBAIJAN                                      AZ      AZE     031   
+BAHAMAS                                         BS      BHS     044
+BAHRAIN                                         BH      BHR     048
+BANGLADESH                                      BD      BGD     050
+BARBADOS                                        BB      BRB     052
+BELARUS                                         BY      BLR     112   
+BELGIUM                                         BE      BEL     056
+BELIZE                                          BZ      BLZ     084
+BENIN                                           BJ      BEN     204
+BERMUDA                                         BM      BMU     060
+BHUTAN                                          BT      BTN     064
+BOLIVIA                                         BO      BOL     068
+BOSNIA AND HERZEGOWINA                          BA      BIH     070
+BOTSWANA                                        BW      BWA     072
+BOUVET ISLAND                                   BV      BVT     074
+BRAZIL                                          BR      BRA     076
+BRITISH INDIAN OCEAN TERRITORY                  IO      IOT     086
+BRUNEI DARUSSALAM                               BN      BRN     096
+BULGARIA                                        BG      BGR     100
+BURKINA FASO                                    BF      BFA     854
+BURUNDI                                         BI      BDI     108
+CAMBODIA                                        KH      KHM     116
+CAMEROON                                        CM      CMR     120
+CANADA                                          CA      CAN     124
+CAPE VERDE                                      CV      CPV     132
+CAYMAN ISLANDS                                  KY      CYM     136
+CENTRAL AFRICAN REPUBLIC                        CF      CAF     140
+CHAD                                            TD      TCD     148
+CHILE                                           CL      CHL     152
+CHINA                                           CN      CHN     156
+CHRISTMAS ISLAND                                CX      CXR     162
+COCOS (KEELING) ISLANDS                         CC      CCK     166
+COLOMBIA                                        CO      COL     170
+COMOROS                                         KM      COM     174
+CONGO                                           CG      COG     178
+COOK ISLANDS                                    CK      COK     184
+COSTA RICA                                      CR      CRI     188
+COTE D'IVOIRE                                   CI      CIV     384
+CROATIA (local name: Hrvatska)                  HR      HRV     191       
+CUBA                                            CU      CUB     192
+CYPRUS                                          CY      CYP     196
+CZECH REPUBLIC                                  CZ      CZE     203   
+DENMARK                                         DK      DNK     208
+DJIBOUTI                                        DJ      DJI     262
+DOMINICA                                        DM      DMA     212
+DOMINICAN REPUBLIC                              DO      DOM     214
+EAST TIMOR                                      TP      TMP     626
+ECUADOR                                         EC      ECU     218
+EGYPT                                           EG      EGY     818
+EL SALVADOR                                     SV      SLV     222
+EQUATORIAL GUINEA                               GQ      GNQ     226
+ERITREA                                         ER      ERI     232
+ESTONIA                                         EE      EST     233   
+ETHIOPIA                                        ET      ETH     231
+FALKLAND ISLANDS (MALVINAS)                     FK      FLK     238
+FAROE ISLANDS                                   FO      FRO     234
+FIJI                                            FJ      FJI     242
+FINLAND                                         FI      FIN     246
+FRANCE                                          FR      FRA     250
+FRANCE, METROPOLITAN                            FX      FXX     249   
+FRENCH GUIANA                                   GF      GUF     254
+FRENCH POLYNESIA                                PF      PYF     258
+FRENCH SOUTHERN TERRITORIES                     TF      ATF     260
+GABON                                           GA      GAB     266
+GAMBIA                                          GM      GMB     270
+GEORGIA                                         GE      GEO     268   
+GERMANY                                         DE      DEU     276
+GHANA                                           GH      GHA     288
+GIBRALTAR                                       GI      GIB     292
+GREECE                                          GR      GRC     300
+GREENLAND                                       GL      GRL     304
+GRENADA                                         GD      GRD     308
+GUADELOUPE                                      GP      GLP     312
+GUAM                                            GU      GUM     316
+GUATEMALA                                       GT      GTM     320
+GUINEA                                          GN      GIN     324
+GUINEA-BISSAU                                   GW      GNB     624
+GUYANA                                          GY      GUY     328
+HAITI                                           HT      HTI     332
+HEARD AND MC DONALD ISLANDS                     HM      HMD     334
+HONDURAS                                        HN      HND     340
+HONG KONG                                       HK      HKG     344
+HUNGARY                                         HU      HUN     348
+ICELAND                                         IS      ISL     352
+INDIA                                           IN      IND     356
+INDONESIA                                       ID      IDN     360
+IRAN (ISLAMIC REPUBLIC OF)                      IR      IRN     364
+IRAQ                                            IQ      IRQ     368
+IRELAND                                         IE      IRL     372
+ISRAEL                                          IL      ISR     376
+ITALY                                           IT      ITA     380
+JAMAICA                                         JM      JAM     388
+JAPAN                                           JP      JPN     392
+JORDAN                                          JO      JOR     400
+KAZAKHSTAN                                      KZ      KAZ     398   
+KENYA                                           KE      KEN     404
+KIRIBATI                                        KI      KIR     296
+KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF          KP      PRK     408
+KOREA, REPUBLIC OF                              KR      KOR     410
+KUWAIT                                          KW      KWT     414
+KYRGYZSTAN                                      KG      KGZ     417   
+LAO PEOPLE'S DEMOCRATIC REPUBLIC                LA      LAO     418
+LATVIA                                          LV      LVA     428   
+LEBANON                                         LB      LBN     422
+LESOTHO                                         LS      LSO     426
+LIBERIA                                         LR      LBR     430
+LIBYAN ARAB JAMAHIRIYA                          LY      LBY     434
+LIECHTENSTEIN                                   LI      LIE     438
+LITHUANIA                                       LT      LTU     440   
+LUXEMBOURG                                      LU      LUX     442
+MACAU                                           MO      MAC     446
+MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF      MK      MKD     807  
+MADAGASCAR                                      MG      MDG     450
+MALAWI                                          MW      MWI     454
+MALAYSIA                                        MY      MYS     458
+MALDIVES                                        MV      MDV     462
+MALI                                            ML      MLI     466
+MALTA                                           MT      MLT     470
+MARSHALL ISLANDS                                MH      MHL     584
+MARTINIQUE                                      MQ      MTQ     474
+MAURITANIA                                      MR      MRT     478
+MAURITIUS                                       MU      MUS     480
+MAYOTTE                                         YT      MYT     175   
+MEXICO                                          MX      MEX     484
+MICRONESIA, FEDERATED STATES OF                 FM      FSM     583
+MOLDOVA, REPUBLIC OF                            MD      MDA     498   
+MONACO                                          MC      MCO     492
+MONGOLIA                                        MN      MNG     496
+MONTSERRAT                                      MS      MSR     500
+MOROCCO                                         MA      MAR     504
+MOZAMBIQUE                                      MZ      MOZ     508
+MYANMAR                                         MM      MMR     104
+NAMIBIA                                         NA      NAM     516
+NAURU                                           NR      NRU     520
+NEPAL                                           NP      NPL     524
+NETHERLANDS                                     NL      NLD     528
+NETHERLANDS ANTILLES                            AN      ANT     530
+NEW CALEDONIA                                   NC      NCL     540
+NEW ZEALAND                                     NZ      NZL     554
+NICARAGUA                                       NI      NIC     558
+NIGER                                           NE      NER     562
+NIGERIA                                         NG      NGA     566
+NIUE                                            NU      NIU     570
+NORFOLK ISLAND                                  NF      NFK     574
+NORTHERN MARIANA ISLANDS                        MP      MNP     580
+NORWAY                                          NO      NOR     578
+OMAN                                            OM      OMN     512
+PAKISTAN                                        PK      PAK     586
+PALAU                                           PW      PLW     585
+PANAMA                                          PA      PAN     591
+PAPUA NEW GUINEA                                PG      PNG     598
+PARAGUAY                                        PY      PRY     600
+PERU                                            PE      PER     604
+PHILIPPINES                                     PH      PHL     608
+PITCAIRN                                        PN      PCN     612
+POLAND                                          PL      POL     616
+PORTUGAL                                        PT      PRT     620
+PUERTO RICO                                     PR      PRI     630
+QATAR                                           QA      QAT     634
+REUNION                                         RE      REU     638
+ROMANIA                                         RO      ROM     642
+RUSSIAN FEDERATION                              RU      RUS     643
+RWANDA                                          RW      RWA     646
+SAINT KITTS AND NEVIS                           KN      KNA     659
+SAINT LUCIA                                     LC      LCA     662
+SAINT VINCENT AND THE GRENADINES                VC      VCT     670
+SAMOA                                           WS      WSM     882
+SAN MARINO                                      SM      SMR     674
+SAO TOME AND PRINCIPE                           ST      STP     678
+SAUDI ARABIA                                    SA      SAU     682
+SENEGAL                                         SN      SEN     686
+SEYCHELLES                                      SC      SYC     690
+SIERRA LEONE                                    SL      SLE     694
+SINGAPORE                                       SG      SGP     702
+SLOVAKIA (Slovak Republic)                      SK      SVK     703   
+SLOVENIA                                        SI      SVN     705   
+SOLOMON ISLANDS                                 SB      SLB     090
+SOMALIA                                         SO      SOM     706
+SOUTH AFRICA                                    ZA      ZAF     710
+SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS    GS      SGS     239
+SPAIN                                           ES      ESP     724
+SRI LANKA                                       LK      LKA     144
+ST. HELENA                                      SH      SHN     654
+ST. PIERRE AND MIQUELON                         PM      SPM     666
+SUDAN                                           SD      SDN     736
+SURINAME                                        SR      SUR     740
+SVALBARD AND JAN MAYEN ISLANDS                  SJ      SJM     744
+SWAZILAND                                       SZ      SWZ     748
+SWEDEN                                          SE      SWE     752
+SWITZERLAND                                     CH      CHE     756
+SYRIAN ARAB REPUBLIC                            SY      SYR     760
+TAIWAN, PROVINCE OF CHINA                       TW      TWN     158
+TAJIKISTAN                                      TJ      TJK     762   
+TANZANIA, UNITED REPUBLIC OF                    TZ      TZA     834
+THAILAND                                        TH      THA     764
+TOGO                                            TG      TGO     768
+TOKELAU                                         TK      TKL     772
+TONGA                                           TO      TON     776
+TRINIDAD AND TOBAGO                             TT      TTO     780
+TUNISIA                                         TN      TUN     788
+TURKEY                                          TR      TUR     792
+TURKMENISTAN                                    TM      TKM     795   
+TURKS AND CAICOS ISLANDS                        TC      TCA     796
+TUVALU                                          TV      TUV     798
+UGANDA                                          UG      UGA     800
+UKRAINE                                         UA      UKR     804
+UNITED ARAB EMIRATES                            AE      ARE     784
+UNITED KINGDOM                                  GB      GBR     826
+UNITED STATES                                   US      USA     840
+UNITED STATES MINOR OUTLYING ISLANDS            UM      UMI     581
+URUGUAY                                         UY      URY     858
+UZBEKISTAN                                      UZ      UZB     860   
+VANUATU                                         VU      VUT     548
+VATICAN CITY STATE (HOLY SEE)                   VA      VAT     336
+VENEZUELA                                       VE      VEN     862
+VIET NAM                                        VN      VNM     704
+VIRGIN ISLANDS (BRITISH)                        VG      VGB     092
+VIRGIN ISLANDS (U.S.)                           VI      VIR     850
+WALLIS AND FUTUNA ISLANDS                       WF      WLF     876
+WESTERN SAHARA                                  EH      ESH     732
+YEMEN                                           YE      YEM     887
+YUGOSLAVIA                                      YU      YUG     891
+ZAIRE                                           ZR      ZAR     180
+ZAMBIA                                          ZM      ZMB     894
+ZIMBABWE                                        ZW      ZWE     716
+</textarea>
+</td>
+</tr>
+</table>
+
+
+<h3>Naming of PUB ENGINE locales</h3>
+<p>
+Once you know the correct locale code, you will create three files to localize the engine:
+
+<table>
+<tr valign="center">
+<td><i>locale</i><b>.py</b></td>
+<td>
+<h4>Grammar</h4>
+Grammar definition module. This is a python module which will declare the structural
+information needed to parse and generate the grammar of the language. It will also provide
+functions for correctly conjugating verbs and declining nouns, as well as maintaining
+any aesthetic agreements the language requires (such as euphonic spelling changes or
+gender or number matching).  You can pretty much do whatever you want here, as there are
+hooks throughout the process.
+</td>
+</tr>
+<tr valign="center">
+<td><i>locale</i><b>.po</b></td>
+<td>
+<h4>Messages</h4>
+This is a gettext messages file. It contains specific messages from the engine which
+need to be translated. If you've ever worked on a gettext internationalization project,
+then this will already be familiar to you.
+</td>
+</tr>
+<tr valign="center">
+<td><i>locale</i><b>.xml</b></td>
+<td>
+<h4>Vocabulary</h4>
+This XML file defines the vocabulary to be understood by the parser. Words are glossed 
+as closely as possible.  But remember that you are dealing with an IF engine.  Even in
+the original English, some of the meanings are stretched or simplified to cope with the
+IF world model.
+</td>
+</tr>
+</table>
+
+</body>
+</html>

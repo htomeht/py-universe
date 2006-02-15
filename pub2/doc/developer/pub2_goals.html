@@ -1,0 +1,164 @@
+<html>
+<head>
+<title>Goals for PUB 2</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Goals for PUB 2</h1>
+<p>
+This is kind of a "TODO" list, but a bit more thought out (there is also a TODO list, if you
+just want to change that).  If you have something you think is important to put into PUB2, or
+at least that we need to consider it, lets put it here:
+</p>
+
+<dl>
+<dt>Internationalization</dt>
+<dd>
+We should be able to have a completely internationalized core, so that it's possible to write
+a game in one language, then, with minimal fuss, translate it so it can be played in many
+languages. The effort needed to localize a <i>game</i> shouldn't be much worse than using
+gettext is for most programs. Internationalizing the IF engine itself is trickier, but I
+have a working model, which is partly outlined in these developer documents. I'm going to
+be seriously overhauling the <tt>parser</tt> module as a result.
+</dd>
+
+<dt>Normalizing to Modern Python</dt>
+<dd>
+There has been some weird stuff in PUB, largely dating from very old Python versions. For
+example, it once had its own simple templating system for interpolation of words. Since
+then, Python has acquired a native syntax for this. Likewise, PUB used to use specialized
+helper functions like "cap(x)" to capitalize a string, but modern python tends to use
+string methods "x.capitalize()". Normalizing these things to modern conventions should make
+the code easier for developers to read.
+</dd>
+
+<dt>Object Database?</dt>
+<dd>
+I have only recently figured out how PUB handles save and restore of games. Basically, the "pub"
+module is being used as an "object database". However, Python modules weren't really designed
+to be object databases, and using them will put some arbitrary limits on us (as well as creating
+some awkwardness in the import ordering within PUB).  I think we ought to seriously consider
+replacing "pub" with a ZODB (Zope Object Database). It should be nearly a drop-in replacement,
+and it should make the save format more stable, provide more support for client-server mode,
+and a number of other conveniences. The only obstacle I see is the need to incorporate Zope-style
+"persistent" classes which extend mutable objects like list and dict.
+</dd>
+
+<dt>Interaction with "Universe"</dt>
+<dd>
+I am also working on a graphical "interactive cinema" engine, which will use PUB as its
+primary game logic engine.  This requires a bit of thought on the PUB side, and is the
+motivation for a number of minor changes:
+<ul>
+<li>Adding "brick model" (or "XYZ-sort") topology</li>
+<li>Vocabulary and context/scope checking to support a "sentence widget"</li>
+<li>Zope-like acquisition of object "resources" based on topological position and context</li>
+<li>Game instance framework for complex game creation.</li>
+</ul>
+</dd>
+
+<dt>Turn-based Scheduling</dt>
+<dd>
+I find it odd that PUB currently only provides a real-time scheduler, despite the fact
+that game play is essentially turn-based. A turn-based scheduler is a very simple extension
+of the existing code.
+</dd>
+
+<dt>XML Authoring Tools</dt>
+<dd>
+Although PUB will always be programmable in Python, and most games of any complexity
+will probably require python coding, I think it would be desireable to provide
+support for an XML language for describing simple aspects of a game, such as:
+<ul>
+<li>Tools for creating massive topological maps of rooms using an XML format.</li>
+<li>Hack <a href="http://xcircuit.sf.net">xcircuit</a> to create the XML from a
+graphical environment. I actually had something like this working once, using xcircuit's
+schematic capture and netlisting tools, so I think I can get it to work again.</li>
+<li>Simple noun creation from existing classes, and initial placement.</li>
+</ul>
+</dd>
+
+<dt>PyProtocols: Interface / Component / Adapters</dt>
+<dd>
+Interfaces provide a much better-controlled expression of the relationships between world-model
+objects, as well as other objects within PUB. Using them will make the code more self-documenting.
+</dd>
+
+<dt>Unit tests with Py-Unit</dt>
+<dd>
+Well, we're doing a lot of re-development, so this is a good time to add unit tests
+wherever we can figure out to put them.  Unit tests add time to your initial writing
+and conceptualizing process, but they usually save <i>massive</i> amounts of time in
+the debugging phase. They also encourage more understanding of the code as you work
+on it.
+</dd>
+
+<dt>Use Interfaces to do Noun "Pre-Checks"</dt>
+<dd>
+Interfaces are also a natural way for a verb to check if a given noun makes sense as an object.
+</dd>
+
+<dt>Replace Post-/Pre- Checks with Exception-Based Code</dt>
+<dd>
+Instead of using the existing pre-check and post-check system, use simple dispatching. Nouns
+will raise exceptions if there is a problem. Otherwise execution will return with values to
+be reported.
+</dd>
+
+<dt>More Objects to Play With</dt>
+<dd>
+Lots more noun and noun-components, allowing more complex objects to be created easily.
+</dd>
+
+<dt>New Example Games</dt>
+<dd>
+I'd like to write a "Cloak of Darkness" game. Many IF authors regard this as a "hello world"
+standard program to test IF engines with.  PUB should at least provide an implementation. I'd
+also like to re-implement the one-room "Through the Looking Glass" puzzle from the Inform
+tutorial.  Then I'd like to make a less-trivial example, with perhaps a dozen rooms and various
+objects and characters to interact with.  We need some more serious tests.
+</dd>
+
+</dl>
+<p>
+. . . ?
+</p>
+<h4>What do <i>you</i> want to see?</h4>
+
+<h1>Dependencies</h1>
+<p>
+Naturally this work has added some dependencies:
+
+<h5>Runtime Dependencies</h5>
+<ul>
+<li>PyProtocols</li>
+<li>ZODB</li>
+<li>py-unit</li>
+</ul>
+
+<h5>Documentation Build Dependencies</h5>
+<ul>
+<li>Dia</li>
+<li>Inkscape</li>
+<li>epydoc</li>
+</ul>
+
+<p>
+If you add a dependency (or think of one), be sure
+to update this list so we all know what's going on.
+</p>
+
+</body>
+</html>
+

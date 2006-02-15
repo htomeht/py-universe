@@ -1,0 +1,137 @@
+<html><head><title>
+PUB Library Summary
+</title></head><body>
+
+<p><font color="red"><b><pre>
+THIS PAGE NOT UPDATED FOR PUB 2.x
+(it's way out of date, so take
+what you see with a grain of salt.
+However, this is what we have to
+start with).
+</pre></b></font></p>
+
+
+<center><h3>
+Python Universe Builder
+</h3><h1>
+Standard Library Summary
+</h1>
+</center>
+
+<h2>Objects</h2>
+
+<table>
+<tr><th align=left valign=top>
+	<a href="objref.htm#Thing">Thing</a></th><td>
+		base class for everything you see in the game
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Container">Container</a></th><td>
+		base class of any Thing that can contain others
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Room">Room</a></th><td>
+		a Container which can contain Actors; any location
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Exit">Exit</a></th><td>
+		connects one Room to another
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Actor">Actor</a></th><td>
+		a Container which can execute commands
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Player">Player</a></th><td>
+		an Actor connected to the keyboard & monitor
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Monitor">Monitor</a></th><td>
+		an Actor which echoes anything it hears to the screen (for debugging)
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Effector">Effector</a></th><td>
+		a Thing which can be Activated and Deactivated
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Timer">Timer</a></th><td>
+		an Effector which automatically Deactivates after a delay
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Garment">Garment</a></th><td>
+		an Effector which is worn and removed
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Liquid">Liquid</a></th><td>
+		a Thing which can only be kept in certain containers
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#Countable">Countable</a></th><td>
+		a Thing with an integer quantity (e.g., "4 chips")
+</td></tr><tr><th align=left valign=top>
+	<a href="objref.htm#NPC">NPC</a></th><td>
+		an Actor with simple reflexive responses
+
+</td></tr>
+</table>
+
+<h2>Verbs</h2>
+
+<table>
+<tr><th align=left valign=top>
+	<a href="verbref.htm#Verb">Verb</a></th><td>
+		base class for all verbs
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Transitive">Transitive</a></th><td>
+		Verb which requires a Thing as a direct object
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Social">Social</a></th><td>
+		a verb with only cosmetic effect (smile, nod, etc.)
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Use">Use</a></th><td>
+		call a Thing's Use(byWhom) method, if any
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#DefVerb">DefVerb</a></th><td>
+		Transitive verb executed when no verb is given
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Inventory">Inventory</a></th><td>
+		give list of what the Actor's carrying
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Get">Get</a></th><td>
+		get a local Thing
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Drop">Drop</a></th><td>
+		drop an object (put it in the room)
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Follow">Follow</a></th><td>
+		follow another Actor when it moves
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#On">On</a></th><td>
+		Activate an Effector
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Off">Off</a></th><td>
+		Deactivate an Effector
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Look">Look</a></th><td>
+		examine the room or some other Thing
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Put">Put</a></th><td>
+		put a Thing into a Container
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Give">Give</a></th><td>
+		give something to another Actor
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Quit">Quit</a></th><td>
+		set pub.gameStatus = QUIT
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Wait">Wait</a></th><td>
+		do nothing for a while
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#Say">Say</a></th><td>
+		speak the rest of the command
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#DbgExamine">DbgExamine</a></th><td>
+		view all attributes (use with, e.g.: @ex rock)
+</td></tr><tr><th align=left valign=top>
+	<a href="verbref.htm#DbgContents">DbgContents</a></th><td>
+		view item contents (use with, e.g.: @contents here)
+
+</td></tr>
+</table>
+
+<hr>
+<address>http://www.strout.net/python/pub/doc/lib/index.htm<br>
+Last Modified:
+5/08/96
+. . . . . . <a href="http://www.strout.net/">Joe Strout</a>
+. . . <a href="mailto:joe@strout.net">joe@strout.net</a>
+</address>

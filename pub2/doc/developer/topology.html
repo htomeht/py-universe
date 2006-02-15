@@ -1,0 +1,176 @@
+<html>
+<head>
+<title>Topological Models in PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Topological Models</h1>
+Topological models are Noun Interfaces, and associated Noun component classes. They provide
+a basic framework for conceptually representing the "physical space" within the game.
+
+<h3>Simple Container</h3>
+<p>
+Simple containers have the simplest topology, and have been included in PUB from the
+beginning.  A simple container object can contain other objects.  It is therefore
+exactly like a directory or folder object in a filesystem, with other objects acting
+like ordinary files or sub-directories.
+</p>
+<p>
+You can get a lot of mileage out of simple containers, by depending on the player's
+tendency to conceptualize the game by context. For example, a table and a box may
+both be represented by simple containers.  The player tends to correctly say "put
+item <i>on</i> table" and "put item <i>in</i> box", even if the IF engine actually
+doesn't care whether you say "in" or "on".  This might be regarded as an example
+of the "Eliza Phenomenon" where the player ascribes more sophistication to the 
+engine than it really has, via the use of their own imagination.
+</p>
+<p>
+Still, the illusion is strained when the player says "put anvil on box" and the
+IF engine responds "you put the anvil in the box", and there are obviously lost
+opportunities for more sophisticated game puzzles.
+</p>
+
+<h3>Brick Model</h3>
+<p>
+The next level of complexity might be described as the "brick model". Most natural
+languages have fairly straightforward ways of expressing the twelve spatial
+relationships in the brick model, and it is a pretty common way to conceptualize
+spatial relationships, as illustrated below:
+</p>
+
+<img usemap="brick" src="../image/brick_topology.png">
+<map name="brick">
+  <area shape="poly" href="#TO_RIGHT" coords="681,264,768,140,769,360,682,487" />
+  <area shape="poly" href="#ON_BOTTOM" coords="562,348,481,456,649,467,726,347" />
+  <area shape="poly" href="#ON_RIGHT" coords="444,268,525,148,526,359,442,485" />
+  <area shape="rect" href="#IN_FRONT" coords="147,441,305,587" />
+  <area shape="rect" href="#ON_FRONT" coords="217,267,441,485" />
+  <area shape="rect" href="#ON_BACK" coords="219,40,487,81" />
+  <area shape="poly" href="#OVER" coords="248,162,475,162,528,90,299,89" />
+  <area shape="poly" href="#ON_TOP" coords="300,144,215,267,441,267,525,145" />
+  <area shape="poly" href="#ON_LEFT" coords="120,180,191,78,193,204,126,307" />
+  <area shape="poly" href="#TO_LEFT" coords="21,265,22,485,107,358,107,138" />
+  <area shape="poly" href="#BEHIND" coords="421,7,417,233,644,232,645,7" />
+  <area shape="poly" href="#UNDER" coords="526,464,299,462,213,591,445,590" />
+</map>
+
+<h5>Attached Locations</h5>
+<p>These six relative locations refer to nouns being attached to the noun, and
+can be thought of as special categories of containment (i.e. it could be modeled
+by an object with six containment groups identified by prepositions). You'll note
+that in English at least, these mostly require "multi-word prepositions". It violates
+the grammatical pedagogy of English, of course, but the easiest way to handle this
+is to treat these as "compound word prepositions" and catch them right
+after the lexing process.  They also have more than one common formulation, so
+it's necessary to have synonyms:
+
+<dl>
+<dt><a name="ON_TOP"><b>on top of, on, on the top of</b></dt>
+<dd>Location is attached (possibly by gravity) to the top surface of the object.</dd>
+
+<dt><a name="ON_BOTTOM"><b>on bottom of, on the bottom of</b></dt>
+<dd>Location is attached to the bottom surface of the object.</dd>
+
+<dt><a name="ON_FRONT"><b>on front of, on the front of, on the front side of</b></dt>
+<dd>Location is attached to the front surface of the object.</dd>
+
+<dt><a name="ON_BACK"><b>on back of, on the back of, on the back side of</b></dt>
+<dd>Location is attached to the back surface of the object.</dd>
+
+<dt><a name="ON_LEFT"><b>on left of, on the left of, on the left side of</b></dt>
+<dd>Location is attached to the left surface of the object.</dd>
+
+<dt><a name="ON_RIGHT"><b>on right of, on the right of, on the right side of</b></dt>
+<dd>Location is attached to the right surface of the object</dd>
+</dl>
+
+<p>
+For all of these locations, if the object is moved, the location moves with it, as will
+anything that was put there.  Clearly this requires the objects to be "attachable" to
+each other, which might be another thing to model.
+</p>
+
+<h5>Adjacent Locations</h5>
+<p>
+The other six locations are merely adjacent to the object -- they do not express
+any containment by the object at all, but rather the spatial location relative to the object
+in the parent container (which will often be the room).  You can think of this as a
+variant of a Z-sort representation, except that X- and Y- sorts are also done. These
+locations determine where the objects will be when the sort is resolved. This would
+be quite an easy concept to translate back and forth from a 3D graphical game
+environment, and so this kind of topology might be useful for applications where
+the PUB engine is being used to provide game logic for a graphical environment (as
+when it is used as part of <a href="http://light-princess.sf.net/Universe">Universe</a>).
+</p>
+<dl>
+<dt><a name="TO_LEFT"><b>to left of, to the left of</b></dt><dd><i>X &lt; X<sub>0</sub></i></dd>
+<dt><a name="TO_RIGHT"><b>to right of, to the right of</b></dt><dd><i>X &gt; X<sub>0</sub></i></dd>
+<dt><a name="OVER"><b>over, above</b></dt><dd><i>Y &gt; Y<sub>0</sub></i></dd>
+<dt><a name="UNDER"><b>under, beneath</b></dt><dd><i>Y &lt; Y<sub>0</sub></i></dd>
+<dt><a name="TO_FRONT"><b>in front of</b></dt><dd><i>Z &gt; Z<sub>0</sub></i></dd>
+<dt><a name="BEHIND"><b>behind, in back of</b></dt><dd><i>Z &lt; Y<sub>0</sub></i></dd>
+</dl>
+
+<p>
+The brick model has limitations, of course. One of them is that it assumes the
+relationship between the player and the object (if you're not facing the "front"
+of the object, then everything changes). Another is that many objects are not
+remotely cube shaped, so that they may have more complex "locations" conceptually,
+and also so that some logical inferences you might be tempted to draw from the
+brick model wouldn't work (it's possible to be simultaneously "above" and "below"
+an object shaped like a "C", for example).
+</p>
+
+<h3>Relative versus Absolute Brick Model</h3>
+<p>
+First of all, the brick model above is subjective (it depends on how the character is
+facing the object).  So the first refinement we might add is to create an analogous
+"absolute" system, by replacing "left", "right", "front", and "back" with
+"east", "west", "south", and "north".  "Over" and "under" (or "top" and "bottom"),
+would remain the same, being determined by gravity (extending this for free-fall
+use is an exercise left to the reader <tt>;-)</tt>).
+</p>
+<p>
+It should be possible even, to represent locations in an absolute form internally,
+then dereference them based on the player's location relative to the object. On the
+other hand, in text-based IF games, we don't usually keep track of the player's
+location <i>within</i> the room (just what room he's in).  But again, this makes
+sense if we are doing back-end logic for a 3D graphical game (in which case the
+3D engine can tell us the relative location of all the objects in the room,
+including the player character).
+</p>
+<p>
+In this usage, the XYZ absolute brick model provides an easy way to condense 3D
+spatial information into a topological representation, and then expand that
+information back out again when entering a 3D simulation (using the topology,
+home locations, basic physics, and some fixed references in the room, it should
+be easy to reconstruct a reasonable set of coordinates for objects left in a
+room -- and this means we don't have to keep track of them all globally).
+</p>
+
+<h3>Room Topology</h3>
+<p>
+Another very common topology is "room topology".  PUB has a concept of "Doors" which
+provides this in a very similar way to the brick model above, using essentially a
+containment system. In this topology, rooms typically have doors associated with the
+cardinal and mixed compass directions (N,NE,E,SE,S,SW,W,NW) plus "up" and "down", making
+a total of ten common directions.
+</p>
+<p>
+[There's probably a lot more to say here, but this pretty much hits the limit of what
+I understand and/or have planned at the moment. TJH 2006-2/13]
+</p>
+
+</body>
+</html>

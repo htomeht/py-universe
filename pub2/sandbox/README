@@ -1,0 +1,7 @@
+Files in this directory are in the CVS version only, and
+are for discussion of new features or approaches in PUB.
+
+This sandbox/ directory should probably be deleted before
+packaging the source code, as it is not really part of
+the PUB sources.
+

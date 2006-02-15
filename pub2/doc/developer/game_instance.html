@@ -1,0 +1,143 @@
+<html>
+<head>
+<title>Game Instance Directories in PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Game "Instances"</h1>
+<i>Instances</i> are an idea I borrowed from the Zope web application engine (which is incidentally
+also written in Python). The idea is that instead of simply having the PUB package in your Python's
+site-packages directory, and having to maintain it all there, the extensible parts of the package
+can be extended by using a light weight framework in a separate instance directory, with plugin
+directories beneath that, e.g.:
+
+<table align="center" width="95%" bgcolor="#99ff99" cellpadding="2" cellspacing="2" border="1">
+<tr valign="top">
+<td width=50%>
+<h5>PUB Package in site-packages</h5>
+</td>
+<td width="50%">
+<h5>PUB Game Instance: "Around the World in Eighty Days"</h5>
+</td>
+<tr>
+<td>
+Contents of<br/>
+<tt>/usr/lib/python2.4/site-packages/pyuniverse</tt>
+<textarea cols="50" rows="10">
+.
+|-- CHANGES
+|-- COPYING
+|-- MANIFEST.in
+|-- README
+|-- TODO
+|-- TODO.PUB2
+|-- __init__.py
+|-- adapters.py
+|-- adverb.py
+|-- build_docs
+|-- components.py
+|-- config.py
+|-- core.py
+|-- debug.py
+|-- errors.py
+|-- events.py
+|-- interfaces.py
+|-- locale.py
+|-- locales
+|   |-- __init__.py
+|   |-- en.py
+|   |-- fr.py
+|   `-- jp.xml
+|-- noun.py
+|-- nouns
+|   |-- README
+|   |-- __init__.py
+|   |-- animal.py
+|   |-- food.py
+|   |-- matter.py
+|   |-- state.py
+|   |-- tool.py
+|   |-- topology.py
+|   `-- vehicle.py
+|-- parser.py
+|-- pub.cfg
+|-- setup.py
+|-- tests
+|   `-- README
+|-- utility
+|   |-- __init__.py
+|   |-- l14n.py
+|   |-- picklemod.py
+|   `-- utility.py
+|-- verb.py
+`-- verbs
+    |-- __init__.py
+    `-- coreverbs.py
+</textarea>
+</td>
+<td>
+Contents of<br/>
+<tt>/usr/local/games/around_the_world</tt>
+<textarea cols="50" rows="10">
+.
+|-- CHANGES
+|-- COPYING
+|-- MANIFEST.in
+|-- README
+|-- __init__.py
+|-- locales
+|   |-- __init__.py
+|   |-- en.po
+|   |-- en.xml
+|   |-- jp.po
+|   `-- jp.xml
+|-- nouns
+|   |-- README
+|   |-- __init__.py
+|   |-- planes.py
+|   |-- trains.py
+|   `-- automobiles.py
+|-- verb.py
+`-- verbs
+    |-- __init__.py
+    `-- driving.py
+</textarea>
+</td>
+</tr>
+<tr><td colspan="2">
+<h5>Game Instance Example</h5>
+A hypothetical PUB game based on the Jules Verne's classic, "Around the World in Eighty Days",
+might need to add some nouns for specific vehicles and verbs associated with driving them.
+Using the instance approach, the game directory can borrow the structural design of PUB,
+and take advantage of PUB's own collection mechanisms to load all the necessary extensions.
+<p>
+Since the resulting extensions are cleanly separated from the core game code, this also
+means that it will promote the re-use of noun modules in new games, and the eventual inclusion
+of popular noun libraries into the PUB core.
+</p>
+</td>
+</tr>
+</table>
+
+<h3>Mechanism</h3>
+The mechanism in creating Instances will probably involve a specially crafted <tt>__init__.py</tt>
+code which can be copied into the game instance directory. Invoking the game will involve calling this
+code, and automatically triggering the recovery of all extensible PUB elements.
+<p>
+However, I haven't given this a lot of thought yet. It's probably worth looking at how Zope does it.
+</p>
+
+</body>
+</html>
+

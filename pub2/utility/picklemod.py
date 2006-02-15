@@ -1,6 +1,6 @@
-# adapters.py    contains adapters                        04/10/22 GJ
+#    picklemod.py                                         8/26/96 JJS
 #
-#   Copyright (C) 2004 Gabriel Jagenstedt
+#   Copyright (C) 1996 Joe Strout 
 #
 #    This library is free software; you can redistribute it and/or
 #    modify it under the terms of the GNU Lesser General Public
@@ -19,53 +19,55 @@
 
 #--------------------------------------------------------------------
 # CHANGELOG
-#
 #   2004-22/10: Gabriel Jagenstedt
 #       Cleaned up and inserted a copyright notice
 #--------------------------------------------------------------------
 """
-Adapters for PUB
+This module pickles entire modules.  Handy when you're trying
+to save/restore the state of a program which uses many module-
+level variables.  Use it as follows:
 
-Contains ,
+picklemod.save( somefile, module1, module2, ...)
+...
+picklemod.restore( somefile, module1, module2, ...)
+
+Note that you can't save the module from which these calls
+are made; if you figure out how to do this, let me know!
 """
+#----------------------------------------------------------------------
 
-# standard imports
+# system imports
+from types import *
+import cPickle
 
 # pub imports
-import interfaces
-#import pub.lang
 
 # protocols imports
-from protocols import advise
+
 
 #--------------------------------------------------------------------
-#
-#class StrLangAdapter:
-#    """
-#    Adapter that evaluates a string as a language name into a languageinstance
-#    """
-#
-#    advise(instancesProvide=[interfaces.ILang], asAdapterForTypes=[str])
-#
-#    def __init__(self, obj, proto):
-#        self.langstr = obj
-#       
-#        
-#    def initiate(self):
-#        """
-#        method to translate a string into a language. 
-#        """
-#
-#        for lang in pub.lang.getListing():
-#            if lang.name.lower() == self.langstr.lower():
-#                #pub.language = lang 
-#                # set this language as current language 
-#                # this way next time we adapt we won't need to evaluate.
-#                
-#                return lang.initiate()
-#
-#        # No such language found
-#        raise pub.errors.LanguageError, "Can't find specified language"
-#
-#        
+
+exclude = [ModuleType, FunctionType, ClassType, BuiltinFunctionType,
+       BuiltinMethodType, CodeType, FileType ]
+
 #--------------------------------------------------------------------
+def modvars(module):
+    mdict = module.__dict__
+    li = []
+    for name, value in mdict.items():
+        t = type(value)
+        if t not in exclude and name[:2] != '__':
+            li.append((name, value))
+    return li
+
+def save( f, *pModules ):
+    p = cPickle.Pickler(f)
+    for mod in pModules:
+        p.dump( modvars(mod) )
+
+def restore( f, *pModules ):
+    u = cPickle.Unpickler(f)
+    for mod in pModules:
+        relist = u.load()
+        for (name, value) in relist:
+            setattr(mod, name, value)

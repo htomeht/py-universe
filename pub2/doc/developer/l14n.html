@@ -1,0 +1,241 @@
+<html>
+<head>
+<title>Localizing PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Localizing the PUB IF Engine</h1>
+[TBD: this is meant to be sort of a how-to as well as a reference]
+
+Outlined elements:
+<a name="GRAMMAR"><h3>Grammar Locale File: <i>locale</i><b>.py</b></h3></a>
+Although much of the grammar processing is general purpose, and is provided
+for by the <tt>utility/l14n.py</tt> module, it is necessary to write a little
+bit of Python code to specify how language in a given locale should be parsed
+and generated. Some of the key knowledge that must be included:
+
+<ul>
+<li>What is the prefered order of words in a clause (i.e. a simple sentence)?</li>
+<li>How do you correctly conjugate a verb, including: the class of the verb, the
+person, tense, and aspect needed?</li>
+<li>How do you correctly decline a noun or noun phrase?</li>
+<li>How do you pluralize a noun?</li>
+<li>How do you ensure that adjectives, adverbs, articles, and other words in the
+sentence 'agree' with each other syntactically? (e.g. with matching gender and number,
+as in Romance languages)</li>
+<li>How do you make a sentence <i>negative</i>? (This varies wildly between languages!).</li>
+</ul>
+<p>
+In my opinion, general linguistics and programming skill is more important than a working
+fluency in the language to write the grammar file, so it might not always be written by
+the same people who localize the messages and vocabulary (I would say that the average 2nd
+year language student in a language probably knows enough grammar to do this well). You
+are essentially creating a formal framework for the other two files to operate in.  If
+your language is grammatically very similar to a provided locale, you would be well
+advised to start by copying that file's localization grammar module and modifying it
+to suit your language (for example all Romance languages have very similar grammar, so
+a Romanian localization probably ought to start with Spanish or French locale grammar modules).
+</p>
+
+<a name="MESSAGES"><h3>Messages Locale File: <i>locale</i><b>.po</b></h3></a>
+This is the "boring part" or the "easy part" depending on your perspective! For ordinary
+messages from the engine, we simply use the gettext facility. If you've ever done
+localization work for any other program, you'll find this part familiar.
+<p>
+For people new to this work, let me direct you to some well-written tutorials on
+using gettext. [links? or we might have to include a brief tutorial here?]
+</p>
+
+<a name="VOCABULARY"><h3>Vocabulary Locale File: <i>locale</i><b>.xml</b></h3></a>
+The vocabulary file, as you might expect, defines a bunch of words. More accurately,
+it <i>glosses</i> the IF engine's "semantic concepts" to words in the host language.
+It also provides the information need to properly use those words in sentences (including
+inflection such as: tense, conjugation, declension, pluralization, and definiteness).
+<p>
+Even "purely analytic" languages like Chinese need to define special words for marking
+noun and verb phrases to indicate such usage distinctions.  Most languages use some
+combination of "word structure" (synthesis) and "phrase structure" (analysis). The vocabulary
+file provides a bit of support for both.
+</p>
+<p>
+Game vocabulary files will be very similar to the engine localization vocabulary, but
+probably somewhat simpler, since it's unlikely that a game will need to provide for
+conjunctions, punctuation, articles, declension, or prepositions. More likely, most
+games will only need to provide nouns and verbs, with some adding adjectives and adverbs.
+</p>
+<p>
+If you are writing the engine vocabulary file, however, you should take seriously the
+fact that game localizers are going to be following your lead. I recommend putting in
+comments in the locale language to help localizers (who may be less fluent than you are
+in English) figure out what they need to put in the file and where to put it.
+</p>
+<p>
+[2006-2/11]<br/>
+I'm working on a formal spec for this XML format, but here's an example to give you the idea.
+Pardon the badness of my Spanish, but the English example overlooks too many useful features:
+<textarea cols=100 rows=20>
+<locale language="es">
+<verbs>
+    <verb lbl="go">
+        <g  inf="ir"        imp="ven"       prp="va"        pri="esta vayando"  />
+        <g  inf="mover"     imp="mueve"     prp="mueve"     pri="esta moviendo" />
+        <g  reg="camin~"    cl="AR"/>
+    </verb>
+
+    <verb lbl="enter">
+        <g  reg="entr~" cl="AR" />
+    </verb>
+
+    <verb lbl="put">
+        <g  inf="poner"     imp="ponga"     prp="pone"      pri="esta poniendo" />
+    </verb>
+
+    <verb lbl="get">
+        <g  inf="obtenir"   imp="obtenga"   prp="obtiene"   pri="esta obteniendo" />
+    </verb>
+
+<!-- etc. ... -->
+
+</verbs>
+
+<nouns>
+    <noun lbl="book">   <g  reg="libro"  cl="M"/>    </noun>
+    <noun lbl="pen">    <g  reg="pluma"  cl="F"/>    </noun>
+<!-- etc. ... -->
+</noun>
+
+<adjectives>
+    <adjective lbl="red"    ><g reg="roj~o"/>    </adjective>
+    <adjective lbl="blue"   ><g reg="azul"/>     </adjective>
+<!-- etc. ... -->
+</adjective>
+</locale>
+</textarea>
+</p>
+<p>
+Some tag/element explanations:
+<dl>
+
+<dt><b>locale</b></dt>
+<dd>
+This element is the wrapper for the whole file and identifies the locale information.
+</dd>
+
+<dt><b>verbs, nouns, adverbs, adjectives, declension, prepositions, articles</b></dt>
+<dd>
+These are the group elements for the parts of speech. Note that they are all spelled out
+and pluralized.  It's probably a good idea to include a comment in these blocks with the
+native term for the part of speech being defined. Remember that the engine locale files
+will be used as models by people writing locales for games, and they may be less fluent
+in English, especially on picky matters of grammatical terms.  If you can provide help
+for them in your native language, this is probably a good thing.
+</dd>
+
+<dt><b>verb, noun, advb, adje, decl, prep, artl</b></dt>
+<dd>
+These elements are used once for each symbolic object recognized internally by PUB's
+"semantic" concept language.  The labels ("lbl" attribute) will generally be English
+words because that's the language we use in core development (but strictly speaking
+this isn't required). It will often be desireable to include a comment showing a usage
+example or exact meaning within PUB, in order to make fine distinctions in glossing words.
+</dd>
+
+<dt><b>conjunctions, punctuation</b></dt>
+<dd>
+These special sections define the conjunction and punctuation tokens which are
+used to delimit clauses within a sentence. PUB doesn't assign any particular meaning
+to these words, it just uses them to break up multi-clause sentences into single
+clause "simple sentences" (commands) to be dispatched in order.
+</dd>
+
+<dt><b>g</b></dt>
+<dd>
+The "g" or "gloss" element is the most basic and has complex attributes to allow
+for a range of language behaviors:<br/>
+<i>Basic Gloss Attributes (for regular grammar elements)</i>
+  <dl>
+    <dt><b>reg</b></dt>
+    <dd>
+    The most basic element is the "reg" or "regular" attribute. If provided, this
+    indicates that the word follows standard behaviors which the Python locale grammar
+    module can be expected to figure out procedurally. Three important cases:
+        <ul>
+        <li>Regularly conjugating verbs.</li>
+        <li>Regularly declined nouns.</li>
+        <li>Nouns, verbs, etc, that do not change (as in English or Chinese).</li>
+        </ul>
+    </dd>
+    
+    <dt><b>cl</b></dt>
+    <dd>
+    Closely linked to the "reg" attribute is the "cl" or "class" attribute. This
+    can be used to identify major classes of verbs (as in Spanish "AR", "ER", and
+    "IR" verbs) or classes of nouns (as in Spanish "M" or "F" gender nouns, or
+    Swahili "M/WA", "KI/VI" class nouns, etc).<br/><br/>
+    Note that the python locale grammar module for your language may provide shortcuts
+    to avoid having to use the "cl" tag explicitly. The example above assumes that
+    the module provides such special handling for adjectives.
+    </dd>
+  </dl>
+  
+<i>Attributes for irregular verbs</i>
+  <dl>
+    <dt><b>inf</b></dt>
+    <dd>
+    The "inf" attribue overrides the representation of the verb in the "infinitive" 
+    conjugation (the dictionary form).  This is used for identification only, since
+    PUB never actually needs to use the infinitive.
+    </dd>
+
+    <dt><b>imp</b></dt>
+    <dd>
+    The "imp" attribute overrides the representation of the "imperative" conjugation
+    and tense of the verb.
+    </dd>
+
+    <dt><b>prp</b></dt>
+    <dd>
+    The "prp" attribute overrides the "present perfective" tense of the verb. This
+    means the tense that is used to report what actions you have completed. (e.g.
+    "you <b>get</b> the hammer"). [We're probably going to need variants like 'prp2'
+    and 'prp3' to deal with cases of 2nd &amp; 3rd person conjugation differences)].
+    </dd>
+
+    <dt><b>pri</b></dt>
+    <dd>
+    The "pri" attribute overrides the "present imperfective" tense of the verb. This
+    means the tense that is used to describe an ongoing state-like condition, such
+    as "you <b>are standing</b> on the table".
+    </dd>
+  </dl>
+  
+<i>Attributes for irregular nouns</i>
+  <dl>
+    <dt><b>nom</b></dt> <dd>Nominative declension for noun.</dd>
+    <dt><b>acc</b></dt> <dd>Accusative declension for noun.</dd>
+    <dt><b>dat</b></dt> <dd>Dative declension for noun.</dd>
+    <dt><b>gen</b></dt> <dd>Genitive declension for noun.</dd>
+    <dt><b>ins</b></dt> <dd>Instrumental declension for noun.</dd>
+    <dt><b>prp</b></dt> <dd>Prepositional declension for noun.</dd>
+  </dl>
+</dd>
+</dl>
+
+
+<a name="ENCODING"><h3>Unicode Encoding</h3></a>
+[Encoding issues]
+
+<a name="DIRECTION"><h3>Reading Direction of Text</h3></a>
+[Any special notes about dealing with right-to-left text, as with Semitic languages]
+

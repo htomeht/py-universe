@@ -1,0 +1,18 @@
+* Provide interface definitions in interfaces.py (instead of just intent)
+
+* Provide implementations in components.py
+
+* Change 'BaseThing' to 'Noun'
+
+(2006/01)
+
+* convert documentation to use epydoc
+
+* complete BaseThing->Noun conversion
+
+* make interpolation engine use Python dict interpolation so <The dirobj> becomes %(dirobj)s
+  this will reduce confusion for new developers (we don't really need a custom templating engine)
+
+* get rid of manual implementation checks to determine if a verb can act on a noun. Instead,
+  use PyProtocols and exception handling. Every verb identifies an interface for dobj and
+  multiple for iobj.

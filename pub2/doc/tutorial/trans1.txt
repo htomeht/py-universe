@@ -1,0 +1,31 @@
+
+                            YOUR GAME TITLE
+                               by You
+
+
+Here's the intro blurb (i.e. prologue) to your game.  Make it as long 
+as you like, wrapping the words with a backslash if you want.
+
+
+[Press Return.]
+
+
+
+
+
+Universe
+It looks like an ordinary Universe.
+
+
+
+>i
+You are empty-handed.
+
+>look
+
+Universe
+It looks like an ordinary Universe.
+
+
+
+>

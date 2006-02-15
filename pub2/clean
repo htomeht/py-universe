@@ -1,0 +1,8 @@
+#!/bin/bash
+find . -name "*.pyc" -exec rm {} \;
+find . -name "*.pyo" -exec rm {} \;
+rm doc/epydoc/*
+rm doc/image/semantics_uml.png 
+rm doc/image/py_universe.png 
+rm doc/image/brick_topology.png
+

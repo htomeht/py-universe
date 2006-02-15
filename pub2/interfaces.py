@@ -15,14 +15,14 @@
 #    You should have received a copy of the GNU Lesser General Public
 #    License along with this library; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#---------------------------------------------------------------------
+#--------------------------------------------------------------------
 
-#---------------------------------------------------------------------
+#--------------------------------------------------------------------
 # CHANGELOG
 #
 #   2004-22/10: Gabriel Jagenstedt
 #       Cleaned up and inserted a copyright notice
-#---------------------------------------------------------------------
+#--------------------------------------------------------------------
 """
 This module should contain all interfaces for pub. An interface is a class
 which documents how other classes or class instances should work. 
@@ -60,7 +60,7 @@ these methods.
 from protocols import Interface, advise
 
 
-#--------------------------------------------------------------------#
+#-------------------------------------------------------------------#
 # Language interfaces.
 #
 
@@ -78,7 +78,7 @@ class ILangMod(Interface):
     This is to ensure that the module is really a language.
     """
     
-#---------------------------------------------------------------------
+#--------------------------------------------------------------------
 #
 class ISymbol(Interface):
     """
@@ -87,80 +87,36 @@ class ISymbol(Interface):
 
     def addComponents(com):
         """
-        Method that adds components listed in com if of the right type.
+        method that adds components listed in com if of the right type.
         """
 
     def delComponents(com):
         """
-        Method that removes components listed in com if it can be found.
+        method that removes components listed in com if it can be found.
         """
 
-#---------------------------------------------------------------------
-#
-class INoun(Interface):
-    """
-    INoun is a marker interface mainly.
-    It is used to adapt to Noun Interfaces.
-    """
 
-#---------------------------------------------------------------------
-#
-class IVerb(Interface):
-    """
-    Documents what a verb has to do in PUB.
-    """
-
-    def do(cmd):
-        """
-        Initiates the command.
-        Generally just calls begin.
-        """
-
-    def begin(cmd):
-        """
-        Does the invoking.
-        ie 
-        try: 
-            if invoke(obj,ITest,'test',cmd):
-                self.finish(cmd)
-        except RandomError:
-            cmd.tell(pub.error['RandomError'])
-        """
-
-    def finish(cmd):
-        """
-        Calls cmd.tell() to let the player and all who see 
-        know what has happened
-        """
-
-#-----------------------# NOUN INTERFACES #-------------------------#
-#
-# This Section contains interfaces that might be added to Nouns, like
+#-----------------------# THING INTERFACES #------------------------#
+# This Section contains interfaces that might be added to Things, like
 # IDescribable and ILocatable.
 #
-#---------------------------------------------------------------------
-
-#---------------------------------------------------------------------
+# These interfaces will probably be provided by adapters like so:
+#     class ThingDescribableAdapter:
+#         advise(instancesProvide=[IDescribable], 
+#                asAdapterForProtocols=[IThing]
+# 
+# It should be simple to make new Thing interfaces.
+#
+#--------------------------------------------------------------------
 # IDescribable
 #
 class IDescribable(Interface):
     """
     Classes that provide IDescribable can be given descriptions and have 
-    methods for evaluating them. IDescribable is language specific. 
-    IDescribable components also provide the syntax for an object like 
-    gender and case.
+    methods for evaluating them. IDescribable components are most likely 
+    language specific.
     """
 
-    def getDesc():
-        """
-        method to aquire a normal description of an item.
-        """
-
-    def getXDesc():
-        """
-        method to aquire a detailed description of an item if it exists.
-        otherwise call getDesc
-        """
 
 #--------------------------------------------------------------------
 #ILocatable
@@ -169,8 +125,20 @@ class ILocatable(Interface):
     """
     Classes that provide ILocatable are used to show where an item is situated
     and if any items are contained within the obj it's a part of.
-    In short it's used to localize objects.
     """
+
+
+#--------------------------------------------------------------------
+#ISyntax
+# 
+# Makes more sense to include this in IDescribable
+#class ISyntax(Interface):
+#    """
+#    Classes that provide ISyntax are the base of an objects language related 
+#    interface. Providing articles, names for singular, plural and whatever a
+#    specific language parser would need. ISyntax components are likely
+#    language specific.
+#    """
 
 
 #--------------------------------------------------------------------
@@ -179,9 +147,7 @@ class ILocatable(Interface):
 class ITangible(Interface):
     """
     Classes that provide ITangible have size and weight and ways to deal with
-    these attributes. It is a bit uncertain that this is a Thing Interface but
-    since it's fully possible to have objects without this attribute I will
-    leave it in.
+    these attributes.
     """
 
 
@@ -205,7 +171,7 @@ class IAskL(Interface):
     """
 
     def ask(chain,cmd):
-        """Method to ask the being something"""
+        """method to ask the being something"""
 
 #--------------------------------------------------------------------
 #InterfaceCloseListener
@@ -225,7 +191,7 @@ class IDrinkL(Interface):
     """
 
     def drink(chain, cmd):
-        """Method called when the object is told of a drinking event"""
+        """method called when the object is told of a drinking event"""
 
 #--------------------------------------------------------------------
 #InterfaceDropListener
@@ -235,7 +201,7 @@ class IDropL(Interface):
     """
 
     def drop(chain,cmd):
-        """Method that listens for drop events."""
+        """method that listens for drop events."""
 
 #--------------------------------------------------------------------
 # IEatListener
@@ -256,7 +222,7 @@ class IExamineL(Interface):
     """
 
     def examine(chain,cmd):
-        """Method that listens for examine events"""
+        """method that listens for examine events"""
 
 #--------------------------------------------------------------------
 #InterfaceFollowListener
@@ -268,7 +234,7 @@ class IFollowL(Interface):
     """
 
     def follow(chain,cmd):
-        """Method that listens for following events"""
+        """method that listens for following events"""
 
 #--------------------------------------------------------------------
 #InterfaceGetListener
@@ -278,7 +244,7 @@ class IGetL(Interface):
     """
 
     def get(chain,cmd):
-        """Method that listens for get events."""
+        """method that listens for get events."""
 
 #--------------------------------------------------------------------
 #InterfaceGiveListener
@@ -288,7 +254,7 @@ class IGiveL(Interface):
     """
 
     def give(chain,cmd):
-        """Method that listens for give events"""
+        """method that listens for give events"""
 
 #--------------------------------------------------------------------
 # InterfaceGoListener
@@ -299,7 +265,7 @@ class IGoL(Interface):
     """
     
     def go(chain,cmd):
-        """Method to use an exit like it was intended."""
+        """method to use an exit like it was intended."""
         
 #--------------------------------------------------------------------
 # InterfaceLockListener
@@ -310,7 +276,7 @@ class ILockL(Interface):
     """
 
     def lock(chain,cmd):
-       """Method to lock the lock"""
+       """method to lock the lock"""
 
 #--------------------------------------------------------------------
 #InterfaceLookListener
@@ -320,7 +286,7 @@ class ILookL(Interface):
     """
 
     def look(chain,cmd):
-        """Method listening for look events"""
+        """method listening for look events"""
 
 #--------------------------------------------------------------------
 # InterfaceOpenListener
@@ -342,7 +308,7 @@ class IPullL(Interface):
     """
 
     def pull(chain,cmd):
-        """Method that listens for pull events"""
+        """method that listens for pull events"""
 
 #--------------------------------------------------------------------
 #InterfacePushListener
@@ -355,7 +321,7 @@ class IPushL(Interface):
     """
 
     def push(chain,cmd):
-        """Method that listens for push events"""
+        """method that listens for push events"""
 
 #--------------------------------------------------------------------
 #InterfacePutListener
@@ -365,7 +331,7 @@ class IPutL(Interface):
     """
 
     def put(chain,cmd):
-        """Method that listens for put events"""
+        """method that listens for put events"""
 
 #--------------------------------------------------------------------
 # InterfaceTalkListener
@@ -375,21 +341,18 @@ class ITalkL(Interface):
     """
 
     def talk(chain,cmd):
-        """Method listening for talk events."""
+        """method listening for talk events."""
 
 
 #--------------------------------------------------------------------
 # InterfaceTellListener
 class ITellL(Interface):
     """
-    Provides tell method.
+    provides tell method.
     """
 
     def tell(chain,cmd):
-        """
-        Method to tell the being about something. Usually used by cmd.tell
-        to let a player know what has happened after a command was executed.
-        """
+        """method to tell the being about something"""
 
 #--------------------------------------------------------------------
 # InterfaceReceiveListener
@@ -399,7 +362,7 @@ class IReceiveL(Interface):
     """
 
     def receive(chain,cmd):
-        """Method that listens for receive events"""
+        """method that listens for receive events"""
 
 
 #--------------------------------------------------------------------
@@ -412,7 +375,7 @@ class IRemoveL(Interface):
     """
 
     def remove(chain,cmd):
-        """Method that listens fo remove events"""
+        """method that listens fo remove events"""
 
 
 #--------------------------------------------------------------------
@@ -426,7 +389,7 @@ class ITurnL(Interface):
     """
 
     def turn(chain,cmd):
-        """Method that listens for turn events"""
+        """method that listens for turn events"""
 
 #--------------------------------------------------------------------
 #InterfaceUnlockListener
@@ -436,7 +399,7 @@ class IUnlockL(Interface):
     """
     
     def unlock(chain,cmd):
-       """Method to unlock the lock"""
+       """method to unlock the lock"""
     
 
 #--------------------------------------------------------------------
@@ -449,7 +412,7 @@ class IWearL(Interface):
     """
 
     def wear(chain,cmd):
-        """Method that listens for wearing events"""
+        """method that listens for wearing events"""
         
 
 #----------------------Interface Packages---------------------------#        

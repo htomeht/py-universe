@@ -1,0 +1,7 @@
+2005-08/12	Terry Hancock	thancock@users.sf.net
+
+    *   Changed the class 'BaseThing' to 'Noun', which seems more intuitive,
+        especially since we have a class 'Verb'.
+
+    *   We haven't really kept a proper changelog before version "1.0 alpha 2",
+        so changes are relative to that version.

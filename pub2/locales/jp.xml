@@ -1,0 +1,85 @@
+<localization language="jp" encoding="utf-8">
+<verbs>
+	<!-- どうし - 動詞 -->
+    <verb lbl="go">		<g  reg="行く" /></verb>
+    <verb lbl="enter">	<g  reg="入る"  /></verb>
+    <verb lbl="put">		<g reg="置く" /></verb>    
+    <verb lbl="get">      <g  reg="取る" />
+								<g reg="得る" /></verb>
+<!-- etc. ... -->
+</verbs>
+
+<adverbs>
+	<!-- ふくし - 副詞 -->
+	<advb lbl="weakly">	  <g reg="弱々しく" />	</advb>
+	<advb lbl="strongly">	<g reg="強く" />		</advb>
+</adverbs>
+
+<nouns>
+	<!-- めいし - 名詞 -->
+    <noun lbl="book">   <g  reg="本"   />    </noun>
+    <noun lbl="pen">    <g  reg="ペン" />    </noun>
+<!-- etc. ... -->
+</noun>
+
+<adjectives>
+	<!-- けいようし と けいようどうし - 形容詞 と 形容動詞 -->
+    <adje lbl="red"    ><g  reg="赤い"/>    </adje>
+    <adje lbl="blue"   ><g  reg="青い"/>     </adje>
+<!-- etc. ... -->
+</adjective>
+
+<declension>
+	<!-- Declension particles - ぶんぽうのじょし - 文法の助詞 -->
+	<decl lbl="NOM">	<g reg="は" /> 
+							<g reg="が" /> </decl>
+	<decl lbl="ACC">	<g reg="を" /> </decl>
+	<decl lbl="DAT">	<g reg="え" />
+							<g reg="に" /> </decl>
+	<decl lbl="GEN">	<g reg="の" />	</decl>
+	<decl lbl="INS">	<g reg="で" />	</decl>
+</declension>
+
+<preposition>
+	<!--                        【ポロジの】ばしょ の じょし -->
+	<!-- Topological Prepositions - 【トポロジの】場所の助詞 -->
+	<prep lbl="front"> 
+			<g reg="の前に" />
+			<g reg="の前で" />
+	</prep>
+	<prep lbl="back">
+			<g reg="の後ろに" />
+			<g reg="の後ろで" />
+	</prep>
+	<prep lbl="on_top">
+			<g reg="の上に" />
+			<g reg="の上で" />
+	</prep>
+	<prep lbl="under">
+			<g reg="の下に" />
+			<g reg="の下で" />
+	</prep>
+	<prep lbl="to_left">
+			<g reg="の左に" />
+			<g reg="の左で" />
+	</prep>
+	<prep lbl="to_right">
+			<g reg="の右に" />
+			<g reg="の右で" />
+	</prep>
+	<prep lbl="inside">
+			<g reg="の中に" />
+			<g reg="の中で" />
+			<g reg="に" />
+			<g reg="で" />
+	</prep>
+</prepositions>
+<punctuation>
+	<punc lbl="ADDRESS"><g chars="、。"/></punc>
+	<punc lbl="CONJ"><g chars="、。"/></punc>
+</punctuation>
+<conjunctions punctuation="Y">
+	<conj><g reg="し" />
+			<g reg="が" />
+	</conj>
+</conjunctions>
