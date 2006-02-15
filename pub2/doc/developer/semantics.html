@@ -1,0 +1,607 @@
+<html>
+<head>
+<title>Semantic Language in PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#ffd890" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Semantic or "Concept" Language in PUB 2.x+</h1>
+Because we wanted to internationalize PUB, we had to do some serious rethinking about
+how the internals of an IF engine should work.  Instead of having objects within PUB
+expressing themselves directly in strings of English, therefore, we have altered the system
+to separate out the localized communications stage from the internal "semantic" language
+used by PUB's core and world model.
+<p>
+This internal language uses Python objects to represent certain basic concepts common
+to all languages -- or at least common to all languages when referring to the limited
+knowledge domain of PUB's interactive fiction topological world.  You can think of this
+internal language as a kind of <i>lingua franca</i> used within PUB, having it's own
+simplified grammar rules.  However, since the mechanism is just ordinary Python objects
+passed as messages to each other, there's not really a need for any formal notation.
+</p>
+<p>
+Describing this mechanism, however, will provide a deeper understanding of how PUB
+is localized, and how game information is passed, making it easier for you if you
+are interested either in writing games for PUB, or working on its engine design.
+</p>
+
+<h3>UML Diagram</h3>
+<p>
+What I can do is provide a UML representation of the objects used in the de-referencing
+and communications messages.  This is still pretty incomplete, as I am still working on
+this at a conceptual level. My current feeling is that I want to make these objects
+subclass directly from the PyParsing parserElement classes, and then add the semantic
+dereferencing to that. Alternatively, I could build semantic classes that are generated
+factory-style from the syntactical parsing objects.  Either way, a clause moves from being
+a string, to a list of string tokens, to identified words, to de-referenced concepts
+from the "topoworld" object model within PUB.
+</p>
+<p>
+Anyway, here's my first concept:
+</p>
+<img alt="UML Diagram of Semantics Objects" usemap="enums" height="500" 
+width="800" border="0" src="../image/semantics_uml.png">
+<map name="enums">
+  <area shape="rect" href="#ENUM_VERBTENSES" coords="678,190,761,203" />
+  <area shape="rect" href="#ENUM_DECLENSIONS" coords="432,343,555,354" />
+  <area shape="rect" href="#ENUM_ARTICLES" coords="406,330,559,343" />
+  <area shape="rect" href="#ENUM_VERBTENSES" coords="98,268,182,279" />
+  <area shape="rect" href="#ENUM_PLURALS" coords="124,241,251,253" />
+  <area shape="rect" href="#PERSON" coords="13,224,159,238" />
+  <area shape="rect" href="#ENUM_DECLENSIONS" coords="125,202,247,214" />
+  <area shape="rect" href="#PARTS_OF_SPEECH" coords="59,164,286,175" />
+</map>
+
+<p>
+This diagram describes several "enumerated" types, I use an idiom of a class container
+with integer objects to represent this. The meaning of the symbols is described below
+under the parts-of-speech headings.
+</p>
+
+<h4>Language, Meta-Language, Meta-Meta-Language, <i>ad infinitum</i></h4>
+As with all discussion of linguistics, which is to say,
+"talking about how we talk about talking", the mere recursion creates a lot
+of fuss in understanding what's going on, so we have to be extra-explicit in
+this document.  In order to clarify this, we need to walk through the parsing
+process to see what happens to what you type, and then walk back out to the
+generated reports that PUB gives you in response:
+<dl>
+<dt><b>Input Strings</b></dt>
+<dd>
+With unicode encodings and other issues, it isn't as trivial as it used to be,
+but one way or another, PUB's parser receives one line of characters as input.
+</dd>
+<dt><b>Tokenization</b></dt>
+<dd>
+The tokenizing or "lexing" process turns the stream of characters into a stream
+of "tokens" or "words" (but in our usage, some "words" may consist only of
+punctuation, such as the "conjunction" ","). At this point, though, words are still
+just groups of characters.  If the string contains <i>lexical</i> errors (e.g. bad spelling),
+it will be rejected at this point, raising a <b>LexicalParsingError</b>.
+</dd>
+<dt><b>Classification</b></dt>
+<dd>
+In the next step, actually called "parsing", the words are classified and a data
+structure is built up, representing the text.  If the typed text is <i>syntactically</i>
+incorrect, it will be rejected at this point with a <b>SyntacticalParsingError</b>.
+However, due to syntactical ambiguity, the parser will attempt variant interpretations
+of the text before giving up and passing the exception on to the next level.
+<ul>
+<li>The input may consist of simple sentences (or "clauses"), broken up by "conjunctions"
+or "punctuations"</li>
+<li>Each clause consists of a "verb phrase" and zero or more "noun phrases".</li>
+<li>The verb phrase consists of a verb and zero or more adverbs, which may modify the
+impact of the verb (they are represented mathematically using a vector of floating
+point numbers, and effectively "fuzzify" the verb).</li>
+<li>The noun phrase consists of a "noun word" and various modifiers, including:
+adjectives, articles, and particles representing "declension" or "prepositional"
+inflections (the original language may have many different ways to express these
+concepts, but int the PUB "concept language" they are attributes of the "noun phrase".</li>
+</li>
+</ul>
+</dd>
+<dt><b>De-Referencing</b></dt>
+<dd>
+The next step converts from "syntax" to "semantics", by de-referencing the "verb phrase"
+and "noun phrase" objects to the PUB linguistic/topological world model objects that they
+represent. This de-referencing is context sensitive, taking into account what the player
+can "see" in the game, and the scope of concepts available to him.  If de-referencing
+fails, the parser will then raise a <b>SemanticParsingError</b> (although it could use
+the same perturbational reinterpretation process to deal with semantic errors that it
+uses for syntactical errors).
+</dd>
+<dt><b>Dispatching</b></dt>
+<dd>
+After the sentence has been so processed, it is now a list of "Command" objects which can
+be executing sequentially to implement the player's move. (It should be noted that in
+PUB, when we have non-player agents, they will also get a chance to act, so the players'
+commands are not the only ones executed at this point). During the dispatching process,
+the actual outcome will be determined -- nouns may not actually allow the verbs in question
+to act on them, in which case they will raise some subclass of <b>IFActionError</b>.
+</dd>
+<dt><b>Reporting</b></dt>
+<dd>
+Regardless of the outcome, whether through error exceptions or successful completion, a
+report "Sentence" object will be passed back to the parser (which is also the language generator
+module), by constructing a "statement sentence" in either the "perfective" (action-completed) or
+"imperfective" (state-reporting) aspect.  This sentence object references the PUB objects it
+refers to, including "noun objects" and "verb objects".
+</dd>
+<dt><b>Phrase-Generation</b></dt>
+<dd>
+The sentence object generates a string representation by making calls into the current locale, 
+to represent objects using their localized names and appropriate modifiers, and to report the
+correct verb with its nearest-matching adverb (or no adverb, depending on the options used).
+</dd>
+<dt><b>Report</b></dt>
+<dd>
+The resulting string is then reported back to the terminal (or stdout).
+</dd>
+</dl>
+
+<a name="PARTS_OF_SPEECH" />
+<h1>Parts of Speech</h1>
+<p>
+Notes about the different parts of speech as understood by PUB.  PUB divides words
+into the following syntactical parts of speech:
+<table align="center" width="100%" cols="3" cellpadding="5" cellspacing="5" border="0">
+<tr valign="top">
+<td><a href="#NOUN">NOUN</a>: noun</td>
+<td><a href="#VERB">VERB</a>: verb</td>
+<td><a href="#ADVB">ADVB</a>: adverb</td>
+</tr>
+<tr valign="top">
+<td><a href="#ADJE">ADJE</a>: adjective</td>
+<td><a href="#DECL">DECL</a>: declension particles</td>
+<td><a href="#PREP">PREP</a>: preposition</td>
+</tr>
+<tr valign="top">
+<td><a href="#ARTL">ARTL</a>: articles</td>
+<td><a href="#CONJ">CONJ</a>: conjunctions</td>
+<td><a href="#PUNC">PUNC</a>: punctuation</td>
+</tr>
+</table>
+
+<a name="NOUN"><h3>Nouns</h3></a>
+"A noun is a person, place, or thing." It's also used for
+some abstract concepts such as directions ("north", "south", "east", and "west").
+<p>
+Nouns are very important objects in PUB, as they are the conceptual
+analog to the "objects" of "object oriented programming".  In most
+cases, the code determining the outcome of a game is attached to
+noun objects.
+</p>
+<p>English is very analytic with respect to nouns, and the only
+true inflection we use is pluralization (there is also possessive,
+but that effectively converts a noun to an adjective).  Pluralization
+is a highly diverse area among different languages. Some languages,
+such as Chinese and Japanese have no inflected plural, essentially
+treating all nouns as "collective" or "ambiguously plural", just like
+the English word "sheep".  And as we do with sheep, these languages
+use "counters" to specify numbers -- hence you can say "three head of sheep".
+</p>
+<p>
+Other languages have more complex pluralization schemes than ours,
+such as Arabic, which has a separate "dual" for specifying <i>two</i>
+objects, in addition to the "plural" which means <i>three or more</i>.
+And there are other examples.
+</p>
+<p>
+The safest way to localize a plural is to be explicit about the number
+of objects (i.e. specify the actual number).  But this is not always
+practical, so the plurality state of a noun is allowed to take on
+some special values (internally, these are negative numbers, so as
+to disambiguate them from literal quantities). Note that using these
+values is likely to cause some breakage when the game author and the
+game locale are very different languages:
+</p>
+<a name="ENUM_PLURALS">
+<dl>
+<dt><b>SING</b>: Singular</dt>
+<dd>
+Just one object. Same as '1', of course.
+</dd>
+<dt><b>DUAL</b>: Dual</dt>
+<dd>
+Just two objects, same as '2'.
+</dd>
+<dt><b>PLUR</b>: Plural</dt>
+<dd>
+Three or more objects (may be used for two-or-more if the number isn't known).
+</dd>
+<dt><b>COLL</b>: Collective or Mass nouns</dt>
+<dd>
+This is applied to a collective noun, and means that no sensible distinction
+between singular and plural is possible, or that the number is effectively
+always plural.  When translating from a language which assigns a collective
+value to a concept to a language that does not, plural should be assumed (e.g.
+hair).  This is also used for liquid or gaseous substances that can't be
+counted without specifying a unit.
+</dd>
+<dt><b>ABST</b>: Abstract</dt>
+<dd>
+Certain nouns have no meaningful singular or plural state, such as abstract
+nouns like "logic" or "north".  For these, the pluralization value "ABST"
+is available.
+</dd>
+</dl>
+
+
+<a name="VERB"><h3>Verbs</h3></a>
+A verb describes a basic transformation to be attempted,
+or an action that the player is meant to do (sometimes no topological change occurs, but
+it may affect the state of listening objects, nevertheless).
+<p>
+Verbs represent actions that may be taken on objects by players (or
+other agents) in the game.  Verbs interact with <i>interfaces</i>
+provided by the nouns.
+</p>
+<p>
+Many languages provide complex inflection on verbs, collectively
+called "verb conjugation". This includes inflections for "person"
+(who the subject is relative to the speaker), "tense" (position in
+time of the verb's action), and sometimes "aspect" (a more complex
+idea incorporating uncertainty, duration, and so on -- to be more
+specific, you'd have to talk about specific languages).  Fortunately,
+in the limited domain of an IF parser we can stick to a few very
+widely held concepts, which are represented here:
+</p>
+<a name="ENUM_VERBTENSES" />
+<h5>Verb Tenses</h5>
+<dl>
+<dt><b>IMP</b>: Imperative</dt>
+<dd>
+This is the form used in a command. Almost every sentence we parse
+will be in this tense/aspect.
+</dd>
+
+<dt><b>INT</b>: Interrogative</dt>
+<dd>
+This is the form used in a question.  This is usually the same as
+the PRP form, and I currently have no use for this, although it
+could be sanely parsed and dereferenced, AFAICT (as a query about
+the topoworld state). We usually use a "look" command to do this
+in IF, but a question syntax ought to be possible.
+</dd>
+
+<dt><b>PRP</b>: Present Perfective</dt>
+<dd>
+Often called the "plain present" or just "present" tense.  Most
+reports generated from the IF engine will be in this tense. It
+indicates a <i>completed</i> action, e.g.: "You <i>hit</i> the nail."
+</dd>
+
+<dt><b>PRI</b>: Present Imperfective</dt>
+<dd>
+In English, we use the "present participle" for this. It indicates
+an on-ongoing or state-like action, e.g.: "You <i>are standing</i> on the table."
+</dd>
+</dl>
+<a name="PERSON" />
+<h5>Person</h5>
+<p>
+"Person" is specified by an integer, following the usual linguistic
+convention:
+</p>
+<dl>
+<dt><b>1</b>: First person</dt>
+<dd>The speaker.  We don't use this much.</dd>
+
+<dt><b>2</b>: Second person</dt>
+<dd>The listener. Most reports are in this person as they are describing
+what the player is doing.</dd>
+
+<dt><b>3</b>: Third person</dt>
+<dd>Another person, not the speaker or listener. We occasionally may use
+this to generate reports on the behavior of non-player characters.</dd>
+
+<dt><b>4</b>: Fourth person</dt>
+<dd>Surprised? Me too. English doesn't have this, but some Native American
+languages (e.g. Ojibwa) do -- it means "yet another person", besides the
+third person. In a third-person narrative, in which the protagonist is
+described in third person, you would expect "fourth person" to refer to
+the people that person interracts with.  I have serious doubts about
+where to use this, if at all, but it will remain an allowed value just
+in case.
+</dd>
+</dl>
+
+
+<a name="ADVB"><h3>Adverbs</h3></a>
+An adverb moderates the action of the verb. It can increase
+or decrease its effect on an abstract "axis" called the "adverb domain", and is represented
+by a floating point value between -1 and 1, which can be thought of as a "vague interval"
+or a bipolar fuzzy state, or a "polar, saturating axon" depending on your prefered jargon. It
+essentially "fuzzifies" the verbs action. The practical upshot is that we can model "synonymous"
+but "connotatively distinct" verbs like "tap" and "bash" ("ameliorating"
+and "exacerbating" forms of "hit", respectively) in a highly language-neutral way. Suitable
+adverbial domains might include VALENCE (good or bad), INTENSITY (strong or weak), POLITENESS
+(rude or polite), etc.
+<p>
+Adverbs are defined as members of an "adverb domain" in PUB, which 
+verbs can subscribe to to indicate that the domain makes sense in
+reference to the verb. Individual adverbs express a modifying numerical
+value from "-1" (ameliorating) to  "0" (neutral) to "+1" (exacerbating).
+Adverbs which modify other adverbs (such as "very") are not really
+interpreted separately, but are combined to form multi-word adverbs,
+such as "very very weakly".  The adverb, once dereferenced to a domain
+and numerical value pair, is passed to the verb when it is executed,
+allowing the verbs action to be further specified. The "neutral" or "0"
+adverbial value should match the interpretation of the <i>base</i> verb
+without an adverb (but "synonym" verbs may carry an adverbial <i>connotation</i>
+which is incorporated by an adverbial value when the synonym is de-referenced
+to the base verb: hence to "gently bash" something may be the same as to "hit" it,
+and to "strongly hit" it may be the same as "bash".
+</p>
+<p>
+This mechanism is useful because in some languages such as English, there
+is a very rich variety of synonymous verbs with differing shades of implied
+adverbial meaning, whereas in other languages, such as Japanese, there are
+few verbs, and such distinctions are carried by adverbs. Since we want to
+be language-neutral, we need to allow for this kind of dereferencing.
+</p>
+
+<a name="ADJE"><h3>Adjectives</h3></a>
+An adjective is really just a label in PUB. Since we are
+only interested in disambiguating objects, it is a descriptive label that has been associated
+with the noun when it is defined.  Translations are essentially simple glosses -- variations
+usually won't be that important as long as the adjectives are translated in the context of the
+noun they are associated with.
+<p>
+Adjectives are used in PUB to <i>further specify</i> a noun, in order to
+aid in de-referencing it.  Thus, if both a "red button" and a "green button"
+are currently visible, we need to examine the adjectives to know which
+the player means (or else we need to raise an <b>AmbiguousSemanticsError</b>
+to report the problem to the player).
+</p>
+<p>
+We don't do much with adjectives internally. They are really just labels that
+are assigned to nouns. In the translation process, we just have to gloss them
+to something reasonably close in meaning.
+</p>
+
+<a name="DECL"><h3>Declension</h3></a>
+<p>
+For analytic languages, the declension of a noun phrase
+is usually defined either by position in the sentence or by explicit marker words. In English,
+we use special prepositions to indicate this. A similar system exists in Chinese and Japanese.
+These words are called by many different names in the formal grammars of those languages, but
+we emphasize their role in determining declension, so we call them "declension particles", even
+if they are pedagogically verbs, adverbs, or prepositions.
+</p>
+<p>
+Declension of nouns may be expressed in many different ways in different languages,
+but the meanings are shared and sensible in the interactive fiction context. The
+six-case declension described here is roughly derived from Russian, because it's
+the most complete declension I'm aware of -- it's certainly rich enough for our
+needs. In all cases, "declension" refers not to the identity of nouns, but rather
+their role in the sentence:
+</p>
+<a name="ENUM_DECLENSIONS" />
+<dl>
+<dt><b>NOM</b>: Nominative case</dt>
+<dd>
+This is the case for the subject. It is underused in PUB, because the subject is
+implicitly the player character (but there are circumstances where it might be needed,
+so we include it for completeness).
+</dd>
+<dt><b>ACC</b>: Accusative case</dt>
+<dd>
+This is what we call the "direct object" in English, it is the principal object that a verb
+is going to act on.
+</dd>
+<dt><b>DAT</b>: Dative case</dt>
+<dd>
+A noun towards which an action is directed. In English we usually represent this with the
+preposition "to" or "towards".
+</dd>
+<dt><b>GEN</b>: Genitive case</dt>
+<dd>
+Opposite of Dative. In English we represent this with the preposition "from".
+</dd>
+<dt><b>INS</b>: Instrumental case</dt>
+<dd>
+This is a noun which is used like a tool. In English we say "using" or "with".
+</dd>
+<dt><b>PRP</b>: Prepositional case</dt>
+<dd>
+This is a catch-all for spatial and directional information.  We use it to represent or specify
+topological relationships when needed.  We set the noun phrase declension to this value to
+represent that a topological preposition will be provided.
+</dd>
+</dl>
+<p>
+In English, declension is marked by a combination of word-order and "prepositions". The
+"explicit declension" model though, is more useful in designing the interaction between
+verbs and nouns, though, which is why I've adopted it (TJH), rather than sticking with
+English terms.
+</p>
+
+<a name="PREP"><h3>Prepositions</h3></a>
+"True" prepositions in PUB are prepositions which describe
+the location of an activity relative to the noun. In other words, they carry topological relationship
+information, rather than grammatical function.
+<p>
+Prepositions are used to represent topological relationships between objects. The concepts
+that apply are determined by the <a href="topology.html">topological model</a> used (currently, this will include only
+"simple containment" and "brick" models).
+</p>
+
+<p>
+Note that the English word "preposition" comes from "pre-" + "position" refering to
+the way the word relates to the noun it modifies. We don't care about this, and don't 
+draw a distinction between "preposition", "postposition", or "particle".  The point is
+that prepositions give us information about where in the topo-world an action is to
+take place.
+</p>
+
+<p>
+Like adjectives, prepositions are basically just labels, but they have a significance
+to the "topology model" that the noun inherits from. If it is a "simple container", then
+"in", "on", etc will all translate to a label like "within" which means that the place
+the action refers to is the contents of the given Noun.  So if you
+"put the hammer in the cabinet", then the hammer's location will be changed to the
+contents of the cabinet.  For more complex topologies, there may be more than one
+kind of "containment" (e.g. "within" versus "on top of"), or the topology may refer
+to ordering within the parent container (as with "brick model topology", which essential
+describes the room as a collection of XYZ-sorted objects) [Yeah, I know, we don't have
+a brick-model yet -- but we could. I think I need to write an article on topology
+models, but that'd be while I'm writing code to do it.].
+</p>
+
+<a name="ARTL"><h3>Articles</h3></a>
+Indo-European languages frequently include a concept of "article" words, such as the
+English "a", "an", and "the". These words draw a distinction between whether a particular
+instance of a noun is meant, or any instance, or the noun concept in the abstract. Since
+this idea is not particularly easy to model, and many languages don't use it, we ignore
+articles on parsing (they are noted, but not used), and specify them using a small set
+of options on output (which are available to the game designer and noun-object author):
+
+<a name="ENUM_ARTICLES" />
+<dl>
+<dt><b>INDEF</b>: 'a'</dt>
+<dd>Indefinite -- any tangible instance of the object.</dd>
+<dt><b>UNDEF</b>: ''</dt>
+<dd>Undefined -- this is a bare word in English, and leaves representation to the default case.</dd>
+<dt><b>DEFIN</b>: 'the'</dt>
+<dd>Definite -- a particular object is intended.</dd>
+<dt><b>QUANT</b>: 'some'</dt>
+<dd>Quantity -- a quantity of a collective or uncountable tangible substance is intended.</dd>
+<dt><b>ABSTR</b>: ''</dt>
+<dd>Abtract -- we are talking about an object "in the abstract", so definiteness doesn't really make
+sense. We don't distinguish this from "undefined" in English, but doing so will result in better
+localization for languages such as Romance languages which have different rules about the articles
+used for abstracts.</dd>
+</dl>
+
+<a name="CONJ"><h3>Conjunctions</h3></a>
+Conjunction words are used to "delimit" clauses. PUB
+doesn't attempt to understand any finer meaning than that. They are all equivalent to "and then", 
+and if more than one occurs in a row, they are treated as one division (i.e. just like we usually
+handle whitespace at the lexing level).
+
+<a name="PUNC"><h3>Punctuation</h3></a>
+Punctuation tokens are usually single characters, such
+as the comma, exclamation mark, and period.  However, because of unicode code-pages and the
+like, they may be somewhat language-specific, so the vocabulary file includes these too. Most
+of the time they are given the same status as conjunctions, but a special set of punctuation is
+assigned to allow for specifying an "addressee" (i.e. a subject other than the player character,
+as in: "John, put the candle on the candlestick", where the comma takes this role).
+
+<a name="VOCABULARY"><h1>Semantic Vocabulary</h1></a>
+<p>
+The Semantic Vocabulary is the internal list of labels used for objects known to
+PUB's linguistic/topological world model. This can be thought of as a list of
+"labels" or words representing objects.  They are defined from various sources
+as PUB Verb and Noun libraries are loaded.
+</p>
+<p>
+Noun libraries define nouns, obviously, but they also contribute adjectives, and
+prepositions, which are used to modify and or describe relationships between nouns.
+Declensions are built into the command processing architecture, and so do not
+exist as semantic vocabulary words -- they are represented by differing structures
+in each locale, which determine where in the sentence structure nouns are assigned.
+</p>
+<p>
+Likewise Verb libraries define not only Verbs, but also "Adverb Domains".  Individual
+adverbs <i>do not exist</i> inside the semantic vocabulary.  This is because the
+adverb is expressed as a numerical value within the adverbial domain.  It is only
+at the locale level that adverbial values are replaced by words. This makes it easier
+to deal with differing methods of expression in different languages (e.g. through
+word choice, use of appropriate adverbs, augmentative adverbs (like "very"), and 
+so on). The <i>idea</i> of an adverb is fairly universal, but the actual choice
+of words differs greatly between languages.
+</p>
+<p>
+Conjunctions and punctuation are recognized only as delimiters, so again, there is
+no formal conceptual analog to these words.
+</p>
+<p>
+So, to summarize, the semantic vocabulary is derived as follows:
+</p>
+<table align="center" width="95%" cellpadding="4" cellspacing="2" border="1">
+<tr valign="top">
+<td>Verbs</td><td>Verbs are defined by <b><tt>Verb</tt></b> classes.</td>
+<td rowspan="2">
+Verb Libraries
+<p class="small">
+Found in the verbs/ extensions directory within the PUB sources,
+or in the game's instance directory.
+</p>
+</td>
+</tr>
+
+<tr valign="top">
+<td>Adverb Domains</td><td>Adverbs are defined by <b><tt>AdverbDomain</tt></b> classes, which
+are <i>subscribed</i> to by the <tt>Verb</tt> classes.  Internally, individual
+adverbs are represented by an <tt>AdverbDomain</tt> and a floating point number.</td>
+</tr>
+
+<tr valign="top">
+<td>Nouns</td><td>Nouns are defined by <b><tt>Noun</tt></b> classes.</td>
+<td rowspan="3">
+Noun Libraries
+<p class="small">
+Found in the nouns/ extensions directory within the PUB sources,
+or in the game's instance directory.
+</p>
+</td>
+</tr>
+<tr valign="top">
+<td>Adjectives</td>
+<td>
+Adjectives are defined by <b><tt>Noun</tt></b> object initializations,
+as labeled parameters.  They are essentially just strings to be replaced
+at the localization phase, and are included as part of the "full name"
+of a <b><tt>Noun</tt></b> object.
+</td>
+</tr>
+
+<tr valign="top">
+<td>Prepositions</td>
+<td>
+Prepositions are defined by a special <b><tt>Topology</tt></b> mix-in class
+which provides the necessary behaviors for noun objects.  Nouns inherit
+from appropriate topology classes, such as <tt>SimpleContainer</tt> or
+<tt>BrickModel</tt> (or both).
+</td>
+</tr>
+
+<tr valign="top">
+<td>
+Declension<br/>
+Articles<br/>
+Conjunctions<br/>
+Punctuation<br/>
+Adverbs<br/>
+</td>
+<td colspan="2">
+These objects are all implicit in the internal semantic model, and are converted back
+and forth from words (or inflections of words) as part of the localization and
+de-localization processes.
+</td>
+</tr>
+</table>
+
+<p>
+The SemanticVocabulary object will have to scan all of these sources, and
+collect lists of labels to be translated.  Collecting the adjectives from
+the nouns, should allow us to give some context for translators to work
+from.  We'll need to be able to automatically create an XML output file to
+be used for this step. [And I have not yet worked out how best to do that! TJH 2006-2/13]
+</p>
+
+
+</body>
+</html>
+

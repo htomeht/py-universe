@@ -1,0 +1,3 @@
+include *.htm *.html
+recursive-include doc *.htm *.html *.py
+recursive-include games *.htm *.html *.py

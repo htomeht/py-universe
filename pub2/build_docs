@@ -1,0 +1,28 @@
+#!/bin/bash
+# Method using epydoc 2.1 (from Debian package python-epydoc)
+
+# Image builds
+#   build-dep: dia
+dia 	--export=doc/image/semantics_uml.png 	\
+	--export-to-format=png			\
+	--size=800x500				\
+	doc/src/semantics_uml.dia
+
+#   build-dep: inkscape
+inkscape --export-png=doc/image/py_universe.png \
+	doc/src/py_universe.svg
+
+inkscape --export-png=doc/image/brick_topology.png \
+	doc/src/brick_topology.svg
+
+
+epydoc  --name "Python Universe Builder Interactive Fiction Engine"       \
+        --help-file=doc/src/epydoc-index.html                     \
+        --top help.html                                         \
+        --docformat="epytext"                                   \
+        --css=doc/epypub.css                                    \
+        --no-frames                                             \
+        --navlink "From the <a href=\"http://py-universe.sf.net\">Python Universe Builder</a> project." \
+        --no-private                                            \
+        --output doc/epydoc *.py
+#

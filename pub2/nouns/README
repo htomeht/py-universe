@@ -1,0 +1,45 @@
+This is organized as a plugin directory. Each module extends
+the range of "noun aspects" or "specific nouns" understood by
+the PUB language engine.  See specific modules for detailed
+descriptions, but in brief:
+
+NOUN ASPECTS
+
+These are "mix-ins" or "components" which provide basic engine
+functionality for specific kinds of operations understood by the
+engine.  They are in a way, the primitives for building noun objects.
+
+topology -- structural properties of nouns (containment, positional
+            prepositions, connectivity, etc).  This determines whether
+	    noun objects can be placed inside of, in front of, etc
+	    other noun objects.
+
+state    -- support for "state engine" nouns, such as lights, switches,
+            machines, and simple characters (walk-on type).
+
+matter   -- basic properties of matter: size, weight, state of matter, etc.
+
+tool     -- nouns which interact with verbs to act on other nouns (generally
+            provide indirect object support and are used transitively).
+
+food     -- nouns which affect agents through eating or drinking, including
+            food, drink, medicine, and poison.
+
+vehicle  -- nouns which have regularly-structure topological changes controlled
+            by state (deps on topology & state): elevators, cars, trains, etc.
+
+animal   -- state engines with common animal traits (gets hungry, eats,
+            drinks, plays, etc).
+
+SPECIFIC NOUNS
+
+Specific noun objects common enough that you wouldn't want to have to
+redefine all of them for a game.
+
+foods    -- a collection of basic food objects (wine, bread, cheese, etc)
+
+vehicles -- a collection of basic vehicles (car, train, bicycle, elevator)
+
+animals  -- cats, dogs, farm animals, etc
+
+

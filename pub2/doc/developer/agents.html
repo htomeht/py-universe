@@ -1,0 +1,45 @@
+<html>
+<head>
+<title>Agents in PUB</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Agents for PUB</h1>
+The basic distribution of Python Universe Builder contains only very simple "state machine"
+representations of non-player characters. However, PUB's object design makes it relatively
+easy to hook agent-based code into PUB -- all characters, including the player, are just
+objects in the PUB world model.
+<p>
+We call those objects "agents" if they can initiate turns on their own initiative by passing
+messages to other objects.  Turn-based agents can register to be called on each turn, allowing
+them to take a turn every time the player does. Real-time agents can be called on a clock-tick
+to update their own state.  Either way, agents can do just about anything the player can.
+</p>
+
+<h1>Emerald</h1>
+Based on this capability, Terry Hancock is starting a package called
+<a href="http://py-universe.sf.net/Emerald">Emerald</a> to provide
+character agents for PUB, inspired by the "Oz Project" approach, and
+motivated primarily by the desire to create rich characters for 
+<a href="http://light-princess.sf.net">The Light Princess</a> game.
+<p>
+As of this writing (2006), though, it's still a long way from happening.
+</p>
+<p>
+Emerald will be an add-on package for PUB, and you should visit the
+Emerald site for more information on it's progress.
+</p>
+
+</body>
+</html>

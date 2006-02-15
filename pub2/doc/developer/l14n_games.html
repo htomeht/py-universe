@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Localizing PUB 2.x Games</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<h1>Localizing Games for PUB 2.x+</h1>
+
+The internationalization/localization (I18N/L14N) concept for PUB allows a game to be written
+once, then localized to many different languages. Game play is not (or shouldn't be) affected
+by the choice of language in any strong way, so there's no need for a particular game to be
+limited to the language of its author.
+<p>
+On the other hand, we have to have FIVE localization files working together to accomplish this
+feat. The first THREE are within the game <i>ENGINE</i>, and can be summed up by saying that
+"a PUB ENGINE localization is available for your language".  If you are trying to localize a
+game, therefore, you must first make sure that an engine locale exists that you can use. You do
+not strictly have to insist on a perfect match -- you could use a similar engine locale, and
+operate in a "mixed locale" mode.  Even so, however, you will have to pick the engine locale
+to use with your game locale.
+</p>
+<p>
+The remaining two files are specific to the game, and consist of:
+<ul>
+<li>The Game MESSAGES file, which uses Gnu gettext, and...</li>
+<li>The Game VOCABULARY file, which uses the same XML format as the ENGINE vocabulary (and
+will be used to extend it).</li>
+</ul>
+</p>
+<p>
+If you need to localize the game engine first, please see the <a href="l14n.html">PUB Localization</a>
+notes.
+</p>
+
+</body>
+</html>
+

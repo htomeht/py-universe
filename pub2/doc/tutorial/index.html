@@ -1,0 +1,127 @@
+<html><head><title>
+PUB Intro
+</title></head><body>
+
+<p><font color="red"><b><pre>
+THIS PAGE NOT UPDATED FOR PUB 2.x
+(it's way out of date, so take
+what you see with a grain of salt.
+However, this is what we have to
+start with).
+</pre></b></font></p>
+
+
+<center><h1>
+Python Universe Builder
+</h1><h3>
+Simple Tutorial
+</h3>
+</center>
+
+In this tutorial, we'll construct a modest two-room house and stock it with
+a few common types of objects.
+<P>
+The easiest way to start is to copy the <a href="template.py">template.py</a>
+file to your new game file -- call it something like MyGame.py (or whatever
+suits you).  The template imports the modules which define verbs and objects
+and so forth; then there's a big gap where you define your own objects and 
+classes (if any); then it prints the title screen and runs the game.
+
+<P>
+You can actually run the game at this point, though nothing much interesting
+happens.  A <a href="trans1.txt">sample transcript</a> shows that you'll find
+yourself in "The Universe", and a perfectly ordinary one at that.  Pretty
+dull so far.
+
+<P>
+Now let's create the two rooms of a house.  We'll call them "upstairs" and
+"downstairs", and give them descriptions.  This code goes in the "Create
+Some Objects" section of the game file:<pre>
+downstairs = pub.objs.Room("Downstairs Room")
+downstairs.desc = "You're on the ground floor of a tiny house.  The walls \
+are featureless, and you can find no doors or windows.  However, there is \
+a ladder that leads up through a little hole in the ceiling."
+
+upstairs = pub.objs.Room("Upstairs Room")
+upstairs.desc = "You're in the upper room of this tiny house.  There are no \
+windows, and no doors either except for a hole in the floor, through which \
+a ladder leads down."
+</pre>
+
+This creates the two rooms, but they are not really linked together.  We
+need to create an exit from each room to the other.  When creating any type
+of object except rooms, the object goes into the last room created.  So
+things we want to appear in the downstairs room should be created right
+after that room.  After the "downstairs.desc" line and before the "upstairs"
+code, insert an exit and a decorative plant:<pre>
+downstairs_u = pub.objs.Exit("up,ladder,exit,u,hole,upstairs")
+downstairs_u.desc = "Looking up, you get a glimpse of a tiny room much like \
+the one you're in."
+plant = pub.objs.Thing("potted plant,plant,potted")
+plant.desc = "It's a nice green ivy, growing merrily despite the lack of \
+direct sunlight."
+</pre>
+Then <i>after</i> the "upstairs" code, insert some things there:<pre>
+upstairs_d = pub.objs.Exit("down,d,ladder,exit,out,hole,downstairs")
+upstairs_d.desc = "It's just a ladder leading down."
+Monty = pub.objs.NPC("Monty,Mon,Mr. Python")
+Monty.desc = "Monty's a tall man with a large mustache and a very silly walk."
+Monty.replies['walk'] = [
+	"It's not very silly, but I think with some funding I could develop it.",
+	"You think it's silly?  You've got a pretty ordinary walk yourself." ]
+Monty.replies['silly'] = Monty.replies['walk']
+</pre>
+So we have exits in each room, as well as a plant downstairs and a character
+named Monty upstairs. Monty has two canned responses to the word 'walk',
+and the same replies for the work 'silly'.
+<P>
+At this point, your script should look <a href="tutgame2.py">like this</a>.
+When you run the game, you get <a href="trans2.txt">this surprising result</a>:
+you're still in the Universe, looking down on the two rooms!  We forgot to
+move the player to one of the rooms we've created.  Just add this line after
+you create the downstairs room:<pre>
+player.MoveTo(downstairs)
+</pre>
+That makes things a little better; you start out in the downstairs room and
+you can look at the plant, the ladder, etc.  But when we try to go up, we
+get the error:<pre>
+>up
+Up leads nowhere.
+</pre>
+What's going on?  We created the exits in both rooms, but we forgot to set
+the <strong>dest</strong> property on each one.  This property tells the
+game where each exit leads.  Note that we can't reference "upstairs" before
+it's been created, so we'll put both of these lines <i>after</i> both
+downstairs and upstairs have been declared:<pre>
+downstairs_u.dest = upstairs
+upstairs_d.dest = downstairs
+</pre>
+
+Now the complete script should look <a href="tutgame3.py">like this</a>,
+and a <a href="trans3.txt">trial run</a> shows that everything appears to
+be in working order.  (I didn't test the downstairs link in this trial;
+you should do so, in addition to looking at the plant, the ladder, etc.)
+
+<hr>
+<h3>That's it!</h3>
+...That's all there is to creating rooms, connecting them by exits, and
+decorating them with characters and other things.  The libraries provide
+many different types of objects and different options on each one, but
+they are all used essentially like the above examples: just create it and
+set its properties.
+
+<h3>Free Advice</h3>
+<ul><li>Save and try out your game often as you add objects.  If it worked
+before, and you've just added a little part, then if it doesn't work you
+know right where to look for the problem.
+	<li>Start by laying out the map -- create the rooms and connect them
+together.  Then go back and add decorations, characters, and special effects.
+	<li>Look over the object libraries and make sure you have at least a
+vague idea of what the different classes are and what they do.
+	<li>Watch out for typos -- it's easy to type "downstairs_u = upstairs" 
+or "downstairs_u.desc = upstairs" instead of "downstairs_u.dest = upstairs".
+These look similar, but only the last one will work; the first two are
+likely to make your game uncerimoniously halt.
+</ul>
+
+</body></html>
