@@ -40,9 +40,7 @@ Collection of convenience functions used throughout the code.
 """
 NOTE: Don't mess with this module unless you know what you're doing!
 
-Includes Scheduler, Event, Command, Parser, Verb, and Noun 
-
-Also a number of utility functions. I'm a little
+A number of utility functions. I'm a little
 disturbed by things like "cap" which simply call
 Python library functions -- not sure that we need
 such a wrapper, as it likely increases the learning
@@ -124,51 +122,31 @@ def chainLinker(obj, proto, default=None):
     used by, for instance invoke to get at all verb methods in an object.
     We can add more functionality here but it's probably best to keep it to 
     a minimum.
+
+    obj can be either a list or something that provides ISymbol.
     """
-
+    
     # First loop through the obj to see if it has any components
-    adapted = adapt(obj, ISymbol, None)  
-    if adapted is not None:
-        for com in adapted.components:
-            for adapted in chainLinker(com, proto):
-                yield adapted
-
+    if type(obj) == type([]):
+        for item in obj:
+            adapted = adapt(item, ISymbol, None)
+            if adapted is not None:
+                for com in adapted.components:
+                    for adapted in chainLinker(com, proto):
+                        yield adapted
     # Second try to adapt those components to the relevant protocol
     # This is the function that builds the chain even though it get's 
     # passed through the above.
-    adapted = adapt(obj, proto, None)
-    if adapted is not None:
-        yield adapted
-
+    else:
+        adapted = adapt(obj, proto, None)
+        if adapted is not None:
+            yield adapted
+    
     # Third add a default method.
     if default is not None:
         yield default
 
-#--------------------------------------------------------------------
-# check -- used to run object checks
-#
-def check(obj, proto, meth, args = [], default = None):
-    """
-    check special functions on objects that should return True or False
-    depending on circumstances.
-    In most cases a default should be supplied. 
-    Ie if you want to check if something can contain water you do
-    
-    from pub import defaults as d
-    if not check(glass, IContainer, 'canContain', d.NoLiquid, [waterI]):
-        raise ContainError
-    
-    """
-    chain = chainLinker(obj, proto, default) # chain of methods in components 
-    try: first = chain.next()
-    except StopIteration: 
-        # The method can't be found on the object, return an error
-        raise pub.errors.ComponentError, "No such component can be found"
-    
-    try: getattr(first, meth)(chain, obj)
-    except StopIteration:
-        return True # If we get this far nothing has stopped us.
-
+            
 #--------------------------------------------------------------------
 # invoke -- used by the component driven object system
 #
@@ -187,7 +165,10 @@ def invoke(obj, proto, meth, cmd=None, output=True):
     Mostly it will result in either an error or immediate execution.
     like: invoke(door, IOpen, 'open') will try to set the doors isOpen=True
     """
-    chain = chainLinker(obj, proto) # link a chain of methods in components 
+    room = obtain(obj,ILocatable).getRoom()
+    actor = cmd.actor or None
+    chain = chainLinker([obj,room,actor], proto) 
+    # link a chain of methods in components 
     try: first = chain.next()
     except StopIteration: 
         # The method can't be found on the object, return an error
@@ -202,25 +183,6 @@ def invoke(obj, proto, meth, cmd=None, output=True):
             return True # Tells the caller it has finished processing
                         # and that it was succesfull.
     
-
-#--------------------------------------------------------------------
-# find -- used by the component driven object system
-#
-#def find(obj,proto,default=None):
-#    """
-#    minimal interface to chainLinker that simply finds out if an object has a
-#    component that matches the protocol and returns it. If there are more or
-#    less than one an error is raised.
-#    """
-#
-#    out = chainLinker(obj, proto, default)
-#    test = len(list(out))
-#
-#    if test < 1: raise pub.errors.ComponentError, "No such component"
-#    if test > 1: raise pub.errors.ComponentError, "Too many components match"
-#
-#    else: return out.next()
-#
 #--------------------------------------------------------------------
 # lingo -- a language finder
 #
@@ -241,20 +203,24 @@ def lingo(lang, cls, args = []):
         except KeyError: raise pub.errors.PubError, "Can't find class"
     
         return out(*args) # if args is not empty args will be passed. 
-                           # else temp will be called without args.
-    
-#def lingo(obj,proto):
-#    """
-#    lingo is used for instances when we want to find the right language.
-#    """
-#
-#    adapted = adapt(obj, ILang, None)
-#    if adapted != None:
-#        adapted = adapted.initiate()
-#        if pub.debugging: print adapted
-#
-#    if pub.debugging: print obj, proto
-#
-#    return adapt(adapted, proto, None)
-#
 
+
+#--------------------------------------------------------------------
+# obtain -- used by the component driven object system
+#
+def obtain(obj,proto,default=None):
+    """
+    Minimal interface to chainLinker that simply finds out if an object has a
+    component that matches the protocol and returns it. If there are more or
+    less than one an error is raised.
+    """
+    
+    adapted = adapt(obj, ISymbol, default)  
+    if adapted is not None: 
+        for com in adapted.components:
+            com = adapt(com, proto, None)
+            if com is not None: # The first match is returned
+                return com 
+            else: return False
+                        
+    else: return False
