@@ -52,6 +52,78 @@ import pub
 
 #protcols imports
 
+#----------------------------------------------------------------------
+# NEW 2006: verb req's
+#
+#	- identified label (objects react to the label)
+#
+#	- subscription to adverbial domains
+#
+#	- identification of listener interface (doc-only or code?)
+#
+#	- scope rules. How large is an action?
+#		SUBJ_SELF:	the subject
+#		THIS_ROOM: 	current room
+#		INVENTORY: 	current inventory
+#		CHARACTER: 	set of agents in room
+#		ALL_AGENT:	every agent in game
+#		ABSTRACTS: 	set of abstracts
+#		PUB_WORLD:	whole game (could be expensive!)
+#	  determines how far we must search for referents.
+#
+#	- scheduling and duration events
+#
+class IVerb(Interface):
+    """
+    Verb Interface
+
+    All verbs provide this interface for PUB.
+    """
+    label = Attribute("""
+                Label uniquely identifying verb in semantic vocabulary
+                (Label class instance)
+                """)
+		
+    adverb_domains = Attribute("""
+                Which adverbial domains make sense for this verb.
+
+		Verb must subscribe to an adverbial domain in order
+		for adverbs from that domain to be applied to it.
+		If no adverbs make sense with the verb (or are not
+		to be supported), this can be an empty sequence.
+
+		Otherwise, it is a sequence of AdverbDomain class
+		instances.
+		""")
+
+    listener_iface = Attribute("""
+                Interface specification of listeners which understand
+		this verb (i.e. Nouns which can be an object of this
+		verb must implement this interface.
+		""")
+
+    
+    scope = Attribute("""
+                Scope determines to which nouns the verb action will
+		be broadcast. It may be None, in which case the scope
+		will be determined by the declension, it may be a single
+		scope Enum, in which case that scope will be considered
+		first, then the scopes determined by declension, or it
+		may be a sequence of scopes, in which case, only those
+		scopes will be considered.
+		""")
+
+    duration = Attribute("""
+                How long will it take to complete the action?
+
+		None,<0 = Statelike (permanent)
+		0, 0.0 = instantaneous
+		other int n = takes n turns (turn-based event)
+		float f = takes f minutes (real-time event)
+		""")
+		 
+   
+
 
 #----------------------------------------------------------------------
 # Verb -- base class of any Verb object

@@ -1,0 +1,31 @@
+DO NOT ATTEMPT TO WRITE A GAME WITH THIS RELEASE!
+
+This is "discussion" release (not even a "pre-alpha"),
+which does not actually work. My goal was to get the
+basic directory and file-structure right, and then
+start getting the developer documentation tree to
+build.
+
+The main reason for releasing this, instead of just
+pulling the work from the CVS, is that I have pre-
+built the documentation tree, so that developers
+don't have to download and install dia, inkscape,
+and epydoc and try to build the documentation as
+I have done it, just to discuss the project (I'm
+hoping this will encourage more people to read it).
+
+Some of the goals of the layout you see:
+
+* New approach to internationalization and new,
+  pyparsing-based parser to support it.
+
+* PyProtocols-based interface/component/adapter
+  architecture.
+
+* "Plugin" structure for Verbs and Nouns to make
+  PUB extensions more atomic.
+
+* Best-of-both-worlds automatically generated API
+  documentation with static developer notes and
+  overview pages added.
+
