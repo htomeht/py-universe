@@ -139,9 +139,27 @@ Vocabulary('NOUN', ['GRASS', 'CACTUS', 'TREE'])
 <!/PoS/NOUN: TREE = Large woody plant>
 
 """
-__all__ = ['sym', 'Concept', 'Vocabulary', 'Enum']
+#--------------------------------------------------------------------
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+
+
+__all__ = ['sym', 'Concept', 'Vocabulary', 'Enum', 'Vague', 'VagueConcept', 'VagueDomain']
 
 from sets import BaseSet, Set
+from vague import *
 
 
 class _ConceptRegistry(object):
@@ -203,6 +221,18 @@ class Concept(object):
     verbosity = 3
     __lock = False
     def __init__(self, name, domain=None, doc=''):
+        if isinstance(domain, str):
+            if hasattr(sym, domain):
+                domain = getattr(sym, domain)
+            else:
+                domain = Concept(domain, doc=doc)
+                
+        if domain and not isinstance(domain, Concept):
+            raise ValueError, "Only strings and concepts accepted as concept domain."
+            
+        if not isinstance(name, str):
+            raise ValueError("Concept name should be a string (and valid identifier)")
+ 
         self.name       = name
         self.domain     = domain
         self.doc        = doc
@@ -302,7 +332,7 @@ class Vocabulary(BaseSet):
             # domain and it is open -- join with it:
             self = domain.vocabulary
         else:
-            raise AssertionError, "When is a vocabulary not a vocabulary?: %s." % repr(domain.vocabulary)
+            raise AssertionError, "When is a vocabulary not a Vocabulary?: %s." % repr(domain.vocabulary)
             
         self._lock = False
         self.domain = domain
@@ -418,7 +448,133 @@ class Enum(Vocabulary):
         self._lock = True
         return self
 
+# The remaining concepts in this module are "uncounted"/"non-enumerated" concepts
+# (Strictly speaking even "floating point" numbers are "countable" on a computer,
+# since there is a finite resolution and a finite range -- but it's best to treat
+# them as uncounted real valued numbers. These concepts have the same type of
+# behavior.
 
+class VagueConcept(Vague, Concept):
+    """
+    A Vague Concept occupies a domain, just as a Concept does,
+    and represents abstract knowledge. However, the value of a
+    VagueConcept is not a member of an open or closed countable
+    set, but rather, a point on the vague interval [-1,1].
+
+    Therefore, we don't check VagueConcepts into the symbol
+    registry (there's essentially an infinity of them, so it
+    would get very unwieldy).  But we do check in their domains,
+    and the vocabulary of VagueConcept domains will at least
+    be given a marker class which can do a membership test.
+
+    In PUB, of course, we only use this class for Adverbs,
+    so you should see that class for specifics.
+    """
+    # FIXME: concept.py is on the other computer, so I'm stopping
+    # in the middle here, until I can put them together. Hopefully
+    # I won't forget to merge them.
+    # We're going to have to redefine __init__ at least, I think
+    #
+    domain = None
+    def __init__(self, value, domain=None):
+        if isinstance(domain, str):
+            if hasattr(sym, domain):
+                domain = getattr(sym, domain)
+            else:
+                domain = Concept(domain, doc=doc)
+                
+        if domain and not isinstance(domain, Concept):
+            raise ValueError, "Only strings and concepts accepted as concept domain."
+            
+        if not isinstance(value, float) and not isinstance(value, Vague):
+            raise ValueError("VagueConcept value must be a float or Vague")
+
+        if not domain: domain = None
+
+        self._data      = self._coerce(value)
+        self.domain     = domain
+        self.vocabulary = None
+        self.__lock     = True
+        
+    def __str__(self):
+        return repr(self)
+
+    def __repr__(self):
+        return "<%s:%7.4fv>" % (self._repr_domain(), self._data)
+
+    def __hash__(self):
+        return hash((self._data, self.domain))
+
+    def __eq__(self, other):
+        # Delete rich-compare properties of Concept, so comparisons
+        # will fall-through to Vague's __cmp__
+        return NotImplemented
+
+    def __ne__(self, other):
+        # Delete rich-compare properties of Concept, so comparisons
+        # will fall-through to Vague's __cmp__
+        return NotImplemented
+
+class VagueDomain(object):
+    """
+    VagueDomain represents the 'vocabulary' of a domain with
+    VagueConcepts in it.
+
+    This is mostly a marker class, but we can test for validity
+    of membership (an object must be a VagueConcept instance
+    and have a matching domain to be considered a member).
+
+    Since VagueDomains have an uncountably infinite number of
+    members (technically this isn't true, because we don't really
+    have "real numbers", but it's close enough for practical
+    purposes), it would be silly to list all possible members,
+    so representations use a rule-based notation.
+    """
+    domain = None
+    def __init__(self, domain, doc=""):
+        if isinstance(domain, str):
+            if hasattr(sym, domain):
+                domain = getattr(sym, domain)
+            else:
+                domain = Concept(domain, doc=doc)
+                
+        if not isinstance(domain, Concept):
+            raise AssertionError, "Only strings and concepts accepted as vocabulary domains."
+            
+        existing = domain.vocabulary
+        if existing is None:
+            # Concept exists, but doesn't link to a vocabulary, do so now:
+            domain.vocabulary = self
+        else:
+            raise TypeError, "VagueDomain cannot join existing vocabulary domain %s." % repr(existing)
+            
+        self._lock = False
+        self.domain = domain
+        self.doc    = doc
+        self._lock = True
+        
+    def __repr__(self):
+        return "VagueDomain(%s)" % repr(self.domain)
+
+    def __str__(self):
+        return "<VagueDomain %s: x in [-1,1]>" % repr(self.domain)
+
+    def __contains__(self, obj):
+        """
+        Containment test is rule-based.
+        """
+        if isinstance(obj, VagueConcept) and obj.domain==self.domain:
+            return True
+        else:
+            return False
+
+    def __len__(self):
+        return 0
+
+    def __nonzero__(self):
+        return True
+    
+    
 #-QA----------------------------------------------------------------------------------
 
 # Documentation generation for concepts and domains
