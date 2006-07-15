@@ -139,62 +139,25 @@ def MkSemWord(wordlist, word_class):
     SW.setParseAction(lambda s,l,t: WordClassifier(word_class, t[0]))
     return SW
 
+# pre-constructed part-of-speech recognizers -- work on regex-matching of
+# vocabularies
 Noun = MkSemWord(noun_list, 'Noun') # Noun
 Verb = MkSemWord(verb_list, 'Verb') # Verb
-
-        # Straightforward PUB stuff. I believe "Noun" used to be called
-        # "BaseThing" though.  Of course, these are the *words* that
-        # represent those game objects -- de-referencing will occur
-        # after the basic parsing step, and is highly context-dependent.
-
 Prep = MkSemWord(prep_list, 'Prep') # Preposition (strictly topological)
 Decl = MkSemWord(decl_list, 'Decl') # Declension markers
-
-        # In traditional English grammar we don't use this term, but it
-        # applies to a subset of English prepositions which express what
-        # declension does in inflected language.  A Russian, for example,
-        # would decline a noun to the "Instrumental" declension in order
-        # to express what an English speaker means by prepositions "with"
-        # or "using"
-
-        # The other use of prepositions is to express topological containment
-        # relationships. Currently PUB is pretty simplistic about this
-        # ("in" always equals "on"), but I want to extend this idea a bit
-        # to allow more than just "containment". It may not be essential,
-        # but I don't yet see any reason why it should be hard.
-        
 Artl = MkSemWord(artl_list, 'Artl') # Articles: "a", "an", "the" in English
 Conj = MkSemWord(conj_list, 'Conj') # Conjunctions
-
-        # Note that as far as this parser is concerned, conjunctions are
-        # just delimiters for clauses -- no understanding of their subtler
-        # meanings is done.
-        
 Adje = MkSemWord(adje_list, 'Adje') # Adjectives, modify nouns
-
-        # The function of adjectives in PUB will be disambiguation. If
-        # there is a "red button" and a "green button", then noun
-        # de-referencing will have to figure out which is meant by
-        # examining adjectives.  We want adjectives to always be considered,
-        # though, because if you specify "push the red button" and there
-        # is only a green button, then the command should fail, not
-        # push the wrong button!  (But of course, if the command was
-        # simply "push the button", it needs to be de-referenced to
-        # the only button visible).
-
 Advb = MkSemWord(advb_list, 'Advb') # Adverbs, modify the verb
 
-        # Adverbs serve no function in PUB as it is, but I am planning for
-        # extensions which do make use of them.
+# These rules are locale-specific & must be provided by locale grammar file
+NounPhrase = eval('Group(Optional(Decl | Prep) + Optional(Artl) + ZeroOrMore(Adje) + Noun)')
+Clause     = eval('Group(ZeroOrMore(Advb) + Verb + ZeroOrMore(Advb | NounPhrase))')
+Sentence   = eval('Group(Clause) + ZeroOrMore( OneOrMore(Conj) + Group(Clause) ) ')
 
-NounPhrase = Group(Optional(Decl | Prep) + Optional(Artl) + ZeroOrMore(Adje) + Noun)
+# These parts are patched on after defining the terms from the locale module
 NounPhrase.setParseAction(lambda s,l,t: NounPhraseClass(t[0]))
-
-Clause     = Group(ZeroOrMore(Advb) + Verb + ZeroOrMore(Advb | NounPhrase))
 Clause.setParseAction(lambda s,l,t: ClauseClass(t[0]))
-
-Sentence   = Group(Clause) + ZeroOrMore( OneOrMore(Conj) + Group(Clause) ) 
-
 #print Clause.parseString("put the red broom in the blue broom closet")
 
 #print Sentence.parseString("put the red broom in the blue broom closet")

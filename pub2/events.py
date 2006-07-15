@@ -53,7 +53,6 @@ import re
 # pub imports
 
 #import pub
-from interfaces import ISymbol, ILangMod 
 import adapters
 from config import *
 

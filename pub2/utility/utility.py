@@ -62,7 +62,7 @@ import re
 # pub imports
 
 import pub
-from interfaces import ISymbol, ILangMod 
+from interfaces import IDynamicComponentRack, ILangMod 
 import adapters
 from constants import *
 
@@ -123,13 +123,13 @@ def chainLinker(obj, proto, default=None):
     We can add more functionality here but it's probably best to keep it to 
     a minimum.
 
-    obj can be either a list or something that provides ISymbol.
+    obj can be either a list or something that provides IDynamicComponentRack.
     """
     
     # First loop through the obj to see if it has any components
     if type(obj) == type([]):
         for item in obj:
-            adapted = adapt(item, ISymbol, None)
+            adapted = adapt(item, IDynamicComponentRack, None)
             if adapted is not None:
                 for com in adapted.components:
                     for adapted in chainLinker(com, proto):
@@ -215,7 +215,7 @@ def obtain(obj,proto,default=None):
     less than one an error is raised.
     """
     
-    adapted = adapt(obj, ISymbol, default)  
+    adapted = adapt(obj, IDynamicComponentRack, default)  
     if adapted is not None: 
         for com in adapted.components:
             com = adapt(com, proto, None)

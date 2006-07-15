@@ -20,7 +20,10 @@
 #---------------------------------------------------------------------
 # CHANGELOG
 #
-#   2004-22/10: Gabriel Jagenstedt
+#   2006-06/26: Terry Hancock
+#       Interfaces for semantics objects.
+#
+#   2004-10/22: Gabriel Jagenstedt
 #       Cleaned up and inserted a copyright notice
 #---------------------------------------------------------------------
 """
@@ -57,7 +60,7 @@ these methods.
 
 # protocols imports
 
-from protocols import Interface, advise
+from protocols import Interface, Attribute, advise
 
 
 #--------------------------------------------------------------------#
@@ -80,7 +83,7 @@ class ILangMod(Interface):
     
 #---------------------------------------------------------------------
 #
-class ISymbol(Interface):
+class IDynamicComponentRack(Interface):
     """
     Interface for Symbol and classes that need to provide component handling.
     """
@@ -90,9 +93,19 @@ class ISymbol(Interface):
         Method that adds components listed in com if of the right type.
         """
 
+    def __iadd__(com):
+        """
+        Synonym for addComponents, allows algebraic notation.
+        """
+
     def delComponents(com):
         """
         Method that removes components listed in com if it can be found.
+        """
+
+    def __isub__(com):
+        """
+        Synonym for delComponents, allows algebraic notation
         """
 
 #---------------------------------------------------------------------
@@ -102,6 +115,156 @@ class INoun(Interface):
     INoun is a marker interface mainly.
     It is used to adapt to Noun Interfaces.
     """
+
+class INounPhrase(Interface):
+    """
+    Logical form of Noun Phrase.
+
+    This is the internal 'concept language' interface of a Noun Phrase.
+    """
+    dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'partial', 'labels', 'object'""")
+
+    Noun = Attribute("""The Noun (string, Symbol, or PUB Noun object) REQUIRED.""")
+    Adjs = Attribute("""Sequence of adjectives (strings or Symbols) (may be empty sequence).""")
+    Plur = Attribute("""Grammatical number of noun (string, int, Symbol, or None).""")
+    Artl = Attribute("""Definite-ness of noun (article used) as (string, Symbol, or None).""")
+    Decl = Attribute("""Declension of noun (its grammatical role in the sentence), (string, Symbol, or None).""")
+    Prep = Attribute(
+        """
+        Topological preposition indicating spatial relationship of action to noun.
+
+        Defined only if Decl==sym.PRP
+        Otherwise None
+        """)  
+    
+    def __repr__():
+        """
+        Symbolic representation of Noun Phrase.
+        Primarily for locale and game testing.
+
+        Should display all components with dereference states.
+        """
+
+    def set(noun, adjs, decl, prep, artl, plur):
+        """
+        Convenience method to set noun values all at once:
+
+        'noun' the basic noun
+        'adjs' a sequence of adjectives used
+        'decl' declension of the noun phrase
+        'prep' preposition used if in prepositional declension
+        'artl' article (or definite-ness)
+        'plur' grammatical number or plurality
+        """
+
+class IVerbPhrase(Interface):
+    """
+    Internal 'concept language' behavior of VerbPhrase.
+    """
+    dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'mixed', 'labels', 'object'""")
+
+    Verb = Attribute("""The basic verb. (strings, concept, or PUB verb object) (REQUIRED).""")
+    Advs = Attribute("""Sequence of adverbs. (strings or VagueConcepts).""")
+    Tense  = Attribute("""Tense, Mood, Aspect of the verb. (None or Symbol or collection of Symbols).""")
+    Negative = Attribute("""Negation of sense of verb. Boolean.""")
+    Person = Attribute("""Person of verb. (possibly empty mapping of Declension Symbols to Person Symbols).""")
+    Number = Attribute("""Number of person of verb. (possibly empty mapping of Declension Symbols to Number Symbols).""")
+
+    # Most commonly Person and Number determine verb conjugation.
+    #   In Romance languages, they will take forms like {sym.NOM: sym.FIRST}, {sym.NOM: sym.SING}
+    #   Some language, e.g. Swahili, will conjugate for more than one noun, e.g.:
+    #       {sym.NOM: sym.FIRST, sym.ACC: sym.SECOND}, ...
+    #
+
+    def set(verb, advs, tense, negative, person, number):
+        """
+        Set a verb's values directly.
+        
+        'verb' the basic verb
+        'advs' sequence of adverbs used.
+        """
+
+    def __repr__(self):
+        """
+        Representation of VerbPhrase for debugging.
+        """
+
+NP_types = '''(None or NounPhrase or sequence of NounPhrases)'''
+class IClause(Interface):
+    """
+    Internal 'concept language' behavior of a Clause (simple sentence).
+    """
+    dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'mixed', 'labels', 'object'""")
+    
+    Verb = Attribute("""The verb phrase (VerbPhrase).""")
+    
+    Nouns = Attribute("""All noun phrases in clause (sequence of NounPhrases).""")
+
+    Negative = Attribute("""I.e. NOT or negative form of statement. Boolean.""")
+    
+    # Convenience references into Nouns:
+    Nom = Attribute("""Nominative (= Subject) noun phrase.%s.""" % NP_types)
+    Acc = Attribute("""Accusative (= Direct Object) noun phrase.%s.""" % NP_types)
+    Dat = Attribute("""Dative (= 'to' Object) noun phrase.%s.""" % NP_types)
+    Gem = Attribute("""Genitive (= 'from' Object) noun phrase.%s.""" % NP_types)
+    Ins = Attribute("""Instrumental (= 'with'/'using' Object) I noun phrase.%s.""" % NP_types)
+    Prp = Attribute("""Prepositional (= Object with spec'd preposition).%s.""" % NP_types)
+
+    def __repr__(self):
+        """
+        Representation of Clause for debugging.
+        """
+
+class ISentence(Interface):
+    """
+    Possibly compound sentence, composed of one or more Clauses.
+
+    This is a marker interface for a standard Python sequence object (should inherit correct interface).
+    """
+
+
+# The following are only provided by L10N adaptors
+
+class ITellNounPhrase(Interface):
+    """
+    'Tell' interface of a NounPhrase.
+
+    Provides methods needed to generate text or speech from a Noun.
+    """
+    def tell():
+        """
+        Tell in default form.
+        """
+
+class IParseNounPhrase(Interface):
+    """
+    'Parse' interface of a NounPhrase.
+
+    Methods for creating a Noun Phrase from input text or other data.
+    """
+    def parse(data):
+        """
+        Parse a noun phrase from input 'data' (typically a string).
+        """
+
+def ITellVerbPhrase(Interface):
+    """
+    'Tell' interface of a verb phrase.
+    """
+    def tell():
+        """
+        Basic localized rendering of the verb.
+        """
+
+def IParseVerbPhrase(Interface):
+    """
+    'Parse' for verb phrases.
+    """
+    def parse(data):
+        """
+        Parse the 'data' to get the verb phrase information.
+        """
+
 
 #---------------------------------------------------------------------
 #

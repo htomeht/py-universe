@@ -1,0 +1,112 @@
+<html>
+<head>
+<title>References for PUB 2 Dependencies</title>
+<link rel="stylesheet" href="../pubdocs.css" type="text/css"></link>
+</head>
+<body bgcolor="#f7e7c7" text="#000000" link="#000030" alink="#808080" vlink="#df3f1f">
+
+<!-- Navigation bar for Static Developer's Docs -->
+<table align="center" width="95%" cellspacing="2" cellpadding="5" border="1"  bgcolor="#553311" >
+<tr valign="top">
+<td align="left" bgcolor="#ffffff" width="150"><a href="../index.html"><img src="../image/nav_logo.png" width="135" height="64" border="0" /></a></td>
+<td align="center"><font color="#ffffff"><b>Developer's Documentation</b></font></td>
+<td align="right" bgcolor="#ffffff" width="150"><a href="../epydoc/index.html"><img src="../image/nav_devguid.png" width="85" height="64" border="0" /></a></td>
+</tr>
+</table>
+<!-- End of Navigation bar -->
+
+<a name="TOP" />
+<h1>References for PUB 2 Dependencies</h1>
+<p>
+PUB 2 introduces a number of external dependencies. This page is a guide
+to resources available on them.
+</p>
+
+<a name="PYPROTOCOLS" />
+<h3>PyProtocols</h3>
+<p>PyProtocols provides our interface / component / adapter architecture.</p>
+<p>Component architecture consists of objects, called <b>interfaces</b> which guarantee the
+API of objects which <b>implement</b> them. These objects typically do so by inheriting
+from <b>components</b> which implement specific interfaces.  Given an expected interface
+and an implemented interface, it is possible to define an <b>adapter</b> which uses
+one interface to implement another (by wrapping the original object). PyProtocols allows
+the automatic determination of <b>transitive adapters</b>. In other words, in the event
+that <i>a→b</i> and <i>b→c</i> adapters exist, PyProtocols can automatically generate
+the <i>a→c</i> adapter.
+</p>
+<h5>Upstream References (Off Site)</h5>
+<ul>
+<li><a href="http://peak.telecommunity.com/protocol_ref/ref.html">PyProtocols Manual</a></li>
+<li><a href="http://peak.telecommunity.com/protocol_ref.pdf">(PDF Version for Printing)</a></li>
+<li><a href="http://peak.telecommunity.com/PyProtocols.html">Website</a> at
+<a href="http://peak.telecommunity.com">PEAK</a></li>
+<li><a href="http://cheeseshop.python.org/pypi/PyProtocols/0.9.3%20final">Cheese Shop</a></li>
+<li><a href="http://packages.debian.org/unstable/python/python-protocols">Debian Package Description</a></li>
+</ul>
+<h5>License</h5>
+<p><i>Python</i> or <i>Zope</i> licenses by reference (non-copyleft free license, compatible with LGPL and GPL)</p>
+
+<h5>Dynamic Components</h5>
+<p>
+Please note that Gabriel Jagenstedt has implemented a rather special usage of components
+for Noun objects in PUB, which we call “dynamic components”.  Objects which use these
+can have their components modified during use (their component makeup is mutable). We
+think this will be quite useful for game programming.  It is not part of the PyProtocols
+architecture, but something specifically designed for PUB by Gabriel.
+</p>
+<p>
+The mechanism follows a design pattern called “chain of responsibility” or CoR, which
+Zope developers may recognize from acquisition.
+</p>
+
+<a name="PYPARSING" />
+<h3>PyParsing</h3>
+<p>The new parser with advanced internationalization and localization is based on
+PyParsing, an easy-to-use pure-python parsing and pattern-recognition tool. In general,
+PyParsing is much more flexible than either regular expressions or the state
+engine that PUB used to use, as well as being easier to maintain—an absolute necessity
+for internationalization of the parser.</p>
+
+<h5>Upstream References (Off Site)</h5>
+<ul>
+<li><a href="http://www.onlamp.com/pub/a/python/2006/01/26/pyparsing.html">Building Recursive Descent Parsers with Python</a></li>
+<li><a href="http://sourceforge.net/projects/pyparsing/">Sourceforge Project</a></li>
+<li><a href="http://pyparsing.wikispaces.com/">Wiki</a></li>
+<li><a href="http://packages.debian.org/stable/python/python-pyparsing">Debian Package Description</a></li>
+<li><b>There is also documentation within the PyParsing package</b></li>
+</ul>
+<h5>License</h5>
+<p><i>MIT/X11</i> type license (non-copyleft free license, compatible with LGPL and GPL)</p>
+
+<a name="DURUS" />
+<h3>Durus</h3>
+<p>
+Durus is a persistent object database library. It provides persistent object storage. We
+use the BTree, PersistentDict, and PersistentList objects to store PUB 2 world and linguistic
+model data.  It is written by the same people (CNRI), who used to maintain Python itself,
+and is a simplified version of the ZODB object database. Durus can run with or without its
+C persistence module (sacrificing speed, of course). This reduces the burden on porting it
+to new platforms along with PUB2.
+</p>
+<p>
+One consequence of this is that we won't actually store “save files” with PUB2. Instead, we
+just define “save points”. We will also have an almost unlimited “undo”. This is because each
+PUB 2 turn can be a database transaction, which can be “rolled back” at the database layer. Thus
+“saves” are very low-cost: all we need to store is the transaction ID.
+</p>
+<h5>Upstream References (Off Site)</h5>
+<ul>
+<li><a href="http://www.mems-exchange.org/software/durus/Durus-3.4.1.tar.gz/Durus-3.4.1/README.txt">Durus 3.4.1 Manual</a>
+    (<a href="../reference/durus_readme.txt">local copy</a>)</li>
+<li><a href="http://www.python.org/pycon/2005/papers/17/Durus.html">Durus: A Persistence System for Python</a>
+    (<a href="../reference/Durus.html">local copy</a>)
+    (<a href="../reference/Durus.pdf">PDF</a>)</li>
+<li><a href="http://www.mems-exchange.org/software/durus/">Website</a></li>
+<li><a href="http://cheeseshop.python.org/pypi/Durus/3.4.1">Cheese Shop</a></li>
+</ul>
+<h5>License</h5>
+<p><i>CNRI Python</i> license with GPL compatability clause. LGPL or GPL compatible.</p>
+
+</body>
+</html>
+

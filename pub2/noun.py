@@ -22,6 +22,16 @@ Base classes for all nouns and noun registry.
 #    License along with this library; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #--------------------------------------------------------------------
+#
+#   CHANGELOG
+#
+#   2006-07/08 TJH -    Renamed 'Symbol' to 'DynamicComponentRack' and
+#                       moved it to components.py which we import to here.
+#
+#                       Now noun.py contains only Noun and Adjective concepts.
+#
+#--------------------------------------------------------------------
+#
 
 # Gettext based I18N:
 # from gettext ...
@@ -31,107 +41,34 @@ def _(s):
 
 from interfaces import *
 from protocols import advise
+from symbol import *
+
+from components import DynamicComponentRack
 
 import locale
-
-
 import types
 
-#----------------------------------------------------------------------
-# Symbol -- Base class for nouns and components -- used by the
-#           component based object system
-#
-class Symbol:
-    """
-    Symbol:
-        Base class of componets and nouns/things.
-        It contains methods and variables to handle components 
-        mostly.
-    """
-
-    advise(instancesProvide=[ISymbol])
-
-    def __init__(self):
-        
-        self._components = [] # PRIVATE variable
-                              # a list of classes or instances
-                              # that should be added to the object when
-                              # initialized.
-
-        self.components = [] # a list that contains references 
-                             # to components after it has been initialized.
-                             # this is the variable that the outside uses.
-        
-        self.addComponents(self._components) # Add the components
-            
-
-    def addComponents(self,com):
-        """
-        method that adds components to the components list.
-        checks three possible ways it can be called, with either a list, a class
-        or an instance. Only when called with an instance does the component get
-        added to the list, in other cases it's converted into an instance and
-        resent to addComponents
-        """
-
-        
-        if com:
-
-            if type(com) == types.ListType:
-                for each in com: self.addComponents(each)
-                
-            elif type(com) == types.ClassType: 
-                self.addComponents(com())
-
-            elif type(com) == types.InstanceType and isinstance(com, Symbol): 
-                self.components.append(com)
-            
-            else: raise TypeError('Must be of type List, Class or Instance')
-
-        # there might well be more issues to deal with but this is a start.
-
-    def delComponents(self,com):
-        """
-        Can be called in the same way as addComponents, with a list, class or
-        instance. However dealing with deleting componets is a bit harder.
-        When given a list the list is looped through and calls to delComponents
-        are made.
-        When given a class all classinstances are deleted.
-        When given an instance just that instance is removed.        
-        """
-
-        if com:
-
-            if type(com) == types.ListType: 
-                for each in com: self.delComponents(each)
-
-            elif type(com) == types.ClassType: 
-                delete = []
-                for item in self.components:
-                    if item.__class__ == com:
-                        delete.append(item)
-
-                #delete all occurences of the class
-                for item in delete:
-                    self.components.remove(item)
-                del delete        
-
-            elif type(com) == types.InstanceType: 
-                if com in self.components:
-                    self.components.remove(com)
-            
-            else: raise TypeError('Must be of type List, Class or Instance')
-
-class Noun(Symbol):
+class Noun(DynamicComponentRack):
     """
     The most basic of objects. 
     Noun doesn't provide any real methods.
     """
-
     advise(instancesProvide=[INoun]) 
 
-    def __init__(self, names=[]):
-        Symbol.__init__(self)       
+    def __init__(self, name, adjs=()):
+        DynamicComponentRack.__init__(self)
+
+        if isinstance(name, Symbol):
+            self.name = name
+            
+        elif isinstance(name, str):
+            if hasattr(sym, name):
+                self.name = getattr(sym, name)
+            else:
+                self.name = Symbol(name, domain=sym.NOUN, doc="Implicit Noun")
+        
+        if self.name.domain != sym.NOUN:
+            raise ValueError("Noun must use symbol in NOUN domain. Got %s instead." % repr(self.name.domain))
         
         #synonyms and name
         self.synonyms = [x.lower() for x in names]
@@ -141,4 +78,25 @@ class Noun(Symbol):
         # Well we know this won't be the way to handle nouns anymore =)
         #for n in self.synonyms:
         #    if n not in pubcore.nouns: pubcore.nouns.append(n)
+
+
+class Adjective(object):
+    """
+    PUB Object which represents adjectives.
+
+    Combines unique symbolic concept with symbolic sense to respond to.
+    Adjectives in PUB are modifiers which can be discovered by specific
+    sense verbs (Look, Smell, Feel, ...) and which can be used to specify
+    nouns to resolve ambiguities.
+    """
+    name  = None
+    sense = None
+
+    def __init__(self, name, sense=None):
+        self.name  = name
+        self.sense = sense
+
+    def __repr__(self):
+        return "<PUB Adjective: %s, Sense=%s>" % (str(self.name), str(self.sense))
+
         

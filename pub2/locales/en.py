@@ -1,205 +1,335 @@
-# (C) 2006 Terry Hancock
-# PUB Engine Locale: fr
+# (C)2006 Terry Hancock
+#------
+# en.py
 """
-Generic US English engine locale for Python Universe Builder
+English locale grammar for PUB
+
+It's also the first one written, so I hope it will also serve
+as the prototype for others.
 """
-#--------------------------------------------------------------------
-#    This library is free software; you can redistribute it and/or
-#    modify it under the terms of the GNU Lesser General Public
-#    License as published by the Free Software Foundation; either
-#    version 2.1 of the License, or (at your option) any later version.
+
+from semantics import sym
+
+#------
+# GPLv2+
+#------
+#-------------------------------------------------------------------
+# If you want to write a grammar file for your language, please
+# read ../doc/developer/l10n.html which will be much more useful
+# than this comment!
 #
-#    This library is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#    Lesser General Public License for more details.
+# Briefly:
 #
-#    You should have received a copy of the GNU Lesser General Public
-#    License along with this library; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#--------------------------------------------------------------------
+#   * This file contains only functions (no OOP)
+#
+#   * Functions are grouped:
+#
+#       o 'define_*' single-call factory functions that provide
+#                    basic structures to the parser 
+#
+#       o 'tell_*'   callbacks for output of words & objects
+#
+#       o 'grok_*'   callbacks to collect grammatical information 
+#                    from words during parsing
+#
+#       o '_*'       functions used only within this module
+#
+#   * In practical terms, the grok functions are called by various
+#     objects which are themselves "parseActions" of pyparsing
+#     expressions. You shouldn't need to know this, but that's how
+#     they are used. They do not, however, have a single calling
+#     profile, because they extract different kinds of information.
+#
+#   * The tell functions, on the other hand, are called by the
+#     __str__ method of various objects and thus they determine
+#     how the objects serialize.
+#
+#   * Most functions take a keyword argument, "context", which is
+#     expected to be a sequence representing the sentence context
+#     for the object, e.g.: for an adverb argument, the context
+#     is:
+#       (the verb phrase, the clause, the sentence)
+#
+#     while, for an adjective, the context is:
+#       (the noun phrase, the clause, the sentence)
+#
+#     (If you're still confused, there's a diagram in l10n.html)
+#
+#     The context can be used to provide grammatical "agreements",
+#     such as number, person, gender, etc.  It also can be used
+#     to tell which inflections should be used for words that
+#     need them. This doesn't get used that much in English -- I
+#     plan to write a Spanish module that shows it off a bit more.
+#-------------------------------------------------------------------
+#-------------------------------------------------------------------
+# DECLARE
+#   The declare_* functions declare structural information about the
+#   language to the parsing and semantics modules. This is used to
+#   define the overall behavior of the module.
+#
+#   So far only one -- which defines the pyparsing expression used
 
-### SENTENCE ########################################################
-# DON'T CHANGE THE NEXT LINE!
-(subject, verb, direct_object, preposition, indirect_object, adverb) = range(6)
+#   to parse sentences in terms of the word elements (which the
+#   parser figures out for itself from the vocabulary XML file.
+#-------------------------------------------------------------------
 
-# CHANGE *THIS* LINE:
-StdSentenceOrder = (subject, 
-                    verb, 
-                    direct_object,
-                    preposition,
-                    indirect_object,
-                    adverb)
+def define_sentence_parsers(Verb,Advb,Noun,Adje,Artl,Decl,Prep,Conj,Punc):
+    """
+    Defines language's grammar for parsing -- note the calling order above should be left as is.
 
-    # Change to reflect the most natural sentence order. Bear in mind that in
-    # some languages, "prep" may be glossed as a declension particle or
-    # ending.
+    This isn't really used as a function -- it's a declaration of the basic structure of
+    sentences to the parser module.
+    """
+    # These are pyparsing expressions. They are very similar to EBNF, except that
+    # the order of statements is reversed (you must work from bottom-to-top level):
+    
+    NounPhrase = Group(Optional(Decl | Prep) + Optional(Artl) + ZeroOrMore(Adje) + Noun)
+    
+    #VerbPhrase -- you may define this if VerbPhrases are contiguous in the target
+    #               language (they aren't in English, where adverbs can occur anywhere
+    #               in the sentence).
+    
+    Clause     = Group(ZeroOrMore(Advb) + Verb + ZeroOrMore(Advb | NounPhrase))
+    
+    Sentence   = Group(Clause) + ZeroOrMore( OneOrMore(Conj) + Group(Clause) )
+    
+    return NounPhrase, Clause, Sentence
 
-    # Yes, I'm very much aware that sentences can be more complicated, 
-    # but this is the form that sentences given to the parser will
-    # have to take. It can sound stilted, but has to make sense.
 
-#####################################################################
+# It will be a PUB error for a sentence to contain clauses with different tenses,
+# so there's no need to worry about this case -- checking the tense of the last
+# clause in the Clauses list tells the tense of all.
 
+#-------------------------------------------------------------------
+# TELL
+#
+#   The 'tell_*' functions define locale-specific str() callbacks
+#   for their respective objects. At the highest levels, these
+#   result in more str() calls for lower elements, which in turn
+#   call additional tell functions until we get to linguistic atoms.
+#-------------------------------------------------------------------
 
-
-### NOUNS ###########################################################
-#Individual nouns should generally be localized in the Game locale.
-
-noun_groups  = ('N',)  # English has only one regular class of nouns
-
-# Pluralization
-
-def pluralize(noun, number):
-    if number==0 or number>1:
-        if noun[-1]=='s':
-            return noun + 'es'
-        else:
-            return noun + 's'
+def tell_sentence(S):
+    #address_s = str(Sentence.address)
+    clauses_s = ', '.join([tell_clause(c) for c in S])
+    tense = S[-1].Verb.Tense
+    if tense == sym.INT:
+        p = '?'
     else:
-        return noun
+        p = '.'
+     
+    return clauses_s + p
+    #return ', '.join(address_s, clauses_s) + p
+    
+def tell_clause(C):
+    """
+    Generate a clause (a simple sentence).
+    """
+    VP = C.Verb
+    NPs = C.Nouns
+    
+    if VP.Tense == sym.INT:
+        # Interrogative -- generate a question clause:
+        sVP = ' '.join([tell_verb_phrase(VP)] + [tell_noun_phrase(n[0]) for n in 
+                                [C.Nom, C.Acc, C.Prp, C.Dat, C.Gen, C.Ins] if n])
 
-        # FIXME: I think we're going to have to be smarter than this
-        # to handle languages like Chinese and Japanese which require
-        # 'counters' and explicit/implicit number
+    elif VP.Tense == sym.EXS:
+        # Existential -- there is/there are sentences
+        if C.Nom[0].Plur in (sym.SING, sym.ABST, sym.MASS, 1):
+            vb = 'is'
+            quantifier = 'one'
+        elif isinstance(C.Nom[0].Plur, int):
+            vb = 'are'
+            quantifier = '%d' % C.Nom[0].Plur
+        elif C.Nom[0].Plur == sym.DUAL:
+            vb = 'are'
+            quantifier = 'two'
+        else:
+            vb = 'are'
+            quantifier = ''
 
-        # English collective nouns and irregular plurals will be handled
-        # within each noun definition
+        if C.Prp:
+            localizer = tell_noun_phrase(C.Prp[0])
+        sVP = ' '.join([str(s) for s in ['There', vb, quantifier, tell_noun_phrase(C.Nom[0]), localizer]])
+        
+    elif VP.Tense == sym.COP:
+        # Copula -- sentences specifying equation or description
+        if C.Nom[0].number in (sym.SING, sym.ABST, sym.MASS, 1):
+            if C.Nom[0].person == sym.FIRST:
+                vb = 'am'
+            elif C.Nom[0].person == sym.SECOND:
+                vb = 'are'
+            else:
+                vb = 'is'
+        else:
+            vb = 'are'
+        # This is the only use of double nominative case:
+        sVP = ' '.join([str(s) for s in [C.Nom[0], vb, C.Nom[1] ]])
 
-# Articles
+    elif VP.Tense in (sym.PPF, sym.PIM):
+        # Present perfect or "plain present tense" statements
+        sVP = ' '.join([str(s) for s in [C.Nom[0], _conjugate_verb(VP, C.Nom[0])] + NPs[1:]])
+        
+    elif VP.Tense == sym.IMP:
+        # Imperative (command) clause
+        sVP = ' '.join([tell_verb_phrase(VP)] + [tell_noun_phrase(N) for N in NPs])
+    else:
+        sVP = 'CLAUSE(TENSE=?): verb=%s, noun=' % str(VP) + ', '.join([str(s) for s in NPs])
 
-article_the = "the %s"
-article_a   = "a %s"
+    return sVP
 
-# FIXME:
-# This makes sense only in European languages, and even so, usage varies 
-# a lot (e.g. "Love" vs "L'Amour" as abstract subject). For now, we ignore
-# the usage differences, and languages without articles should define both
-# as "%s" and move on
+def tell_noun_phrase(NP):
+    # Expand a noun phrase
+    
+    # BTW, this builds the phrase up in reverse, then flips it,
+    # to take advantage of appending semantics, and the fact that
+    # noun phrases are "strongly left branching" in English
 
-# Declension (only makes sense in some languages)
-# see also "Prepositions"
-# Note that nouns may override, so this is fall-back or 'regular' declension
+    words = []
+    words.append(str(NP.Noun))
+
+    adjs = [str(a) for a in NP.Adjs]
+    adjs.reverse()
+
+    words += adjs
+    
+    if NP.Artl == sym.DEFIN:
+        words.append('the')
+    elif NP.Artl == sym.INDEF and NP.Plur==sym.SING:
+        if words[0][0] in 'aeiouAEIOU':
+            words.append('an')
+        else:
+            words.append('a')
+
+    if NP.Decl == sym.PRP:
+        # Prepositional phrase, so look for preposition:
+        words.append(str(NP.Prep))
+    elif NP.Decl in (sym.NOM, sym.ACC):
+        pass
+    elif NP.Decl == sym.GEN:
+        words.append('from')
+    elif NP.Decl == sym.DAT:
+        words.append('to')
+    elif NP.Decl == sym.INS:
+        words.append('with')
+
+    words.reverse()
+    return ' '.join(words)
+    
+
+def tell_verb_phrase(VP):
+    """
+    Expand a verb phrase.
+
+    Unit test:
+    >>> VP = DummyVP(verb='hit', advs=('very', 'gently'))
+    """
+    # Expand a verb phrase
+    return ' '.join([tell_adverb(A) for A in VP.Advs] + [tell_verb(VP.Verb)])
+
+def tell_adverb(A, clause=None):
+    """
+    Expand adverb expression to nearest match to adverbial value.
+    """
+    # FIXME: this assumes we have some stuff I haven't defined yet,
+    #       including 'Adverb_Vocabulary' (locale-specific)
+    #
+    #       It also treats adverbs as Concepts (VagueConcepts), which
+    #       I'm not certain is right
+    domain_adverbs = [B for B in Adverb_Vocabulary if B.domain==A.domain]
+    nearest    = domain_adverbs[0]
+    prev_delta = abs(A._data - nearest._data)
+    for adverb in domain_adverbs:
+        delta = abs(A._data - adverb._data)
+        if delta < prev_delta:
+            delta = prev_delta
+            nearest = adverb
+    return str(adverb)
+
+def tell_verb(V, context=()):
+    """
+    Expand verb word (calls conjugation).
+    """
+    return '%s(?)' % V.name
+
+def tell_noun(N, context=()):
+    """
+    Expand noun word (calls declension if needed).
+    """
+    if context:
+        NP, C, S = context
+        decl = NP.Decl
+    else:
+        decl = sym.NOM
+        
+    if N in Pronoun_Vocabulary:
+        s = _decline_noun(N, decl)
+    else:
+        s = N.name
+
+    return s
+
+#-------------------------------------------------------------------
+# UTILITIES
+#   You can of course define whatever extra functions you want to
+#   use within the module:
+#-------------------------------------------------------------------
+
+def _conjugate_verb(V, S):
+    if S.Plur != sym.SING and V.Person in (sym.THIRD, sym.FOURTH):
+        return V.name
+    else:
+        return V.name + 's'
+
+def _decline_noun(NP):
+    return str(NP.noun)
+
+#-------------------------------------------------------------------
+# GROK
+#   The grok_* functions define the interpretations of various types
+#   of words and grammatical structures from strings. They recognize
+#   meanings from words.
 #
-# N is the noun (or its base form)
-# P is the "preposition", "particle", "prefix", or "suffix" which
-# marks the relationship of the noun to the verb or the role of the
-# noun in the sentence. PUB only knows about "subj" and "dobj" implicitly,
-# and depends on the verb and noun to know what the preposition means
-# in context -- thus "indirect object" may represent more than one
-# possible declension -- if this can be constructed by attaching one of
-# several standard endings, then this is the means.
+#   They are not aware of structure above what they are given, so
+#   they may return inconclusive in many cases.
+#-------------------------------------------------------------------
 
-# In English, subj and dobj take no special endings or declension marks,
-# so they are only distinguishable by word order.  The meaning of
-# the "indirect object" is a noun with a declension determined by the
-# preposition.
+def grok_sentence():
+    # Understand an entire sentence
+    # Do we need this?
+    pass
 
-declension = {  'subj': '%(N)s',
-                'dobj': '%(N)s',
-                'iobj': '%(P)s %(N)s' }
+def grok_noun_phrase():
+    pass
 
-# Special abstract nouns
+def grok_noun():
+    # Identify 
+    pass
 
-adj_specifying  = '%(A)s %(N)s'
-adj_descriptive = '%(N)s %(A)s'
+def grok_verb_phrase():
+    # Get various information from a verb phrase
+    pass
 
-inventory = ('inventory',)
+def grok_verb():
+    # info from the verb word itself
+    pass
 
-# Adjectives -- note that these are adjective forms! Many of these
-# are nouns in English too, but these will be used in modifiers (as
-# in "one red box" or "switch is on").
+def grok_adjective():
+    pass
 
-adj_state = ('on', 'off')
+def grok_adverb():
+    pass
 
-# FIXME: do we really need colors?  Maybe these should be in game locales
-adj_color = { 'black': 'black',
-              'white': 'white',
-              'gray':  'gray',
-              'brown': 'brown',
-              'red':   'red',
-              'blue':  'blue',
-              'green': 'green'}
+def grok_article():
+    pass
 
-adj_number = ('one', 'two',   'three', 'four', 'five', 
-              'six', 'seven', 'eight', 'nine', 'ten')
+def grok_declension():
+    pass
 
-adj_size   = ('smallest', 'smaller', 'small', 'large', 'larger', 'largest')
+def grok_preposition():
+    pass
 
+#---------------------------------------------------------------------
+# Quality Assurance
+#---------------------------------------------------------------------
 
-#####################################################################
-
-
-### PREPOSITIONS ####################################################
-# What we call 'prepositions' in English may be replaced by declension
-# particles in some other languages. The point is, these determine the
-# relationship of a noun to an action.
-
-# Prepositions are among the hardest words to translate, so I'm trying
-# to be very explicit and literal here.  The use of prepositions in
-# PUB is to indicate the relationship of various "indirect object" nouns
-# to the verbs acting on them -- so keep this in mind when translating.
-
-# Containment
-within = ('in', 'within')
-    # Means object is contained within another object
-    # DO NOT USE 'on' to mean 'in' in English!  Per-noun irregularities
-    # can be resolved in the noun locale (e.g. the Noun "airplane" will
-    # redefine 'on' as a synonym for 'in', removing it from the "on" list).
-
-# Spatial relationships
-
-# Almost every language has some support for adjacency in the form of
-# a "cube model" -- objects having six sides: top/bottom, front/back,
-# left/right. In addition, there is usually something indicating distance
-# without being specific, and gravity implies attachment to top (supporting).
-
-on    = ('on', 'upon', 'on top of')    # Touching / supported-by
-top   = ('above', 'over')              # Not touching
-
-bottom= ('under', 'below', 'beneath')  
-
-front = ('in front of',)
-back  = ('in back of',) #?
-
-side  = ('beside', 'near')
-left  = ('to the left of',)
-right = ('to the right of',)
-
-# Anything more specific will be have to be associated with individual nouns
-# (e.g. on top shelf of)
-
-# Tool-use
-
-using   = ('using', 'with')
-tool_on = ('on', 'upon', 'against')
-target  = ('towards', 'to')
-
-#####################################################################
-
-
-### VERBS ###########################################################
-
-#####################################################################
-
-
-### ADVERBS #########################################################
-
-StdAdverbModifiers = {  'extremely %(A)s':  -0.7,
-                        'very %(A)s':       -0.5,
-                        '%(A)s':            -0.3,
-                        '':                  0.0,
-                        '%(B)s':             0.3,
-                        'very %(B)s':        0.5,
-                        'extremely %(B)s':   0.7 }
-                        
-# 'A' and 'B' are adverbs with opposite meanings.  They may be
-# constructed by using a standard inversion form for either A or B,
-# or they may be explicit opposites.
-
-StdAdverbInversion = "not %s"
-
-# Standard (fall back) inversion form. This is only used if no
-# inverse form is given for 'A' or 'B' in StdAdverbModifiers.
-
-#####################################################################

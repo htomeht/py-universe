@@ -1,34 +1,34 @@
 # (C)2006 Terry Hancock
 #---------------------------------------------------------------------------
-# concept
+# symbol
 """
-Concept provides sets of symbols used to label concepts. These are the
+Symbol provides sets of symbols used to label concepts. These are the
 international 'words' used throughout the program to communicate concepts
 which are localized in the semantics module for communication with the user.
 
 There is a module-level container namespace, called simply "sym", which you
-can use to refer to Concepts. This container is completely flat -- each Concept
+can use to refer to Symbols. This container is completely flat -- each Symbol
 must have a unique name within sym, to avoid confusion.
 
-Nevertheless, there is a tree structure of "Concept Domains", to provide
-a structure to the Concepts.
+Nevertheless, there is a tree structure of "Symbol Domains", to provide
+a structure to the Symbols.
 
-There are also two types of sets of Concepts -- "Vocabulary" and "Enum".
+There are also two types of sets of Symbols -- "Vocabulary" and "Enum".
 
-A "Vocabulary" is an extendable set of Concepts which must share a domain.  It
+A "Vocabulary" is an extendable set of Symbols which must share a domain.  It
 can be used as a container, or you can throw away the Vocabulary and use it simply
-for the side-effect of loading sym with the resulting Concepts.
+for the side-effect of loading sym with the resulting Symbols.
 
 You can also "clear" a Vocabulary, which will not only remove the contents of
-the Vocabulary object, but also delete all Concepts from its domain in the 
+the Vocabulary object, but also delete all Symbols from its domain in the 
 sym namespace.  This is pretty violent, and should be avoided (not that it is
-not strictly true that all Concepts with the same domain are in the same Vocabulary,
+not strictly true that all Symbols with the same domain are in the same Vocabulary,
 but they will all be scrubbed anyway).
 
 In fact, I really only recommend using "clear" for experimentation in the interpreter,
 or in tests, where you want to start over.
 
-An "Enum" is a closed set of Concepts.  We can use these to define flags and states
+An "Enum" is a closed set of Symbols.  We can use these to define flags and states
 throughout the program, as well as for very limited vocabularies, such as "articles"
 or "declension" particles, where we want to clarify that there are no additional
 possibilities. Generally you can expect program code using Enums to hard-code the
@@ -38,9 +38,9 @@ If you mutate an object being used as a hash, you viol
 
 Some example uses:
 
->>> from concept import *
+>>> from symbol import *
 >>> sym.clear()
->>> Concept('PoS', doc="Part of Speech")
+>>> Symbol('PoS', doc="Part of Speech")
 <!: PoS = Part of Speech>
 >>> pos = Enum(sym.PoS, {'NOUN':'Noun', 'VERB':'Verb', 'ADVB':'Adverb', 'ADJE':'Adjective', 'DECL':'Declension particle', 'PREP':'Preposotion (topological)', 'ARTL':'Article', 'CONJ':'Conjunction', 'PUNC':'Punctuation symbol'})
 >>> verbs = Vocabulary(sym.VERB, ('GO', 'WALK', 'MOVE', 'LOOK', 'GET', 'PUT'), "Basic motion and action verbs")
@@ -49,20 +49,20 @@ Some example uses:
 
 That may be a bit bulky, but we can control the verbosity:
 
->>> Concept.verbosity = 0
+>>> Symbol.verbosity = 0
 >>> sym.GO
 <GO>
->>> Concept.verbosity = 1
+>>> Symbol.verbosity = 1
 >>> sym.GO
 <VERB: GO>
->>> Concept.verbosity = 2
+>>> Symbol.verbosity = 2
 >>> sym.GO
 <!/PoS/VERB: GO>
->>> Concept.verbosity = 3
+>>> Symbol.verbosity = 3
 >>> sym.GO
 <!/PoS/VERB: GO = Basic motion and action verbs>
 
-Concepts are immutable and hashable, and can be used as dictionary keys,
+Symbols are immutable and hashable, and can be used as dictionary keys,
 labels, etc. -- anywhere you might use an int or a string object:
 
 >>> spam = {}
@@ -111,7 +111,7 @@ Vocabulary('VERB', ['SWIM', 'WALK', 'PUT', 'GET', 'MOVE', 'GO', 'RUN', 'FLY', 'L
 
 Not that with this method, we gave the verbs individual doc strings:
 
->>> Concept.verbosity = 3
+>>> Symbol.verbosity = 3
 >>> sym.SWIM
 <!/PoS/VERB: SWIM = Move through the water>
 >>> sym.FLY
@@ -156,13 +156,13 @@ Vocabulary('NOUN', ['GRASS', 'CACTUS', 'TREE'])
 #--------------------------------------------------------------------
 
 
-__all__ = ['sym', 'Concept', 'Vocabulary', 'Enum', 'Vague', 'VagueConcept', 'VagueDomain']
+__all__ = ['sym', 'Symbol', 'Vocabulary', 'Enum', 'Vague', 'VagueConcept', 'VagueDomain']
 
 from sets import BaseSet, Set
 from vague import *
 
 
-class _ConceptRegistry(object):
+class _SymbolRegistry(object):
     """
     Simple registry for holding symbols. Raises an error if an overwrite is
     attempted.  Some convenience functions provided for introspection.
@@ -172,7 +172,7 @@ class _ConceptRegistry(object):
             object.__setattr__(self, name, value)
         elif hasattr(self, name):
             raise AttributeError, "Attempt to overwrite symbol '%s'" % name
-        elif isinstance(value, Concept):
+        elif isinstance(value, Symbol):
             object.__setattr__(self, name, value)
         else:
             raise AttributeError, "Symbol registry only holds Symbols."
@@ -194,7 +194,9 @@ class _ConceptRegistry(object):
                             (domain=='!' and self.__dict__[name].domain==None)):
                     if name[:len(match)]==match:
                         names.append(name)
-        return names
+
+        # 2006-06/27: change to return symbols instead of names:
+        return [getattr(self, name) for name in names]
 
     def clear(self, domain=None):
         """
@@ -207,14 +209,16 @@ class _ConceptRegistry(object):
         else:
             self.__dict__ = dict([(k,v) for k,v in self.__dict__.items() if k[0]=='_'])
 
-sym = _ConceptRegistry()
+# We probably want to put the actual symbol registry into the persistant database?
+# We also need to cope better with non-conflicting re-definitions
+sym = _SymbolRegistry()
 
-class Concept(object):
+class Symbol(object):
     """
-    Abstract marker for the concept to which a word maps.
+    Abstract marker for the symbol to which a word maps.
 
-    Concepts are used as 'labels' for objects which are represented
-    by topoworld or linguistic objects. Many concepts, however, have
+    Symbols are used as 'labels' for objects which are represented
+    by topoworld or linguistic objects. Many symbols, however, have
     no actual model object, and are used inside the semantics engine,
     possibly for disambiguation or grammatical classification.
     """
@@ -225,13 +229,13 @@ class Concept(object):
             if hasattr(sym, domain):
                 domain = getattr(sym, domain)
             else:
-                domain = Concept(domain, doc=doc)
+                domain = Symbol(domain, doc=doc)
                 
-        if domain and not isinstance(domain, Concept):
-            raise ValueError, "Only strings and concepts accepted as concept domain."
+        if domain and not isinstance(domain, Symbol):
+            raise ValueError, "Only strings and symbols accepted as symbol domain."
             
         if not isinstance(name, str):
-            raise ValueError("Concept name should be a string (and valid identifier)")
+            raise ValueError("Symbol name should be a string (and valid identifier)")
  
         self.name       = name
         self.domain     = domain
@@ -244,7 +248,7 @@ class Concept(object):
         return hash( (self.name, self.domain) )
 
     def __eq__(self, other):
-        if not isinstance(other, Concept):
+        if not isinstance(other, Symbol):
             return False
         if self.name==other.name and self.domain==other.domain:
             return True
@@ -272,7 +276,7 @@ class Concept(object):
         # Recurse up domain tree to collect full domain path
         if self.domain is None:
             return '!'
-        elif isinstance(self.domain, Concept):
+        elif isinstance(self.domain, Symbol):
             if self.verbosity > 1:
                 return '%s/%s' % (self.domain._repr_domain(), self.domain.name)
             else:
@@ -283,18 +287,18 @@ class Concept(object):
     def domains(self):
         if self.domain is None:
             return ()
-        elif isinstance(self.domain, Concept):
+        elif isinstance(self.domain, Symbol):
             return self.domain.domains() + (self.domain.name,)
         else:
             return (str(self.domain),)
 
     def __setattr__(self, name, value):
         if name in ('doc', 'vocabulary'):
-            # These are meta-data that are not part of concept's value
+            # These are meta-data that are not part of symbol's value
             object.__setattr__(self, name, value)
         elif self.__lock:
             raise AttributeError, "Instance is locked (Immutable)." 
-        elif not self.__lock and (name=='_Concept__lock' or not name[0]=='_'):
+        elif not self.__lock and (name=='_Symbol__lock' or not name[0]=='_'):
             object.__setattr__(self, name, value)
         else:
             raise AttributeError, "(lock=%s) Name %s can't be altered." % (self.__lock, name)
@@ -302,7 +306,7 @@ class Concept(object):
 
 class Vocabulary(BaseSet):
     """
-    Base of Vocabulary and Enumeration, Abstract, do not use directly.
+    Vocabulary or mutable enumeration.
     """
     __slots__ = ['domain', 'doc', '_lock']
 
@@ -313,18 +317,18 @@ class Vocabulary(BaseSet):
             if hasattr(sym, domain):
                 domain = getattr(sym, domain)
             else:
-                domain = Concept(domain, doc=doc)
+                domain = Symbol(domain, doc=doc)
                 
-        if not isinstance(domain, Concept):
-            raise AssertionError, "Only strings and concepts accepted as vocabulary domains."
+        if not isinstance(domain, Symbol):
+            raise AssertionError, "Only strings and symbols accepted as vocabulary domains."
             
         existing = domain.vocabulary
         if existing is None:
-            # Concept exists, but doesn't link to a vocabulary, do so now:
+            # Symbol exists, but doesn't link to a vocabulary, do so now:
             domain.vocabulary = self
            
         elif isinstance(domain.vocabulary, Enum):
-            # Concept is domain of Enum (closed vocabulary, can't join):
+            # Symbol is domain of Enum (closed vocabulary, can't join):
             raise TypeError, "Cannot join closed Enum %s." % repr(domain)
             
         elif isinstance(domain.vocabulary, Vocabulary):
@@ -365,22 +369,22 @@ class Vocabulary(BaseSet):
         if not isinstance(doc, str):
             doc = self.doc
         if key in self._data:
-            raise KeyError, "Concept %s already in vocabulary." % key
+            raise KeyError, "Symbol %s already in vocabulary." % key
         elif hasattr(sym, key):
-            raise KeyError, "Cannot redefine existing concept %s." % repr(getattr(sym, key))
-        elif isinstance(key, Concept):
+            raise KeyError, "Cannot redefine existing symbol %s." % repr(getattr(sym, key))
+        elif isinstance(key, Symbol):
             self._data[key] = True
         elif isinstance(key, str):
-            self._data[Concept(key, domain=self.domain, doc=doc)] = True
+            self._data[Symbol(key, domain=self.domain, doc=doc)] = True
         else:
-            raise KeyError, "Vocabularies only hold Concepts (or string to be coerced to Concept)."
+            raise KeyError, "Vocabularies only hold Symbols (or string to be coerced to Symbol)."
 
     def __repr__(self):
         return "%s('%s', %s)" % (self.__class__.__name__, str(self.domain), repr([str(s) for s in list(self)]))
 
     def clear(self):
         """
-        Clear not only empties the vocabulary, it also removes the concepts from the registry.
+        Clear not only empties the vocabulary, it also removes the symbols from the registry.
         """
         sym.clear(self.domain)
         self._data = {}
@@ -399,9 +403,9 @@ class Vocabulary(BaseSet):
             doc = self.doc
         
         if type(names)==dict:
-            data = [Concept(n, self.domain, names[n] + doc) for n in names]
+            data = [Symbol(n, self.domain, names[n] + doc) for n in names]
         elif hasattr(names, '__iter__'):
-            data = [Concept(n, self.domain, doc)            for n in names]
+            data = [Symbol(n, self.domain, doc)            for n in names]
         else:
             raise ValueError, "Vocabulary words must be in a collection object."
 
@@ -429,14 +433,14 @@ class Enum(Vocabulary):
             if hasattr(sym, domain):
                 domain = getattr(sym, domain)
             else:
-                domain = Concept(domain, doc=doc)
+                domain = Symbol(domain, doc=doc)
                 
-        if not isinstance(domain, Concept):
-            raise AssertionError, "Only strings and concepts accepted as vocabulary domains."
+        if not isinstance(domain, Symbol):
+            raise AssertionError, "Only strings and symbols accepted as vocabulary domains."
             
         existing = domain.vocabulary
         if existing is None:
-            # Concept exists, but doesn't link to a vocabulary, do so now:
+            # Symbol exists, but doesn't link to a vocabulary, do so now:
             domain.vocabulary = self
         else:
             raise TypeError, "Enum cannot join existing vocabulary domain %s." % repr(existing)
@@ -448,15 +452,15 @@ class Enum(Vocabulary):
         self._lock = True
         return self
 
-# The remaining concepts in this module are "uncounted"/"non-enumerated" concepts
+# The remaining symbols in this module are "uncounted"/"non-enumerated" symbols
 # (Strictly speaking even "floating point" numbers are "countable" on a computer,
 # since there is a finite resolution and a finite range -- but it's best to treat
-# them as uncounted real valued numbers. These concepts have the same type of
+# them as uncounted real valued numbers. These symbols have the same type of
 # behavior.
 
-class VagueConcept(Vague, Concept):
+class VagueConcept(Vague, Symbol):
     """
-    A Vague Concept occupies a domain, just as a Concept does,
+    A Vague Concept occupies a domain, just as a Symbol does,
     and represents abstract knowledge. However, the value of a
     VagueConcept is not a member of an open or closed countable
     set, but rather, a point on the vague interval [-1,1].
@@ -470,21 +474,17 @@ class VagueConcept(Vague, Concept):
     In PUB, of course, we only use this class for Adverbs,
     so you should see that class for specifics.
     """
-    # FIXME: concept.py is on the other computer, so I'm stopping
-    # in the middle here, until I can put them together. Hopefully
-    # I won't forget to merge them.
-    # We're going to have to redefine __init__ at least, I think
-    #
+
     domain = None
     def __init__(self, value, domain=None):
         if isinstance(domain, str):
             if hasattr(sym, domain):
                 domain = getattr(sym, domain)
             else:
-                domain = Concept(domain, doc=doc)
+                domain = Symbol(domain, doc=doc)
                 
-        if domain and not isinstance(domain, Concept):
-            raise ValueError, "Only strings and concepts accepted as concept domain."
+        if domain and not isinstance(domain, Symbol):
+            raise ValueError, "Only strings and symbols accepted as symbol domain."
             
         if not isinstance(value, float) and not isinstance(value, Vague):
             raise ValueError("VagueConcept value must be a float or Vague")
@@ -506,12 +506,12 @@ class VagueConcept(Vague, Concept):
         return hash((self._data, self.domain))
 
     def __eq__(self, other):
-        # Delete rich-compare properties of Concept, so comparisons
+        # Delete rich-compare properties of Symbol, so comparisons
         # will fall-through to Vague's __cmp__
         return NotImplemented
 
     def __ne__(self, other):
-        # Delete rich-compare properties of Concept, so comparisons
+        # Delete rich-compare properties of Symbol, so comparisons
         # will fall-through to Vague's __cmp__
         return NotImplemented
 
@@ -536,14 +536,14 @@ class VagueDomain(object):
             if hasattr(sym, domain):
                 domain = getattr(sym, domain)
             else:
-                domain = Concept(domain, doc=doc)
+                domain = Symbol(domain, doc=doc)
                 
-        if not isinstance(domain, Concept):
-            raise AssertionError, "Only strings and concepts accepted as vocabulary domains."
+        if not isinstance(domain, Symbol):
+            raise AssertionError, "Only strings and symbols accepted as vocabulary domains."
             
         existing = domain.vocabulary
         if existing is None:
-            # Concept exists, but doesn't link to a vocabulary, do so now:
+            # Symbol exists, but doesn't link to a vocabulary, do so now:
             domain.vocabulary = self
         else:
             raise TypeError, "VagueDomain cannot join existing vocabulary domain %s." % repr(existing)
@@ -577,19 +577,19 @@ class VagueDomain(object):
     
 #-QA----------------------------------------------------------------------------------
 
-# Documentation generation for concepts and domains
+# Documentation generation for symbols and domains
 #
-# There's no clean way to generate documentation on the Concept/Domain tree, so
+# There's no clean way to generate documentation on the Symbol/Domain tree, so
 # I have to implement it here.  I've thought of using a real templating system,
 # such as "simpletal", but it's not in the standard library, and I hesitate to
 # add the dependency for this one use. If I see more applications for it, I might
 # change this:
 
-class ConceptDocumentor(object):
+class SymbolDocumentor(object):
     html_frame = """\
 <html>
 <head>
-<title>PUB - Concept Tree</title>
+<title>PUB - Symbol Tree</title>
 <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
 </head>
 <body bgcolor="white" text="black" link="blue" vlink="#204080" alink="#204080">
@@ -605,14 +605,14 @@ class ConceptDocumentor(object):
 <dd>
 <table width="90%%" cellpadding="2" cellspacing="4" border="0" cols="2">
 <tr valign="top">
-<td width="10%%"><i>Concept</i></td>
+<td width="10%%"><i>Symbol</i></td>
 <td width="90%%"><i>Description</i></td>
 </tr>
-%(concept_table)s
+%(symbol_table)s
 </table>
 </dd>
 """
-    html_concept = """\
+    html_symbol = """\
 <tr valign="top">
 <td><b>%(name)s</b></td>
 <td>%(doc)s</td>
@@ -637,14 +637,14 @@ class ConceptDocumentor(object):
                 names = sym.lookup(domain=domain)
 
             names.sort()
-            concepts = [getattr(sym, n) for n in names]
+            symbols = [getattr(sym, n) for n in names]
             
-            fmt['concept_table'] = ''.join([self.html_concept % {'name':c.name, 'doc':c.doc}
-                                            for c in concepts])
-            if len(concepts)==0:
+            fmt['symbol_table'] = ''.join([self.html_symbol % {'name':c.name, 'doc':c.doc}
+                                            for c in symbols])
+            if len(symbols)==0:
                 fmt['domain_path'] = 'EMPTY DOMAIN?'
             else:
-                fmt['domain_path'] = concepts[0]._repr_domain()
+                fmt['domain_path'] = symbols[0]._repr_domain()
            
             mn['docset_body'] += self.html_domain % fmt
 

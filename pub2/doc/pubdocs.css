@@ -11,11 +11,11 @@ body {
 /* Definition list improvements    */
 dt      {margin-top: 2ex; color: #334400; font-weight: bold; font-size: +110%; }
 
-h1      {margin-top: 4ex; color: #661100; font-weight: bolder; font-size: +200%; }
-h2      {margin-top: 3ex; color: #661100; font-weight: bolder; font-size: +180%; }
-h3      {margin-top: 2ex; color: #aa2200; font-weight: bold; font-size: +160%; }
-h4      {margin-top: 1ex; color: #bb3300; font-weight: bold; font-size: +130%; }
-h5      {margin-top: 1ex; color: #ff3300; font-weight: bold; font-size: +110%; }
+h1      {margin-top: 5ex; color: #661100; font-weight: bolder; font-size: +200%; }
+h2      {margin-top: 4ex; color: #661100; font-weight: bolder; font-size: +180%; }
+h3      {margin-top: 3ex; color: #aa2200; font-weight: bold; font-size: +160%; }
+h4      {margin-top: 3ex; color: #bb3300; font-weight: bold; font-size: +130%; }
+h5      {margin-top: 2ex; margin-bottom: 0ex; color: #ff3300; font-weight: bold; font-size: +110%; }
 
 
 

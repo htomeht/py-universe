@@ -59,18 +59,20 @@ semantic objects are all designed to be reversible -- they can be re-referenced
 # Most common types of part-of-speech values
 
 import textwrap
-from concept import *
+from symbol import *
 import random
-from noun import Noun
-from verb import Verb, AdverbDomain, Adverb
+from noun import Noun, Adjective
+#from verb import Verb, AdverbDomain, Adver
+import vocabulary
 
-# First we define a limited set of vocabularies to express semantic concepts.
+# Symbolic vocabularies
 
-Concept('PoS',      doc="Part of Speech")
-Concept('SCOPE',    doc="Extent and place of search among program objects.")
-Concept('TENSE',    doc="Tense (including aspect and mood) of a sentence or phrase.")
-Concept('G_NUMBER', doc="Grammatical number of a noun.")
-Concept('G_PERSON', doc="Grammatical 'person' 1st - 4th.")
+Symbol('PoS',      doc="Part of Speech")
+Symbol('SCOPE',    doc="Extent and place of search among program objects.")
+Symbol('TENSE',    doc="Tense (including aspect and mood) of a sentence or phrase.")
+Symbol('G_NUMBER', doc="Grammatical number of a noun.")
+Symbol('G_PERSON', doc="Grammatical 'person' 1st - 4th.")
+Symbol('SENSES',   doc="Senses to which adjectives apply.")
 
 part_of_speech = Enum(sym.PoS, {
         'NOUN':'Noun',
@@ -103,8 +105,8 @@ decl_cases = Enum(sym.DECL, {
 tense = Enum(sym.TENSE, {
         'IMP':'Imperative = Command',
         'INT':'Interrogative = Question',
-        'PRP':'Present Perfective = Statement of Completed Action',
-        'PRI':'Present Imperfective = Statement of Ongoing Action',
+        'PPF':'Present Perfective = Statement of Completed Action',
+        'PIM':'Present Imperfective = Statement of Ongoing Action',
         'COP':'Copular = Statement of Equality Between Subject and Object  "A is B"',
         'EXS':'Existance = Statement of Existance "there are..."' })
         
@@ -131,32 +133,75 @@ person  = Enum(sym.G_PERSON, {
         'FOURTH': "Fourth person or 'obviative', when appropriate.",
         'YOUandI':"Inclusive 1st+2nd 'you and I'" })
 
-# FIXME: this module is very incomplete below this point.
+topopreps = Vocabulary(sym.PREP, {
+        'IN': "Inside of, contained within.",
+        'ON': "On top of. Supported by.",
+        'ABOVE': "Above the object, not necessarily supported by it.",
+        'BELOW': "Below. Underneath.",
+        })
 
-class Grokable(object):
-    """
-    Can 'grok' or dereference a localized string value to its semantic equivalent.
+senses = Vocabulary(sym.SENSES, {
+        'VISIBLE':  "Responds to 'LOOK' sense verb.",
+        'AUDIBLE':  "Responds to 'LISTEN' sense verb.",
+        'FEELABLE': "Responds to 'FEEL' sense verb (implied by TOUCH).",
+        'SMELLABLE':"Responds to 'SMELL' sense verb.",
+        'TASTABLE': "Responds to 'TASTE' sense verb (implied by EAT or DRINK)."
+        })
 
-    Makes class act like a typecast or type-converter factory function.
+class AdjectiveVocabulary(Vocabulary):
     """
-    _part_of_speech = None
-    def __call__(self, value):
-    	# We pass the 
-        return locale.grok(self._part_of_speech, value)   
+    Adjective vocabulary factory. Creates adjective symbols and constructs Adjective
+    objects as well.
+    
+    Takes into account sense domains and prefixes overlapping meanings accordingly.
+    """
+    # Domains are associated with sense-verbs:
+    sense = {sym.VISIBLE:'V', sym.AUDIBLE:'A', sym.FEELABLE:'F', sym.SMELLABLE:'S', sym.TASTABLE:'T'}
 
-class Declension(Enum, Grokable):
-    """
-    Declension or "case" of nouns (i.e. their role in the sentence):
-    """
-    scopes = {	sym.NOM: (sym.SUBJ_SELF, sym.CHARACTER, sym.EVERYBODY),
-                sym.ACC: (sym.THIS_ROOM, sym.INVENTORY, sym.ABSTRACTS, sym.CHARACTER, sym.EVERYBODY),
-		        sym.DAT: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY),
-		        sym.GEN: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY),
-		        sym.INS: (sym.INVENTORY, sym.THIS_ROOM, sym.UNIVERSE ),
-		        sym.PRP: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY)  }
-    _part_of_speech = sym.DECL
+    def update(self, names, doc=None):
+        """
+        Update the list of names.
+        """
+        if self.domain not in self.sense.keys():
+            raise ValueError, "Adjective domain must be a sense: %s" % repr([s.name for s in self.sense.keys()])
 
-Decl = Declension() 
+        # This is a little bit ugly, but it allows us to reuse the code better. The
+        # domain passed to AdjectiveVocabulary is the SENSE to which the adjective
+        # will respond. The actual adjective symbols domain is always PoS/ADJE. The
+        # sense domain is a property of the PUB Adjective object, which we create
+        # as a side-effect of create the adjective symbol.
+        
+        sense = self.domain
+        self.domain = sym.ADJE
+            
+        if self._lock: raise TypeError, "Immutable"
+
+        if not doc:
+            doc = self.doc
+        
+        data = []
+        if type(names)==dict:
+            for n in names:
+                try:
+                    data.append(Symbol(n, self.domain, names[n] + doc))
+                except AttributeError:
+                    data.append(Symbol(self.sense[sense]+'_'+n, self.domain, names[n] + doc))               
+        elif hasattr(names, '__iter__'):
+            for n in names:
+                try:
+                    data.append(Symbol(n, self.domain, doc))
+                except AttributeError:
+                    data.append(Symbol(self.sense[sense]+'_'+n, self.domain, doc))
+        else:
+            raise ValueError, "Vocabulary words must be in a collection object."
+
+        for adj in data:
+            vocabulary.All_Adjectives[adj] = Adjective(adj, sense=sense)
+
+        self._data = {}
+        if data is not None:
+            self._update(data)
+
 
 class NounPhrase(object):
     """
@@ -213,7 +258,7 @@ class NounPhrase(object):
         #
         match = False
         # First the name must match -- most matches end here
-        if isinstance(self.noun, Concept) and self.noun==noun.name:
+        if isinstance(self.noun, Symbol) and self.noun==noun.name:
             match = True
         else:
             return False
@@ -351,5 +396,4 @@ class VerbPhrase(object):
             # Consider synonym impact on adverbial value
             verb, domain, value = locale.grok_verb(verb)
             self.noun = verb
-            self.adverbs[domain] = fuzzy.combine(
 

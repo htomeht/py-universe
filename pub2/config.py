@@ -24,19 +24,22 @@ Load information from the pub.cfg file (at present, just choice of locale).
 #--------------------------------------------------------------------
 
 import ConfigParser, StringIO
+import os
+
+pub_dir = os.path.dirname(__file__)
 
 defaults = StringIO.StringIO("""\
-[L14N]
-LOCALE=en_US
+[L10N]
+LOCALE=en
 """)
 defaults.seek(0)
 
 config = ConfigParser.ConfigParser()
 config.readfp(defaults)
-config.read(['pub.cfg'])
+config.read([os.path.join(pub_dir, 'pub.cfg')])
 
 # Configuration values
-LOCALE = config.get('L14N', 'LOCALE')
+LOCALE = config.get('L10N', 'LOCALE')
 
 # TODO: the above really should deal with the Game Instance directory,
 # but I'm not sure how we're going to do that.

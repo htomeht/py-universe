@@ -1,0 +1,71 @@
+CONCEPT LANGUAGE in PUB
+
+localized words
+    When creating translations, must have a grammatical structure and
+    a gloss for each universal concept.
+
+    This is achieved through 5 files:
+
+    First 3 are for the engine (=engine localization)
+        locales/xx_VV.py    -- grammatical core locale for language xx,
+                               optional variant VV, defines parsing
+                               and telling functions for that language
+
+        locales/xx_VV.xml   -- core vocabulary for locale
+
+        locales/xx_VV.po    -- core messages for locale
+
+    Last 2 are for the specific game (=game localization)
+        game/xx_VV.xml      -- localized vocabulary for game
+
+        game/xx_VV.po       -- localized messages for game
+        
+    
+linguistic concepts ("bare symbols" or "labels")
+
+    There must be a concept for every referrable object in
+    the PUB universe, every linguistic concept, and every
+    modifier or descriptive element. These concepts are
+    universal, so they include a superset of known linguistic
+    requirements (e.g. we include "4th person" because some
+    languages have one, 6-part declension, because that's
+    the maximum declension structure commonly found, etc).
+    
+    This is moderated by the limitation to the needs for
+    describing present-tense statements, orders, questions,
+    existential, and copular sentences which make sense
+    with reference to the specific knowledge domain of the
+    PUB universe.
+    
+    Basic set of concept symbols are defined in:
+
+    semantics.py        -- basic grammatical structure
+                            (modifiers, declension, tenses,
+                            etc).
+
+    nouns/basic.py      -- base set of noun components,
+                           nouns, and adjectives
+                           (For testing, demo games, etc)
+
+    verbs/basic.py      -- base set of verbs and adverbs
+                           (Many games can use only these)
+
+    
+semantic objects
+
+    We have to define a number of objects whose function
+    determines the basic laws of the PUB universe. So,
+    for example, this is the level at which a "PUB Adjective"
+    or a "PUB Noun" or "PUB Verb" exists. Unlike the
+    linguistic concepts, they actually implement attributes
+    and methods (either directly, or via dynamic components,
+    as with nouns).
+
+    semantics.py        -- NounPhrase and VerbPhrase objects,
+                            AdjectiveVocabulary factory
+
+    noun.py             -- DynamicComponentRack, Noun, Adjective classes
+
+    verb.py             -- Verb, AdverbDomain, Adverb (factory object)
+    
+

@@ -19,6 +19,10 @@
 #--------------------------------------------------------------------
 #  CHANGELOG
 #
+#   2006-07/08 TJH - Changed 'Symbol' to 'DynamicComponentRack' and
+#                   moved it into components.py
+#
+#
 #--------------------------------------------------------------------
 """ 
 This module provides components that are made into parts of an object. 
@@ -30,7 +34,7 @@ obj.addComponents(compo)
 
 # pub imports
 import pub
-from pubcore import Symbol
+
 from interfaces import *
 import defaults as d
 
@@ -38,18 +42,108 @@ import defaults as d
 from protocols import advise
 
 
+class DynamicComponentRack(object):
+    """
+    Base class of objects which use the dynamic components design.
+
+    Currently this is the base class for Noun only, which is why it's
+    in this file. It allows components to be defined dynamically,
+    """
+
+    advise(instancesProvide=[IDynamicComponentRack])
+
+    def __init__(self):
+        
+        self._components = [] # PRIVATE variable
+                              # a list of classes or instances
+                              # that should be added to the object when
+                              # initialized.
+
+        self.components = [] # a list that contains references 
+                             # to components after it has been initialized.
+                             # this is the variable that the outside uses.
+        
+        self.addComponents(self._components) # Add the components
+            
+
+    def addComponents(self,com):
+        """
+        method that adds components to the components list.
+        checks three possible ways it can be called, with either a list, a class
+        or an instance. Only when called with an instance does the component get
+        added to the list, in other cases it's converted into an instance and
+        resent to addComponents
+        """ 
+        if com:
+
+            if type(com) == types.ListType:
+                for each in com: self.addComponents(each)
+                
+            elif type(com) == types.ClassType: 
+                self.addComponents(com())
+
+            elif type(com) == types.InstanceType and isinstance(com, DynamicComponentRack): 
+                self.components.append(com)
+            
+            else: raise TypeError('Must be of type List, Class or Instance')
+
+        # there might well be more issues to deal with but this is a start.
+
+    def __iadd__(self, other):
+        """
+        Synonym to provide n += components syntax.
+        """
+        self.addComponents(other)
+
+    def delComponents(self,com):
+        """
+        Can be called in the same way as addComponents, with a list, class or
+        instance. However dealing with deleting componets is a bit harder.
+        When given a list the list is looped through and calls to delComponents
+        are made.
+        When given a class all classinstances are deleted.
+        When given an instance just that instance is removed.        
+        """
+        if com:
+
+            if type(com) == types.ListType: 
+                for each in com: self.delComponents(each)
+
+            elif type(com) == types.ClassType: 
+                delete = []
+                for item in self.components:
+                    if item.__class__ == com:
+                        delete.append(item)
+
+                #delete all occurences of the class
+                for item in delete:
+                    self.components.remove(item)
+                del delete        
+
+            elif type(com) == types.InstanceType: 
+                if com in self.components:
+                    self.components.remove(com)
+            
+            else: raise TypeError('Must be of type List, Class or Instance')
+
+        def __isub__(self, other):
+            """
+            Synonym to provide simpler n -= components
+            """
+            self.delComponents(other)
+
 #--------------------------------------------------------------------
-class Component(Symbol):
+class Component(DynamicComponentRack):
     """
     Component is the base class for all components it holds basic 
     functionality for dealing with composites. However there is 
-    currently nothing that differs between Symbol and Component.
+    currently nothing that differs between DynamicComponentRack and Component.
     """
 
     def __init__(self):
-        Symbol.__init__(self)
+        DynamicComponentRack.__init__(self)
     
-    advise(instancesProvide=[ISymbol])
+    advise(instancesProvide=[IDynamicComponentRack])
     
 #--------------------------------------------------------------------
 # Components -- 

@@ -48,6 +48,8 @@ import string
 #pub imports
 import types 
 import pub
+
+from concept import *
 #from pubcore import *
 
 #protcols imports
@@ -136,7 +138,10 @@ class Verb:
             executing them -- checking possibilities, etc.
     """
 
-    def __init__(self,pNames=''):
+    symbol = sym.VERB
+
+    def __init__(self, name, pNames='', doc=''):
+        self.symbol = Concept(name, domain=sym.VERB, doc=doc)
         self.synonyms = string.split(string.lower(pNames),',')
         self.duration = 1        # time (in minutes) to execute
         self.succ = 'You ' + self.synonyms[0] + '.'

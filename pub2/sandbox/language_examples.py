@@ -338,3 +338,44 @@ noun_vocabulary = {     'pen': ('pluma', n_F, "pluma para escrire"),   # A regul
 #
 
 
+#  SOME STUFF PULLED FROM semantics 2006-07/08
+
+#  Frankly I'm not sure what I was doing, but I think this approach has
+#  module dependency problems (I need semantics to load/test locale, but
+#  then this calls locale from semantics objects. Might have to rethink
+#  whether this is a wise design or not.
+
+
+class Grokable(object):
+    """
+    Can 'grok' or dereference a localized string value to its semantic equivalent.
+
+    Makes class act like a typecast or type-converter factory function.
+    """
+    _part_of_speech = None
+    def __call__(self, value):
+    	# We pass the 
+        return locale.grok(self._part_of_speech, value)   
+
+# The problem here is that I'm not sure if declension search scope should
+# really be determined by noun declension. It might be a good idea. But
+# it might be more predictable to always use the same scope or to let the
+# verb decide this.
+
+class Declension(Grokable):
+    """
+    Declension or "case" of nouns (i.e. their role in the sentence):
+    """        
+    scopes = {	sym.NOM: (sym.SUBJ_SELF, sym.CHARACTER, sym.EVERYBODY),
+                sym.ACC: (sym.THIS_ROOM, sym.INVENTORY, sym.ABSTRACTS, sym.CHARACTER, sym.EVERYBODY),
+		        sym.DAT: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY),
+		        sym.GEN: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY),
+		        sym.INS: (sym.INVENTORY, sym.THIS_ROOM, sym.UNIVERSE ),
+		        sym.PRP: (sym.ABSTRACTS, sym.THIS_ROOM, sym.INVENTORY)  }
+    _part_of_speech = sym.DECL
+
+Decl = Declension() 
+
+
+
+
