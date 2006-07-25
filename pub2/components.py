@@ -82,9 +82,13 @@ class DynamicComponentRack(object):
             elif type(com) == types.ClassType: 
                 self.addComponents(com())
 
-            elif type(com) == types.InstanceType and isinstance(com, DynamicComponentRack): 
+            elif type(com) == types.InstanceType \
+            and isinstance(com, DynamicComponentRack): 
                 self.components.append(com)
-            
+                com(self) # This registers the component with self.
+                self.addComponents(com.components) 
+                # Add everything that this component provides.
+                            
             else: raise TypeError('Must be of type List, Class or Instance')
 
         # there might well be more issues to deal with but this is a start.
@@ -123,6 +127,8 @@ class DynamicComponentRack(object):
             elif type(com) == types.InstanceType: 
                 if com in self.components:
                     self.components.remove(com)
+                    self.delComponents(com.components)
+                    # Remove everything provided by the component. 
             
             else: raise TypeError('Must be of type List, Class or Instance')
 
