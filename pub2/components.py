@@ -48,6 +48,8 @@ class DynamicComponentRack(object):
 
     Currently this is the base class for Noun only, which is why it's
     in this file. It allows components to be defined dynamically,
+
+    It is also the base class for Component.
     """
 
     advise(instancesProvide=[IDynamicComponentRack])
@@ -86,9 +88,9 @@ class DynamicComponentRack(object):
             and isinstance(com, DynamicComponentRack): 
                 self.components.append(com)
                 com(self) # This registers the component with self.
-                self.addComponents(com.components) 
+                 self.addComponents(com.components) 
                 # Add everything that this component provides.
-                            
+                
             else: raise TypeError('Must be of type List, Class or Instance')
 
         # there might well be more issues to deal with but this is a start.
@@ -110,7 +112,7 @@ class DynamicComponentRack(object):
         """
         if com:
 
-            if type(com) == types.ListType: 
+            if type(com) == list: 
                 for each in com: self.delComponents(each)
 
             elif type(com) == types.ClassType: 
@@ -138,6 +140,27 @@ class DynamicComponentRack(object):
             """
             self.delComponents(other)
 
+        def extend(self,meth,component):
+            """
+            Extends the Object to enable dispatching methods.
+            """
+
+            if type(meth) == list:
+                for x in meth:
+                    extend(meth)
+
+            if type(meth) == str:
+                if not meth in dir(self)
+                    exec """
+
+@dispatch.generic()
+def %(m)s(self,cmd): pass
+self.%(m)s = %(m)s
+""" % {'m':meth}
+                    
+            else : raise TypeError, "Must be of type List or String."
+                
+
 #--------------------------------------------------------------------
 class Component(DynamicComponentRack):
     """
@@ -146,11 +169,14 @@ class Component(DynamicComponentRack):
     currently nothing that differs between DynamicComponentRack and Component.
     """
 
+    advise(instancesProvide=[IDynamicComponentRack])
+
     def __init__(self):
         DynamicComponentRack.__init__(self)
-    
-    advise(instancesProvide=[IDynamicComponentRack])
-    
+        
+        check = "and self.components.__contains__(c)"
+
+
 #--------------------------------------------------------------------
 # Components -- 
 #--------------------------------------------------------------------
@@ -164,24 +190,32 @@ class Askable(Component):
 
     def __init__(self):
         Component.__init__(self)
-      
+        self.methods = ['ask']
+
         # Ask specifics 
-        self.answerDict = {} # a dictionary with queries and answers
-        
-    def ask(self, chain, cmd):
-        """takes a chain object and a command object"""
+        self.answers = {} # A dictionary with queries and answers
 
-        # All listen methods have to handle cmd being None
-        if cmd == None: return chain.next().ask(chain,cmd)
-
-        try: return chain.next().ask(chain,cmd)
-        except StopIteration:
-            try:
-                if self.answerDict[cmd.aboutobj]:
-                    cmd.tell(answer = self.answerDict[cmd.aboutobj])
-            except KeyError: raise pub.errors.ResponseError 
-            raise
+        self.__call__(self)
         
+    def __call__(self,parent):
+        """Register methods to parent."""
+        
+        parent.extend(self.methods, self)
+                
+        #---------------------------------------------------------------
+        # Ask methods
+
+        @parent.ask.when("c.answers.__contains__(cmd.aboutobj) %s" % self.check)
+        def ask(self, cmd, c=self):
+
+            cmd.tell(answer = c.answerDict[cmd.aboutobj])
+
+        @parent.ask.before("not c.answers.__contains__(cmd.aboutobj) %s"\
+        % self.check)
+        def ask_fail_no_answer(self,cmd,c=self):
+            
+            raise pub.errors.NoAnswer
+      
 #--------------------------------------------------------------------
 #
 class Carriable(Component):
@@ -196,151 +230,142 @@ class Carriable(Component):
     shouldn't be needed if one designs a good set defaults.
     """
 
-    advise(instancesProvide=[IGetL,IGiveL,IDropL,IPutL])
+    advise(instancesProvide=[IDropL,IGetL,IGiveL,IPutL])
     
     def __init__(self):
         Component.__init__(self)
-
-        # Carriable specifics
-        # I know of no sure cards.
-
-    def drop(self, chain, cmd):
-        """
-        Try to drop the object.
-        """
-
-        if cmd == None: return chain.next().drop(chain,cmd)
-
-        check(cmd.actor, IContainer, 'contains', [cmd.dirobj],d.NoContainer)
+        self.methods = ['drop','get','give','put']
         
-        #except ComponentError:
-        #    raise ContainerError, ("%(actor)s isn't a container."\
-        #    % cmd.__dict__)
+        # Carriable specifics.
         
-        # This should raise an error if the dirobj isn't in inventory. 
-        # InventoryError to be specific.
-        # The Verb should handle this, I'm writing it here so I won't
-        # forget it.
-        
-        try: return chain.next().drop(chain,cmd)
-        except StopIteration:
-            loc = set(cmd.dirobj,ILocatable)
-            if loc: loc.moveTo(cmd.actor.container)
+
+        self.__call__(self) # Register methods.
+
+    def __call__(self,parent):
+        """Register methods to parent."""
+
+        parent.extend(self.methods)
+
+        #-------------------------------------------------------------
+        # Drop methods
+
+        @parent.drop.when("cmd.actor.has(self) %s)" % self.check)
+        def drop(self,cmd,c=self):
+            """
+            Try to drop the object.
+            """
             
-            cmd.primary = pub.messages['TransitiveSuccess']
+            self.moveTo(cmd.actor.container)
 
-            
-            raise
-        
-    def get(self, chain, cmd):
-        """
-        Try to pick up an object.
-        """
+        @parent.drop.before("not cmd.actor.has(self) %s)" % self.check)
+        def drop_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory."""
 
-        if cmd == None: return chain.next().get(chain,cmd)
-        
-        # Should raise an error if the object can't be contained.
-        check(cmd.actor, IContainer, 'canContain', [cmd.dirobj],d.NoContainer)
-            
-        try: return chain.next().get(chain,cmd)
-        except StopIteration: 
-            # Perform the action we've been asked to.
-            obj_desc = set(cmd.dirobj,IDescribable)
-            obj_desc.initialDesc = ''
-            obj_desc.initialNote = ''
+            raise pub.errors.InventoryError
 
-            obj_loc = set(cmd.dirobj,ILocatable)
-            obj_loc.moveTo(cmd.actor)
 
-            cmd.primary = pub.messages['TransitiveSuccess']
-            
-            raise
+        #---------------------------------------------------------------
+        # Get methods
                 
-    def give(self, chain, cmd):
-        """
-        Try to give the object to target.
-        """
-        if cmd == None: return chain.next().give(chain,cmd) 
+        @parent.get.when("cmd.actor.has(self) %s" % self.check)
+        def get(self,cmd,c=self):
+            """Try to pick up an object."""
 
-        try: check(cmd.actor, IContainer, 'contains', [cmd.dirobj])
-        except ComponentError:
-            raise ContainerError, ("%(actor)s isn't a container."\
-            % cmd.__dict__)
+            self.moveTo(cmd.actor)    
+
+        
+        @parent.get.before("not cmd.actor.has(self) %s" % self.check)
+        def get_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory."""
+
+            raise pub.errors.InventoryError
+                
+
+        #---------------------------------------------------------------
+        # Give methods
+
+        @parent.give.when("cmd.actor.has(self) %s" % self.check)
+        def give(self,cmd,c=self):
+            """
+            Try to give the object to target.
+            """
             
-        
-        try: return chain.next().give(chain,cmd)
-        except StopIteration:
-            try: 
-                if invoke(cmd.indobj, IReceiveL, 'receive', cmd):
-                    pass # Continue as per usual
-            except: raise # Intercept errors.
-            #XXX: Here is needed the code for telling cmd that the command
-            # was succesfull.
-            raise
+            cmd.dirobj.receive(self)
 
-    def put(self, chain, cmd):
-        """
-        Put the object on a specific place.
-        """
+        @parents.give.before("not cmd.actor.has(self) %s" % self.check)
+        def give_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory."""
 
-        if cmd == None: return chain.next().put(chain,cmd)
-        
-        try: check(cmd.actor, IContainer, 'contains', [cmd.dirobj])
-        except ComponentError:
-            raise ContainerError, ("%(actor)s isn't a container."\
-            % cmd.__dict__)
-        
-        try: return chain.next().put(chain,cmd)
-        except StopIteration:
-            loc = set(cmd.dirobj, ILocatable)
-            loc.moveTo(indobj)
-            raise
+            raise pub.errors.InventoryError
 
-#--------------------------------------------------------------------          
+        #---------------------------------------------------------------
+        # Put methods
+
+        @parent.put.when("cmd.actor.has(self) %s" % self.check)
+        def put(self,cmd,c=self):
+            """Put the object on a specific place."""
+
+            self.moveTo(cmd.indirobj)
+
+        @parent.put.before("not cmd.actor.has(self) %s" % self.check
+        def put_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory"""
+
+            raise pub.errors.InventoryError
+
+#-----------------------------------------------------------------------        
 #
 class Drinkable(Component):
-    """
-    Handles drinking events
-    """
+    """Handles drinking events."""
 
     advise(instancesProvide=[IDrinkL])
     
     def __init_(self):
         Component.__init__(self)
+        self.methods = ['drink']
 
         # Drink Specifics
         self.amount = 1 # How much liquid the object consist of. 
                         # 1 is a very small amount a normal glass 
                         # consists of about 5
-
         
-    def drink(self, chain, cmd):
-        """
-        Method to drink the liquid.
-        """
+        self.__call__(self)
 
-        if cmd == None: pass            
-            
-        try: return chain.next().drink(chain, cmd) # See that nothing halts.
-        except StopIteration: # We've reached the end, so execute
-            if self.amount > 1:
-                self.amount -= 1
-            elif self.amount == 1:
+    def __call__(self,parent):
+        """Register methods to parent."""
+
+        parent.extend(self.methods)
+
+        #---------------------------------------------------------------
+        # Drink methods
+
+        @parent.drink.when("cmd.actor.has(self) %s" % self.check)
+        def drink(self, cmd, c=self):
+            """
+            Method to drink the liquid.
+            """
+            if c.amount > 1:
+                c.amount -= 1
+            elif c.amount == 1:
                 cmd.dirobj.MoveTo('TRASH')
+    
+        @parent.drink.before("not cmd.actor.has(self) %s" % self.check)
+        def drink_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory"""
 
-            raise # reraise Errors and StopIteration
-       
+            raise pub.errors.InventoryError
+
+           
 #--------------------------------------------------------------------
 #
 class Edible(Component):
-    """
-    Handles eating events
-    """
+    """Handles eating events."""
     
     advise(instancesProvide=[IEatL])
 
     def __init__(self):
         Component.__init__(self)
+        self.methods = ['eat']
 
         # Eat specifics
 
@@ -348,237 +373,428 @@ class Edible(Component):
                         # This might be an idea to change in time
                         # but it's not important now.
 
-    def eat(self, chain, cmd):
-        """
-        Try to eat something, if not stopped by anything will result in
-        either part of the object being removed or the entire object being
-        deleted.
-        """
+        self.__call__(self)
 
-        if cmd == None: return chain.next().eat(chain,cmd)
+    def __call__(self,parent):
+        """Register methods to parent."""
 
-        try: return chain.next().eat(chain, cmd)
-        except StopIteration: 
-            if self.amount > 1:
-                self.amount -= 1
-            elif self.amount == 1:
+        parent.extend(self.methods)
+
+        #---------------------------------------------------------------
+        # Eat methods
+
+        @parent.eat.when("cmd.actor.has(self) %s" % self.check)
+        def eat(self, cmd, c=self):
+            """
+            Try to eat something, if not stopped by anything will result in
+            either part of the object being removed or the entire object being
+            deleted.
+            """
+
+            if c.amount > 1:
+                c.amount -= 1
+            elif c.amount == 1:
                 cmd.dirobj.moveTo('TRASH')
 
-            raise # reraise Errors and StopIteration
-                    
+        @parent.eat.before("not cmd.actor.has(self) %s" % self.check)
+        def eat_fail_inventory(self,cmd,c=self):
+            """Fail because not in inventory"""
+
+            raise pub.errors.InventoryError
+
 
 #--------------------------------------------------------------------
 #
 class Visible(Component):
-    """
-    """
-    advise(instancesProvide=[ILookL, IExamineL])
+    """"""
+    advise(instancesProvide=[IExamineL, ILookL])
 
     def __init__(self):
         Component.__init__(self)
+        self.methods = ['examine','look']
 
         # Visible specifics
 
         salient = True # Is the item visible
         invisible = 0
 
-    def look(self, chain, cmd):
-        """
-        """
-        try: return chain.next().look(chain,cmd)
-        except StopIteration: 
-            #XXX: Code for looking at the object including checking it's
-            # visibility and the like.
-            # This should really be redesigned so that it doesn't use 
-            # introspection.
-            if self.salient == True:
-                if cmd.actor.canSee(cmd.dirobj):
-                    desc = set(cmd.dirobj, IDescribable).desc
-                    cmd.tell(desc)
-                else: raise VisibilityError ("Not visible.")
-            raise # Reraise
+        self.__call__(self)
 
-    def examine(self,chain,cmd):
-        """
-        """
-        try: return chain.next().look(chain,cmd)
-        except StopIteration:
-            if self.salient == True:
-                if cmd.actor.canSee(cmd.dirobj):
-                    desc = set(cmd.dirobj, IDescribable).xdesc
-                    cmd.tell(desc) 
-                else: raise VisibilityError ("Not visible.")
-            raise # Reraise
-    
-#--------------------------------------------------------------------
+    def __call__(self, parent):
+        """Register methods."""
+
+        parent.extend(self.methods)
+
+        #---------------------------------------------------------------
+        # Examine methods
+
+        @parent.examine.when("visible(c) %s" % self.check)
+        def examine(self,cmd,c=self):
+        """Look closer at the object."""
+        
+
+        #-----------------------------------------------------------------------
+        # Look methods
+
+        @parent.examine.when("visible(c) %s" % self.check)
+        def look(self,cmd,c=self):
+            """Look at the object."""
+
+        # Not having determined how visibility and the like works I don't know
+        # how this should be coded yet.
+
+        
+#-----------------------------------------------------------------------
 #
 class Mobile(Component):
-    """
-    
-    """
-    advise(instancesProvide=[])
+    """Makes the object mobile."""
+    advise(instancesProvide=[IFollowL])
     
     def __init__(self):
         Component.__init__(self)
+        self.methods = ['follow','move']
 
         # Mobile specifics
+        self.followers = []
 
+        self.__call__(self)
 
+        def __call__(self,parent):
+            """Register methods."""
 
+            parent.extend(self.methods)
+
+            @parent.follow.when("cmd.actor.can('move')")
+            def follow(self,cmd,c=self):
+                """Follow this entity."""
+
+                c.followers.append(cmd.actor)
+
+            @parent.move.when("")
+            def move(self,cmd,c=self):
+                """Move somewhere."""
+                
+                self.moveTo(cmd.dirobj)
+
+                for follower in c.followers:
+                    follower.moveTo(cmd.dirobj)
+
+                
+#-----------------------------------------------------------------------
 class Enterable(Component):
-    """
-    
-    """
+    """Make the object enterable."""
     advise(instancesProvide=[IGoL])
 
     def __init__(self):
-        """
-        """
+        Component.__init__(self)
+
+        self.target = None
+
+        self.__call__(self)
     
-    def go(self, chain, cmd):
-        """
-        """
+    def __call__(self,parent):
+        """Register methods."""
+        
+        parent.extend(self.methods)
+
+        @parent.go.when("self.target not is None %s" % self.check)
+        def go(self,cmd,c=self):
+            """Enter the object."""
+
+            cmd.actor.moveTo(self.target)
+        
     
+        @parent.go.before("self.target is None %s" % self.check)
+        def go_fail_no_target(self,cmd,c=self):
+            """Fail because no target"""
+
+            raise pub.errors.ObjError, "This door leads nowhere."
+
 #--------------------------------------------------------------------
 #
 class Lockable(Component):
-    """
-    """
+    """Make a lock on the object."""
 
     advise(instancesProvide=[ILockL,IUnlockL])
 
     def __init__(self):
         Component.__init__(self)
+        self.methods = ['lock','unlock','open','close']
 
         #Lockable specifics
         self.isLocked = False
         self.keys = []
 
-    def lock(self, chain, cmd):
-        """
-        Method to change isLocked to True if possible.
-        """
-        #XXX: One has to check if the lock can be locked, ie if the 
-        # door is closed or whatever. Or maybe disregard the door
-        # totaly? Just use this class as a base and build on it in other
-        # components or create new special components that work on doors or the
-        # like.
-    
-    def unlock(self, chain, cmd):
-        """
-        Method to change isLocked to False if possible.
-        """
+        self.__call__(self)
 
+    def __call__(self,parent):
+        """Register methods to parent"""
+
+        parent.extend(self.methdods)
+
+        @parent.lock.when("c.isLocked = False %s" % self.check)
+        def lock(self,cmd,c=self):
+            """Method to change isLocked to True if possible."""
+
+            for key in self.keys:
+                if cmd.actor.has(key):
+                    self.isLocked = True
+
+        @parent.lock.before("c.isLocked = True %s" % self.check)
+        def lock_fail_locked(self,cmd,c=self):
+            """Fail because already locked."""
+
+            raise pub.errors.LockError
+        
+        @parent.unlock.when("c.isLocked = True %s" % self.check)
+        def unlock(self,cmd,c=self):
+            """Method to change isLocked to False if possible."""
+
+            for key in self.keys:
+                if cmd.actor.has(key):
+                    self.isLocked = False
+
+        @parent.unlock.before("c.isLocked = False %s" % self.check)
+        def unlock_fail_unlocked(self,cmd,c=self):
+            """Fail because not locked."""
+
+            raise pub.errorsLockError
+
+        @parent.open.before("c.isLocked = True %s" % self.check)
+        def open_fail_locked(self,cmd,c=self):
+            """The lock is locked."""
+
+            raise pub.errors.LockError
         
 #--------------------------------------------------------------------
 #
 class Openable(Component):
-    """
-    """
+    """Give the object the ability to be opened."""
 
     advise(instancesProvide=[ICloseL,IOpenL])
 
     def __init__(self):
-       Component.__init__(self) 
+        Component.__init__(self) 
+        self.methods = ['close','open']
 
-       #Openable specifics
-       self.isOpen = True
+        #Openable specifics
+        self.isOpen = True
+
+        self.__call__(self)
     
-    def close(self, chain, cmd):
-        """
-        Tries to close itself.
-        """
-       
-        if cmd == None: # We have been told to close regardless of state
-            self.isOpen = False
-            return chain.next().close(chain, cmd)
+    
+    def __call__(self,parent):
+        """Register methods to parent."""
 
-        if not self.isOpen: raise pub.errors.StateError
+        parent.extend(self.methods)
 
-        try: return chain.next().close(chain, cmd)
-        except StopIteration:
-            self.isOpen = False
+        @parent.close.when("c.isOpen == True %s" % self.check)
+        def close(self,cmd,c=self):
+            """Tries to close itself."""
+           
+            c.isOpen = False
+
+        @parent.close.before("c.isOpen == False %s" % self.check)
+        def close_fail_closed(self,cmd,c=self):
+            """Already closed"""
+
+            raise pub.errors.StateError
+        
+        @parent.open.when("c.isOpen == False %s" % self.check)
+        def open(self,cmd,c=self):
+            """Tries to open itself."""
+
+            c.isOpen = True
+
+        @parent.open.before("c.isOpen == True %s" % self.check)
+        def open_fail_open(self,cmd,c=self):
+            """Already opened"""
             
-            raise # reraise StopIteration
-
-    def open(self, chain, cmd):
-        """
-        Tries to open itself.
-        """
-
-        if cmd == None: #Open regardless of state or locks.
-            self.isOpen = True 
-            return chain.next().open(chain,cmd)
-
-        if self.isOpen: raise pub.errors.StateError
-       
-        try: return chain.next().open(chain, cmd)
-        except StopIteration:
-            self.isOpen = True
-            
-            raise # reraise StopIteration
-            
+            raise pub.errors.StateError
 
 #--------------------------------------------------------------------
 #
 class Pullable(Component):
-    """
-    
-    """
+    """"""
+
+    advise(InstancesProvide = [IPullL]
+
+    def __init__(self):
+        """"""
+        Component.__init__(self)
+        self.methods = ['pull']
+
+        self.pulled = False
+
+        self.__call__(self)
+
+    def __call__(self,parent):
+        """Register methods."""
+
+        parent.extend(self.methods)
+
+        @parent.pull.when("True %s" %s self.check)
+        def pull(self,cmd,c=self):
+            """Pull at this object. It is normaly a lever."""
+
+
+            c.pulled = True
     
 #--------------------------------------------------------------------
 #
 class Pushable(Component):
-    """
+    """"""
+     
+    advise(InstancesProvide = [IPushL]
+
+    def __init__(self):
+        """"""
+        Component.__init__(self)
+
+        self.methods = ['pull']
+        self.pushed = False
+
+        self.__call__(self)
+
+
+    def __call__(self,parent):
+        
+        parent.extend(self.methods)
     
-    """
-    
-    
+        @parent.push.when("True %s" %s self.check)
+        def push(self,cmd,c=self):
+            """"""
+            
+            self.pushed = True
+            
+
 #--------------------------------------------------------------------
 #
 class Tellable(Component):
-    """
-    
-    """
+    """"""
+
+    advise(InstancesProvide = [ITellL]
+
+    def __init__(self):
+        """"""
+        Component.__init__(self)
+
+        self.methods = ['tell']
+
+        self.__call__(self)
+
+    def __call__(self,parent):
+        
+        parent.extend(self.methods)
+        
+        @parent.tell.when("True %s" %s self.check)
+        def tell(self,cmd,c=self):
+            """
+            This would likely be seen as a metaclass of
+            sorts. Creating a general Tellable class would most likely
+            just send information from the tell to a parser. In the case
+            of an agent this parser could make it possible to react on 
+            actions.
+            """
+            continue
 
 
-#--------------------------------------------------------------------
-#
-class Removeable(Component):
-    """
-    
-    """
-    
 #--------------------------------------------------------------------
 #
 class Turnable(Component):
-    """
+    """"""
     
-    """
-    
+    advise(InstancesProvide = [IPullL]
+
+    def __init__(self):
+        """"""
+        Component.__init__(self)
+
+        self.methods = ['turn']
+        self.turnaction = None
+
+    def __call__(self,parent):
+        
+        parent.extend(self.methods)
+
+        @parent.turn.when("True %s" % self.check)
+        def turn(self,cmd,c=self);
+            """Turn something. What happens depends on turnaction."""
+            if self.turnaction != None:
+                exec turnaction
+            
+
 #--------------------------------------------------------------------
 #
 class Wearable(Component):
-    """
-    
-    """
+    """"""
 
+    advice(instancesProvide = [IWearL,IRemoveL]
+
+    def __init__(self):
+        """"""
+        Component.__init__(self)
+        self.methods = ['wear', 'remove']
+
+        self.isWorn = False
+        self.wornBy = None
+
+        self.__call__(self)
+
+        
+    def __call__(self,parent):
+        """Register methods to parent."""
+
+        parent.extend(self)
+
+        @parent.wear.when("cmd.actor.has(self) %s" % self.check)
+        def wear(self,cmd,c=self):
+            """"""
+            
+            c.isWorn = True
+            c.wornBy = cmd.actor
+
+        @parent.wear.before("not cmd.actor.has(self) %s" % self.check)
+        def wear_fail_inventory(self,cmd,c=self):
+            """"""
+
+            raise pub.errors.InventoryError
+            
+
+        @parent.remove.when("c.wornBy == cmd.actor %s" % self.check)
+        def remove(self,cmd,c=self):
+            """"""
+
+            c.isWorn = False
+            c.wornBy = None
+
+        @parent.remove.when("c.wornBy not is cmd.actor %s" % self.check)
+        def remove_fail_not_wearing(self,cmd,c=self):
+            """"""
+
+            raise pub.errors.InventoryError
+
+
+
+        
 ######################################################################
 #
 #
 class TestComponent(Component):
-    """
-    A TestComopnent. Used to check adation and stuff.
-    """
+    """A TestComopnent. Used to check adation and stuff."""
 
     advise(instancesProvide=[ITest])
     def __init__(self):
         Component.__init__(self)    
 
-    def test(self, chain, cmd):
-        """
-        funtion that does nothing but returns
-        most likely this will raise a StopIteration error.
-        """
+        self.methods = ['test']
 
-        return chain.next().test(chain, cmd)
+        self(self)
+
+    def __call__(self,parent):
+
+        parent.extentd(self.methods)
+
+        @parent.test.when("cmd is 'test'")
+        def test(self,cmd,c=self):
+            print 'Testing finished.'
