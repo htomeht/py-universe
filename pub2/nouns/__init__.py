@@ -8,7 +8,7 @@ import sys, os
 
 plugin_path = os.path.abspath(__path__[0])
 for module_file in filter(
-	lambda n: n[-3:]=='.py' and n not in ('__init__.py',), 
+	lambda n: n[-3:]=='.py' and n not in ('__init__.py'), 
 	os.listdir(plugin_path)):
     #print "Loading %s" % module_file
     f, e = os.path.splitext(module_file)

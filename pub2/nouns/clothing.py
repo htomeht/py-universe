@@ -8,6 +8,8 @@ from pub.component import Component
 #---------------------------------------------------------------------
 # Wearing/Removing Interface
 #
+
+# Interfaces
 class IWearL(Interface):
     """
     Provides an interface for wearing.
@@ -29,27 +31,29 @@ class IRemoveL(Interface):
         """Method that listens fo remove events"""
 
 
+# Components
 class Wearable(Component):
-    """"""
+    """Handles wearing events."""
 
     advice(instancesProvide = [IWearL,IRemoveL]
 
     def __init__(self):
-        """"""
         Component.__init__(self)
         self.methods = ['wear', 'remove']
 
+        # Wearable specifics
         self.isWorn = False
         self.wornBy = None
 
         self.__call__(self)
 
-        
     def __call__(self,parent):
         """Register methods to parent."""
 
         parent.extend(self)
 
+        #-------------------------------------------------------------
+        # Wearing methods
         @parent.wear.when("cmd.actor.has(self) %s" % self.check)
         def wear(self,cmd,c=self):
             """"""
@@ -62,8 +66,12 @@ class Wearable(Component):
             """"""
 
             raise pub.errors.InventoryError
-            
 
+        #
+        #-------------------------------------------------------------
+            
+        #-------------------------------------------------------------
+        # Removing methods
         @parent.remove.when("c.wornBy == cmd.actor %s" % self.check)
         def remove(self,cmd,c=self):
             """"""
@@ -77,6 +85,9 @@ class Wearable(Component):
 
             raise pub.errors.InventoryError
 
-#
+        #
+        #-------------------------------------------------------------
+
+# End Wering/Removing Interface
 #---------------------------------------------------------------------
 

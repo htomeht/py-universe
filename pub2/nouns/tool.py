@@ -2,4 +2,5 @@
 
 from protocols import Interface, advise
 
-import pub.error
+import pub.errors
+from pub.component import Component

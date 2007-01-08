@@ -2,20 +2,24 @@
 
 from protocols import Interface, advise
 
-import pub.error
+import pub.errors
+from pub.component import Component
 
 #---------------------------------------------------------------------
 # Asking  Interface 
 # 
+
+# Interfaces
 class IAskL(Interface):
     """
-    provides an interface to asking the components owner.
+    Provides an interface to asking the components owner.
     """
 
     def ask(chain,cmd):
         """Method to ask the being about a given subject."""
 
 
+# Components
 class Askable(Component):
     """
     A simple ask component that provides IAskL. If you want an object to
@@ -61,6 +65,8 @@ class Askable(Component):
 #---------------------------------------------------------------------
 # Receiving Interface
 #
+
+# Interfaces
 class IReceiveL(Interface):
     """
     Provides receive method.
@@ -71,18 +77,21 @@ class IReceiveL(Interface):
     def receive(chain,cmd):
         """Method that listens for receive events"""
 
-#
+# End Receiving Interface
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
 # Talking Interface
 #
+
+# Interfaces
 class ITalkL(Interface):
     """ Provides the talk listener interface."""
 
     def talk(chain,cmd):
         """Method listening for talk events."""
 
+# Components
 class Talkable(Component):
     """
     Used to provide a talk interface. May be used to simplify 
@@ -110,6 +119,7 @@ class Talkable(Component):
 
         @parent.talk.when("c.answers %s" % self.check)
         def talk(self, cmd, c=self):
+            """Respond to queries basicly"""
 
             cmd.tell(answer = c.answer[0]
             if c.answer.length > 1:
@@ -118,19 +128,20 @@ class Talkable(Component):
         @parent.talk.before("not c.answers %s"\
         % self.check)
         def talk_fail_no_answer(self,cmd,c=self):
-            
+            """Fail with NoAnswer -- The topic is not known to the agent"""
             raise pub.errors.NoAnswer
 
         #
         #-------------------------------------------------------------
 
-
-#
+# End Talking Interface
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
 # Telling Interface
 #
+
+# Interfaces
 class ITellL(Interface):
     """
     Provides tell method.
@@ -142,8 +153,9 @@ class ITellL(Interface):
         to let a player know what has happened after a command was executed.
         """
 
+# Components
 class Tellable(Component):
-    """"""
+    """Component for handling tells."""
 
     advise(InstancesProvide = [ITellL]
 
@@ -170,13 +182,14 @@ class Tellable(Component):
             just send information from the tell to a parser. In the case
             of an agent this parser could make it possible to react on 
             actions.
+            A room can have this trait and be used to send the information to
+            everyon in a room.
             """
             continue
 
         #
         #-------------------------------------------------------------
 
-
-#
+# End Telling Interface
 #---------------------------------------------------------------------
 

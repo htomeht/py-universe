@@ -2,11 +2,14 @@
 
 from protocols import Interface, advise
 
-import pub.error
+import pub.errors
+from pub.component import Component
 
 #---------------------------------------------------------------------
 # Drinking Interface
 #
+
+# Interfaces
 class IDrinkL(Interface):
     """
     Used for things you could drink.
@@ -16,6 +19,7 @@ class IDrinkL(Interface):
         """Method called when the object is told of a drinking event"""
 
 
+# Components
 class Drinkable(Component):
     """Handles drinking events."""
 
@@ -56,12 +60,17 @@ class Drinkable(Component):
 
             raise pub.errors.InventoryError
 
+        #
+        #-------------------------------------------------------------
+
 # End Drinking Interface
 #---------------------------------------------------------------------
 
 #---------------------------------------------------------------------
 # Eating Interface
 #
+
+# Interfaces
 class IEatL(Interface):
     """
     Used for things you could eat.
@@ -71,6 +80,7 @@ class IEatL(Interface):
         """Method called when something is eaten"""
 
 
+# Components
 class Edible(Component):
     """Handles eating events."""
     
@@ -96,7 +106,7 @@ class Edible(Component):
         #---------------------------------------------------------------
         # Eat methods
 
-        @parent.eat.when("cmd.actor.has(self) %s" % self.check)
+        @parent.eat.when("True) %s" % self.check)
         def eat(self, cmd, c=self):
             """
             Try to eat something, if not stopped by anything will result in
@@ -115,5 +125,8 @@ class Edible(Component):
 
             raise pub.errors.InventoryError
 
-#
+        #
+        #-------------------------------------------------------------
+
+# End Eating Interface
 #---------------------------------------------------------------------
