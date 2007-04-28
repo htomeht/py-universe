@@ -34,11 +34,11 @@ or "declension" particles, where we want to clarify that there are no additional
 possibilities. Generally you can expect program code using Enums to hard-code the
 values, while Vocabularies should be extensible.  Enum is immutable.
 
-If you mutate an object being used as a hash, you viol
+If you mutate an object being used as a hash, you violate assumptions of the module.
 
 Some example uses:
 
->>> from symbol import *
+>>> from concepts import *
 >>> sym.clear()
 >>> Symbol('PoS', doc="Part of Speech")
 <!: PoS = Part of Speech>
@@ -259,7 +259,8 @@ class Symbol(object):
         return not self.__eq__(other)
 
     def __cmp__(self, other):
-        raise TypeError, "Symbols are unordered"
+        return cmp(self.name, other.name)
+        #raise TypeError, "Symbols are unordered"
 
     def __str__(self):
         return self.name
@@ -620,8 +621,8 @@ class SymbolDocumentor(object):
 """
     def html(self):
         domain_set = {}
-        for name in sym.lookup():
-            domain_set[getattr(sym, name).domains()] = 1
+        for symbol in sym.lookup():
+            domain_set[symbol.domains()] = 1
         domain_list = domain_set.keys()
             
         domain_list.sort()  # I think the default sort does what we want (?)
@@ -631,13 +632,12 @@ class SymbolDocumentor(object):
             fmt = {}
 
             if len(domain_path)==0:
-                names = sym.lookup(domain='!')
+                symbols = sym.lookup(domain='!')
             else:
                 domain = getattr(sym, domain_path[-1])
-                names = sym.lookup(domain=domain)
+                symbols = sym.lookup(domain=domain)
 
-            names.sort()
-            symbols = [getattr(sym, n) for n in names]
+            #symbols = [getattr(sym, n) for n in symbols]
             
             fmt['symbol_table'] = ''.join([self.html_symbol % {'name':c.name, 'doc':c.doc}
                                             for c in symbols])

@@ -45,7 +45,7 @@ from symbol import *
 
 from components import DynamicComponentRack
 
-import locale
+#import locale
 import types
 
 class Noun(DynamicComponentRack):

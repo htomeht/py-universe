@@ -49,8 +49,7 @@ import string
 import types 
 import pub
 
-from concept import *
-#from pubcore import *
+from symbol import *
 
 #protcols imports
 

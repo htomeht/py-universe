@@ -36,7 +36,7 @@ obj.addComponents(compo)
 import pub
 
 from interfaces import *
-import defaults as d
+#import defaults as d
 
 # protocols imports
 from protocols import advise

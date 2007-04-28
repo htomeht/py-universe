@@ -548,30 +548,39 @@ no formal conceptual analog to these words.
 <p>
 So, to summarize, the semantic vocabulary is derived as follows:
 </p>
+
+<!-- table updated 2006-9/12 to represent use of Symbol objects -->
 <table align="center" width="95%" cellpadding="4" cellspacing="2" border="1">
 <tr valign="top">
-<td>Verbs</td><td>Verbs are defined by <b><tt>Verb</tt></b> classes.</td>
+<td>Verbs</td><td>Verbs are defined by <b><tt>Verb</tt></b> classes. In utterances, they
+are represented by universal "Symbols", which can be <i>localized</i> to "words".</td>
 <td rowspan="2">
 Verb Libraries
 <p class="small">
-Found in the verbs/ extensions directory within the PUB sources,
+Found in the <tt>verbs/</tt> extensions directory within the PUB sources,
 or in the game's instance directory.
 </p>
 </td>
 </tr>
 
 <tr valign="top">
-<td>Adverb Domains</td><td>Adverbs are defined by <b><tt>AdverbDomain</tt></b> classes, which
-are <i>subscribed</i> to by the <tt>Verb</tt> classes.  Internally, individual
-adverbs are represented by an <tt>AdverbDomain</tt> and a floating point number.</td>
+<td>Adverb Domains</td><td>Adverbs are defined by <b><tt>AdverbDomain</tt></b> instances, which
+are identified by the <tt>Verb</tt> classes. Internally, individual adverbs are
+represented by a <tt>VagueSymbol</tt> with a symbol domain identifying the symbol name
+for the <tt>AdverbDomain</tt>.  A <tt>VagueSymbol</tt> combines a symbol/domain interface
+with a <tt>Vague</tt> number interface, which represents a value which always remains
+in the interval [-1.0,+1.0], with a saturating addition operator defined to allow
+combintions.</td>
 </tr>
 
 <tr valign="top">
-<td>Nouns</td><td>Nouns are defined by <b><tt>Noun</tt></b> classes.</td>
+<td>Nouns</td><td>Nouns are defined by <b><tt>Noun</tt></b> instances.  All Noun
+behavior is determined by <b>dynamic components</b> which can be added or
+removed during gameplay.</td>
 <td rowspan="3">
 Noun Libraries
 <p class="small">
-Found in the nouns/ extensions directory within the PUB sources,
+Found in the <tt>nouns/</tt> extensions directory within the PUB sources,
 or in the game's instance directory.
 </p>
 </td>
@@ -579,10 +588,13 @@ or in the game's instance directory.
 <tr valign="top">
 <td>Adjectives</td>
 <td>
-Adjectives are defined by <b><tt>Noun</tt></b> object initializations,
-as labeled parameters.  They are essentially just strings to be replaced
-at the localization phase, and are included as part of the "full name"
-of a <b><tt>Noun</tt></b> object.
+Adjectives are represented by modified <tt>Symbol</tt> objects which
+identify the sense by which the adjective is detectable, represented
+by the special symbols: <tt>VISIBLE</tt> ('V'), <tt>AUDIBLE</tt> ('A'),
+<tt>FEELABLE</tt> ('F'), <tt>SMELLABLE</tt> ('S'), <tt>TASTABLE</tt> ('T'),
+with a single-letter abbreviation, as indicated, which is used in the
+XML vocabulary files. The adjective symbols are universal, with translations
+in the locale vocabulary files.
 </td>
 </tr>
 
@@ -592,7 +604,8 @@ of a <b><tt>Noun</tt></b> object.
 Prepositions are defined by a special <b><tt>Topology</tt></b> mix-in class
 which provides the necessary behaviors for noun objects.  Nouns inherit
 from appropriate topology classes, such as <tt>SimpleContainer</tt> or
-<tt>BrickModel</tt> (or both).
+<tt>BrickModel</tt> (or both). In utterances, they are represented by
+<tt>Symbol</tt> objects.
 </td>
 </tr>
 
@@ -606,20 +619,11 @@ Adverbs<br/>
 </td>
 <td colspan="2">
 These objects are all implicit in the internal semantic model, and are converted back
-and forth from words (or inflections of words) as part of the localization and
-de-localization processes.
+and forth from words (or inflections of words) as part of the localized "telling"
+and "grokking" processes.
 </td>
 </tr>
 </table>
-
-<p>
-The SemanticVocabulary object will have to scan all of these sources, and
-collect lists of labels to be translated.  Collecting the adjectives from
-the nouns, should allow us to give some context for translators to work
-from.  We'll need to be able to automatically create an XML output file to
-be used for this step. [And I have not yet worked out how best to do that! TJH 2006-2/13]
-</p>
-
 
 </body>
 </html>

@@ -124,18 +124,18 @@ class INounPhrase(Interface):
     """
     dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'partial', 'labels', 'object'""")
 
-    Noun = Attribute("""The Noun (string, Symbol, or PUB Noun object) REQUIRED.""")
-    Adjs = Attribute("""Sequence of adjectives (strings or Symbols) (may be empty sequence).""")
-    Plur = Attribute("""Grammatical number of noun (string, int, Symbol, or None).""")
-    Artl = Attribute("""Definite-ness of noun (article used) as (string, Symbol, or None).""")
-    Decl = Attribute("""Declension of noun (its grammatical role in the sentence), (string, Symbol, or None).""")
-    Prep = Attribute(
+    noun = Attribute("""The Noun (string, Symbol, or PUB Noun object) REQUIRED.""")
+    adjs = Attribute("""Sequence of adjectives (strings or Symbols) (may be empty sequence).""")
+    artl = Attribute("""Definite-ness of noun (article used) as (string, Symbol, or None).""")
+    decl = Attribute("""Declension of noun (its grammatical role in the sentence), (string, Symbol, or None).""")
+    prep = Attribute(
         """
         Topological preposition indicating spatial relationship of action to noun.
 
         Defined only if Decl==sym.PRP
         Otherwise None
         """)  
+    number = Attribute("""Grammatical number of noun (string, int, Symbol, or None).""")
     
     def __repr__():
         """
@@ -163,25 +163,23 @@ class IVerbPhrase(Interface):
     """
     dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'mixed', 'labels', 'object'""")
 
-    Verb = Attribute("""The basic verb. (strings, concept, or PUB verb object) (REQUIRED).""")
-    Advs = Attribute("""Sequence of adverbs. (strings or VagueConcepts).""")
-    Tense  = Attribute("""Tense, Mood, Aspect of the verb. (None or Symbol or collection of Symbols).""")
-    Negative = Attribute("""Negation of sense of verb. Boolean.""")
-    Person = Attribute("""Person of verb. (possibly empty mapping of Declension Symbols to Person Symbols).""")
-    Number = Attribute("""Number of person of verb. (possibly empty mapping of Declension Symbols to Number Symbols).""")
+    verb    = Attribute("""The basic verb. (strings, concept, or PUB verb object) (REQUIRED).""")
+    advs    = Attribute("""Sequence of adverbs. (strings or VagueConcepts).""")
+    mood    = Attribute("""Tense, Mood, Aspect of the verb. (None or Symbol or collection of Symbols).""")
+    negative= Attribute("""Is verb phrase negated? Boolean.""")
+    question= Attribute("""Is verb phrase a question? Boolean.""")
 
-    # Most commonly Person and Number determine verb conjugation.
-    #   In Romance languages, they will take forms like {sym.NOM: sym.FIRST}, {sym.NOM: sym.SING}
-    #   Some language, e.g. Swahili, will conjugate for more than one noun, e.g.:
-    #       {sym.NOM: sym.FIRST, sym.ACC: sym.SECOND}, ...
-    #
+    advb_remainders = Attribute("""Left-over adverbial values (mapping of adverbial domains to VagueConcepts). the error in adverbial expression.""")
 
-    def set(verb, advs, tense, negative, person, number):
+    agreements = Attribute("""Information about noun-verb agreements, such as conjugation, may be used during parsing, but ignored in other applications""")
+
+    def set(verb, advs, mood):
         """
         Set a verb's values directly.
         
         'verb' the basic verb
         'advs' sequence of adverbs used.
+        'mood' sequence of VERB_MOOD aspects
         """
 
     def __repr__(self):
@@ -196,19 +194,19 @@ class IClause(Interface):
     """
     dereferenced = Attribute("""How de-referenced is this phrase?: 'text', 'mixed', 'labels', 'object'""")
     
-    Verb = Attribute("""The verb phrase (VerbPhrase).""")
+    verb_phrase = Attribute("""The verb phrase (VerbPhrase).""")
     
-    Nouns = Attribute("""All noun phrases in clause (sequence of NounPhrases).""")
+    noun_phrases = Attribute("""All noun phrases in clause (sequence of NounPhrases).""")
 
-    Negative = Attribute("""I.e. NOT or negative form of statement. Boolean.""")
+    negative = Attribute("""I.e. NOT or negative form of statement. Boolean.""")
     
     # Convenience references into Nouns:
-    Nom = Attribute("""Nominative (= Subject) noun phrase.%s.""" % NP_types)
-    Acc = Attribute("""Accusative (= Direct Object) noun phrase.%s.""" % NP_types)
-    Dat = Attribute("""Dative (= 'to' Object) noun phrase.%s.""" % NP_types)
-    Gem = Attribute("""Genitive (= 'from' Object) noun phrase.%s.""" % NP_types)
-    Ins = Attribute("""Instrumental (= 'with'/'using' Object) I noun phrase.%s.""" % NP_types)
-    Prp = Attribute("""Prepositional (= Object with spec'd preposition).%s.""" % NP_types)
+    nom = Attribute("""Nominative (= Subject) noun phrase.%s.""" % NP_types)
+    acc = Attribute("""Accusative (= Direct Object) noun phrase.%s.""" % NP_types)
+    dat = Attribute("""Dative (= 'to' Object) noun phrase.%s.""" % NP_types)
+    gen = Attribute("""Genitive (= 'from' Object) noun phrase.%s.""" % NP_types)
+    ins = Attribute("""Instrumental (= 'with'/'using' Object) I noun phrase.%s.""" % NP_types)
+    prp = Attribute("""Prepositional (= Object with spec'd preposition).%s.""" % NP_types)
 
     def __repr__(self):
         """

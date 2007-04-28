@@ -6,99 +6,47 @@ Tests for locales.
 
 Provides test cases for tell and parse consistency tests.
 """
-#-----------------------------------------
-# GPLv2+
-#-----------------------------------------
+
+#--------------------------------------------------------------------
+#    This library is free software; you can redistribute it and/or
+#    modify it under the terms of the GNU Lesser General Public
+#    License as published by the Free Software Foundation; either
+#    version 2.1 of the License, or (at your option) any later version.
+#
+#    This library is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#    Lesser General Public License for more details.
+#
+#    You should have received a copy of the GNU Lesser General Public
+#    License along with this library; if not, write to the Free Software
+#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#--------------------------------------------------------------------
+import sys, traceback
+
 import protocols
 import textwrap
 
 import l10n
 
-from concept import *
+from symbol import *
+from vague import SparseVector
 from interfaces import *
 
+import pyparsing
 
-# Dummy fixtures for testing:
+from semantics import *
 
-class TestNP(object):
-    """
-    Minimal test-rig version of NounPhrase object.
-
-    Here we have just enough to test localized 'tell' functionality.
-    We're leaving out the dereferencing mechanism.
-    """
-    protocols.advise(instancesProvide=[INounPhrase])
-    dereferenced = 'labels'
-    def __init__(self, *args, **kw):
-        self.set(*args, **kw)
-    
-    def set(self, noun, adjs=(), decl=None, prep=None, artl=None, plur=None):
-        self.Noun = noun
-        self.Adjs = adjs
-        self.Decl = decl
-        self.Prep = prep
-        self.Artl = artl
-        self.Plur = plur
-        if self.Decl != sym.PRP:
-            self.Prep = None
-            
-    def __repr__(self):
-        return "<NounPhrase: N=%s, a=%s,\n\t\t\t(%s/%s %s #%s)>" % (
-                        self.Noun, repr(self.Adjs), self.Decl, self.Prep or '-', self.Artl, self.Plur or '-')
-
-class TestVP(object):
-    """
-    Minimal test-rig version of VerbPhrase object.
-
-    Here we have just enough to test localized 'tell' functionality.
-    We're leaving out the dereferencing mechanism.
-    """
-    protocols.advise(instancesProvide=[IVerbPhrase])
-    dereferenced = 'labels'
-    def __init__(self, *args, **kw):
-        self.set(*args, **kw)
-    
-    def set(self, verb, advs=(), tense=sym.IMP, negative=False, person=sym.SECOND, number=sym.SING):
-        self.Verb = verb
-        self.Advs = advs
-        self.Tense = tense
-        self.Negative = negative
-        self.Person = person
-        self.Number = number
-
-    def __repr__(self):
-        return "<VerbPhrase: V=%s, A=%s,\n\t\t(%3.3s%1.1s %s person %s)>" % (
-                        self.Verb, repr(self.Advs), str(self.Tense), 
-                        '-+'[not self.Negative], str(self.Person), str(self.Number) )
-                        
-
-class TestClause(object):
-    protocols.advise(instancesProvide=[IClause])
-    dereferenced = 'labels'
-    def __init__(self, VP, NPs):
-        self.Verb = VP
-        self.Nouns = NPs
-        self.Negative = False
+Symbol.verbosity = 0
         
-        # Convenient declension references to the Nouns:
-        for decl in sym.lookup(domain=sym.DECL):
-            decl_s = str(decl).lower().capitalize()
-            setattr(self, decl_s, [N for N in self.Nouns if N.Decl==decl])
-
-    def __repr__(self):
-        rep_s = "\n<Clause: %s\n\tVP = %s,\n\tNPs =\n" % ('-+'[not self.Negative], repr(self.Verb))
-        nouns = "".join(["\t\t%s\n" % repr(N) for N in self.Nouns])
-        tail  = "\t>"
-        return rep_s + nouns + tail
-
-        
-# Now define specific test sentences:
+# specific test sentences:
 
 Vocabulary(sym.NOUN,
     {
     'HAMMER': "Tool for hitting things.",
     'NAIL':   "Nail as used to connect wood.",
-    'BROOM_CLOSET': "Storage closet for brooms."
+    'BROOM_CLOSET': "Storage closet for brooms.",
+    #'YOU': "2nd person pronoun"
     })
 
 Vocabulary(sym.ADJE,
@@ -115,17 +63,119 @@ Vocabulary(sym.VERB,
     'MOVE': "Relocate an object from place to place.",
     'PUT':  "Relocate an object from inventory.",
     'GET':  "Relocate object to inventory.",
-    'EXIST': "Implicit verb in 'there are'."
+    #'EXIST': "Implicit verb in 'there are'."
     })
 
-test_hammer1_s = "Hit the nail with the hammer."
-test_hammer1 = [TestClause(TestVP(sym.HIT, tense=sym.IMP), 
-                    (   TestNP(sym.NAIL,    decl=sym.ACC,   artl=sym.DEFIN), 
-                        TestNP(sym.HAMMER,  decl=sym.INS,   artl=sym.DEFIN) ))]
+tell_tests =    {
+    'hammer1': ("Hit the nail with the hammer.",
+                [SemanticClause(SemanticVerbPhrase(sym.HIT, moods=(sym.VM_IMP,)), 
+                    (   SemanticNounPhrase(sym.NAIL,    decl=sym.ACC,   artl=sym.DEFIN), 
+                        SemanticNounPhrase(sym.HAMMER,  decl=sym.INS,   artl=sym.DEFIN) ))]
+                ),
 
-test_nails1_s = "There are 3 nails in the broom closet."
-test_nails1 = [TestClause(TestVP(sym.EXIST, tense=sym.EXS, number=sym.PLUR, person=sym.THIRD),
-                    (   TestNP(sym.NAIL, decl=sym.NOM, artl=sym.INDEF, plur=3),
-                        TestNP(sym.BROOM_CLOSET, decl=sym.PRP, prep=sym.IN, 
-                            artl=sym.DEFIN, plur=sym.SING)))]
+    'nails1':  ("There are three nails in the broom closet.",
+                [SemanticClause(SemanticVerbPhrase(sym.VM_EXS, moods=(sym.VM_EXS,)),
+                    (   SemanticNounPhrase(sym.NAIL, decl=sym.NOM, artl=sym.INDEF, number=3),
+                        SemanticNounPhrase(sym.BROOM_CLOSET, decl=sym.PRP, prep=sym.IN, 
+                            artl=sym.DEFIN, number=sym.SING)))]
+                ),
 
+    'hammer2': ("Did the hammer hit the nail?",
+                [SemanticClause(SemanticVerbPhrase(sym.HIT, moods=(sym.VM_PPF, sym.VM_INT)), 
+                    (   SemanticNounPhrase(sym.NAIL,    decl=sym.ACC,   artl=sym.DEFIN), 
+                        SemanticNounPhrase(sym.HAMMER,  decl=sym.NOM,   artl=sym.DEFIN) ))]
+                ),
+    'hammer3': ("You hit the nail with the hammer.",
+                [SemanticClause(SemanticVerbPhrase(sym.HIT, moods=(sym.VM_PPF,)),
+                    (   SemanticNounPhrase(sym.SECOND,  decl=sym.NOM,   artl=sym.UNDEF),
+                        SemanticNounPhrase(sym.NAIL,    decl=sym.ACC,   artl=sym.DEFIN), 
+                        SemanticNounPhrase(sym.HAMMER,  decl=sym.INS,   artl=sym.DEFIN) ))]
+                ),
+    'nails2':   ("The nails are in the broom closet.",
+                [SemanticClause(SemanticVerbPhrase(sym.VM_LOC, moods=(sym.VM_LOC,)),
+                    (   SemanticNounPhrase(sym.NAIL,    decl=sym.NOM,   artl=sym.DEFIN, number=sym.PLUR),
+                        SemanticNounPhrase(sym.BROOM_CLOSET, decl=sym.PRP, prep=sym.IN,
+                           artl=sym.DEFIN, number=sym.SING)))]
+                ),
+                }
+
+# FIXME:    "The nail is rusty"
+#   We have no CL for adjectives worked out yet
+
+
+
+parse_tests = dict([(k,(v,e)) for (k,(e,v)) in tell_tests.items()])
+
+
+def run_tests():
+
+    # TODO:
+    # This is sort of dumb, because it's an ad-hoc test runner. I probably should make
+    # something that works with pyunit/doctest
+    
+    # however, this was easier and more fun at the time ;-)
+
+    # Test code:
+    failed = 0
+    passed = 0
+    errors = 0
+    
+    loc = l10n.Locale('xx', concept_language_classes=(SemanticClause, SemanticNounPhrase, SemanticVerbPhrase))
+
+    print "tell tests..."
+    for key, (expected, meaning) in tell_tests.items():
+        print "TEST: %s" % key
+        print "-"*40
+        try:
+            actual =  loc.grammar.tell_sentence(meaning)
+        
+            if not actual == expected:
+                print "Failed test %s - Should read:" % repr(key)
+                print expected
+                print "not:"
+                failed += 1
+                print "FAIL"
+            else:
+                passed += 1
+                print "PASS"
+            print actual
+        except:
+            errors += 1
+            print "Error occured during test:"
+            t,e,tb = sys.exc_info()
+            print t
+            print e
+            traceback.print_tb(tb)
+        print "-"*40
+
+    print "parse tests..."
+    
+    for key, (expected, text) in parse_tests.items():
+        print "TEST: %s" % key
+        print "-"*40
+        try:
+            actual =  loc.SentenceParser.parseString(text).asList()
+        
+            if not actual == expected:
+                print "Failed test %s - Should read:" % repr(key)
+                print expected
+                print "not:"
+                failed += 1
+                print "FAIL"
+            else:
+                passed += 1
+                print "PASS"
+            print actual
+        except:
+            errors += 1
+            print "Error occured during test:"
+            t,e,tb = sys.exc_info()
+            print t
+            print e
+            traceback.print_tb(tb) 
+        print "-"*40
+        
+    print "%d failed, %d passed, %d errors" % (failed, passed, errors)
+
+if __name__ == '__main__':
+    run_tests()

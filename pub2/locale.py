@@ -33,7 +33,7 @@ PUB engine. It has to collect this information from multiple sources:
 #    if so, just update names.
 #
 # 2) Otherwise, look for a module named by the locale (e.g. 'en_US.py')
-#    in the directory 'locale'.
+#    in the directory 'locales'.
 #
 # 3) If you can't find the exact locale (like 'en_US.py'), look for
 #    the nearest "major locale" (like 'en.py') and load that as "major".
@@ -43,8 +43,8 @@ PUB engine. It has to collect this information from multiple sources:
 #    can clobber values from the major locale, but will inherit the
 #    major locale's names.
 #
-# 5) If all else fails, fall back on the English (en_US) locale that
-#    is native for PUB.
+# 5) If all else fails, fall back on the English test (xx) locale that
+#    is used in PUB unit tests.
 #
 # The hard part is that the normal Python import statement doesn't allow
 # you to load a module by a name in a variable. So you have to go to the
@@ -52,8 +52,11 @@ PUB engine. It has to collect this information from multiple sources:
 # the import statement.
 #
 
-import sys, imp
+import sys, imp, os
 from config import LOCALE
+
+pwd = os.getcwd()
+os.chdir('locales')
 
 MAJOR = LOCALE[:2]
 
@@ -83,9 +86,9 @@ else:
         locale = None
 
 if not locale and not major:
-    # Requested locale doesn't exist, use native en_US locale:
-    found = imp.find_module('en', ['locales'])
-    locale = imp.load_module('en', *found)
+    # Requested locale doesn't exist, use test xx locale:
+    found = imp.find_module('xx', ['.'])
+    locale = imp.load_module('xx', *found)
     
 if major:
     try:
@@ -103,6 +106,7 @@ if locale:
     for n in all:
         globals()[n] = locale.__dict__[n]
    
+os.chdir(pwd)
        
 # GAME LOCALE
 

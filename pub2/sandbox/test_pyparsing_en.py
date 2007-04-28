@@ -151,9 +151,9 @@ Adje = MkSemWord(adje_list, 'Adje') # Adjectives, modify nouns
 Advb = MkSemWord(advb_list, 'Advb') # Adverbs, modify the verb
 
 # These rules are locale-specific & must be provided by locale grammar file
-NounPhrase = eval('Group(Optional(Decl | Prep) + Optional(Artl) + ZeroOrMore(Adje) + Noun)')
-Clause     = eval('Group(ZeroOrMore(Advb) + Verb + ZeroOrMore(Advb | NounPhrase))')
-Sentence   = eval('Group(Clause) + ZeroOrMore( OneOrMore(Conj) + Group(Clause) ) ')
+NounPhrase = Group(Optional(Decl | Prep) + Optional(Artl) + ZeroOrMore(Adje) + Noun)
+Clause     = Group(ZeroOrMore(Advb) + Verb + ZeroOrMore(Advb | NounPhrase))
+Sentence   = Group(Clause) + ZeroOrMore( OneOrMore(Conj) + Group(Clause) )
 
 # These parts are patched on after defining the terms from the locale module
 NounPhrase.setParseAction(lambda s,l,t: NounPhraseClass(t[0]))

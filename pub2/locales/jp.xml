@@ -1,87 +1,91 @@
-<localization language="jp" encoding="utf-8">
+<locale name="jp" lang="jp" region="JP" variant="乗用漢字" language="日本語" encoding="utf-8" direction="TBRL">
 <verbs>
-	<!-- どうし - 動詞 -->
-    <verb lbl="GO">		<g  reg="行く" /></verb>
-    <verb lbl="ENTER">	<g  reg="入る"  /></verb>
-    <verb lbl="OUT">		<g reg="置く" /></verb>    
-    <verb lbl="GET">      <g  reg="取る" />
-								<g reg="得る" /></verb>
-<!-- etc. ... -->
+	どうし - 動詞
+    <verb sym="GO">		    <g wd="行く"    /></verb>
+    <verb sym="ENTER">	    <g wd="入る"    /></verb>  
+    <verb sym="GET">        <g wd="取る"    />
+							<g wd="得る"    /></verb>
+
+    テストの例の語彙:                        
+    <verb sym="HIT">        <g wd="打つ"    /></verb>
+    <verb sym="PUT">		<g wd="置く"    /></verb> 
+    etc.
 </verbs>
 
 <adverbs>
-	<!-- ふくし - 副詞 -->
-	<advb lbl="WEAKLY">	  <g reg="弱々しく" />	</advb>
-	<advb lbl="STRONGLY">	<g reg="強く" />		</advb>
+	ふくし - 副詞
+	<advb sym="INTENSITY">  <g wd="弱々しく"    val="+0.500"  />
+                            <g wd="強く"        val="-0.500"  /></advb>
 </adverbs>
 
 <nouns>
-	<!-- めいし - 名詞 -->
-    <noun lbl="BOOK">   <g  reg="本"   />    </noun>
-    <noun lbl="PEN">    <g  reg="ペン" />    </noun>
-<!-- etc. ... -->
+	めいし - 名詞    
+    <noun sym="BOOK">           <g  wd="本"             /></noun>
+    <noun sym="PEN">            <g  wd="ペン"           /></noun>
+
+    テストの例の語彙:
+    <noun sym="NAIL">           <g  wd="釘"             /></noun>
+    <noun sym="HAMMER">         <g  wd="ハンマー"       /></noun>
+    <noun sym="BROOM">          <g  wd="箒"             /></noun>
+    <noun sym="BROOM_CLOSET">   <g  wd="箒の物置"       /></noun>
+    etc. ...
 </nouns>
 
 <adjectives>
-	<!-- けいようし と けいようどうし - 形容詞 と 形容動詞 -->
-    <adje lbl="RED"    ><g  reg="赤い"/>    </adje>
-    <adje lbl="BLUE"   ><g  reg="青い"/>     </adje>
-<!-- etc. ... -->
+	けいようし と けいようどうし - 形容詞 と 形容動詞
+    <adje sym="RED">        <g wd="赤い"        /></adje>
+    <adje sym="BLUE">       <g wd="青い"        /></adje>
+    etc. ...
 </adjectives>
 
 <declensions>
-	<!-- Declension particles - ぶんぽうのじょし - 文法の助詞 -->
-	<decl lbl="NOM">	<g reg="は" /> 
-							<g reg="が" /> </decl>
-	<decl lbl="ACC">	<g reg="を" /> </decl>
-	<decl lbl="DAT">	<g reg="え" />
-							<g reg="に" /> </decl>
-	<decl lbl="GEN">	<g reg="の" />	</decl>
-	<decl lbl="INS">	<g reg="で" />	</decl>
+	Declension particles - ぶんぽうのじょし - 文法の助詞
+	<decl sym="NOM">        <g wd="は"          />
+                            <g wd="が"          /></decl>
+	<decl sym="ACC">        <g wd="を"          /></decl>
+	<decl sym="DAT">        <g wd="え"          />
+                            <g wd="に"          /></decl>
+	<decl sym="GEN">	    <g wd="の"          /></decl>
+	<decl sym="INS">	    <g wd="で"          /></decl>
 </declensions>
 
 <prepositions>
-	<!--                        【ポロジの】ばしょ の じょし -->
-	<!-- Topological Prepositions - 【トポロジの】場所の助詞 -->
-	<prep lbl="FRONT"> 
-			<g reg="の前に" />
-			<g reg="の前で" />
-	</prep>
-	<prep lbl="BACK">
-			<g reg="の後ろに" />
-			<g reg="の後ろで" />
-	</prep>
-	<prep lbl="ON_TOP">
-			<g reg="の上に" />
-			<g reg="の上で" />
-	</prep>
-	<prep lbl="UNDER">
-			<g reg="の下に" />
-			<g reg="の下で" />
-	</prep>
-	<prep lbl="TO_LEFT">
-			<g reg="の左に" />
-			<g reg="の左で" />
-	</prep>
-	<prep lbl="TO_RIGHT">
-			<g reg="の右に" />
-			<g reg="の右で" />
-	</prep>
-	<prep lbl="INSIDE">
-			<g reg="の中に" />
-			<g reg="の中で" />
-			<g reg="に" />
-			<g reg="で" />
-	</prep>
+	 【トポロジの】ばしょ の じょし
+	 【トポロジの】場所の助詞
+	<prep sym="FRONT">      <g wd="の前に"      />
+                            <g wd="の前で"      /></prep>
+                            
+	<prep sym="BACK">       <g wd="の後ろに"    />
+                            <g wd="の後ろで"    /></prep>
+                            
+	<prep sym="ON_TOP">     <g wd="の上に"      />
+                            <g wd="の上で"      /></prep>
+                            
+	<prep sym="UNDER">      <g wd="の下に"      />
+                            <g wd="の下で"      /></prep>
+                            
+	<prep sym="TO_LEFT">    <g wd="の左に"      />
+                            <g wd="の左で"      /></prep>
+                            
+	<prep sym="TO_RIGHT">   <g wd="の右に"      />
+                            <g wd="の右で"      /></prep>
+                            
+	<prep sym="INSIDE">     <g wd="の中に"      />
+                            <g wd="の中で"      />
+                            <g wd="に"          />
+                            <g wd="で"          /></prep>
 </prepositions>
+
 <punctuation>
-	<punc lbl="ADDRESS"><g chars="、。"/></punc>
-	<punc lbl="CONJ"><g chars="、。"/></punc>
+	<punc sym="ADDRESS" chars="、。"/>
+	<punc sym="CONJ"    chars="、。"/>
 </punctuation>
+
 <conjunctions punctuation="Y">
-	<conj><g reg="し" />
-			<g reg="が" />
+	<conj sym="CONJ">
+            <g wd="し" />
+			<g wd="が" />
 	</conj>
 </conjunctions>
-</localization>
+</locale>
 

@@ -85,41 +85,56 @@ in English) figure out what they need to put in the file and where to put it.
 I'm working on a formal spec for this XML format, but here's an example to give you the idea.
 Pardon the badness of my Spanish, but the English example overlooks too many useful features:
 <textarea cols=100 rows=20>
-<locale language="es">
+<locale name="es" lang="es" region="MX" variant="(Usando 'Usted')" language="Español Mexicana" encoding="utf-8" direction="LRTB">
+
 <verbs>
-    <verb lbl="go">
-        <g  inf="ir"        imp="ven"       prp="va"        pri="esta vayando"  />
-        <g  inf="mover"     imp="mueve"     prp="mueve"     pri="esta moviendo" />
-        <g  reg="camin~"    cl="AR"/>
-    </verb>
-
-    <verb lbl="enter">
-        <g  reg="entr~" cl="AR" />
-    </verb>
-
-    <verb lbl="put">
-        <g  inf="poner"     imp="ponga"     prp="pone"      pri="esta poniendo" />
-    </verb>
-
-    <verb lbl="get">
-        <g  inf="obtenir"   imp="obtenga"   prp="obtiene"   pri="esta obteniendo" />
-    </verb>
-
-<!-- etc. ... -->
-
+    <verb sym="GO">         <g  wd="ir" cl="IR"
+                                    imp="vaya"
+                                    prp="va"
+                                    pri="esta yendo"            /></verb>
+                                    
+    <verb sym="ENTER">      <g  wd="entrar" cl="AR"             /></verb>
+    
+    <verb sym="GET">        <g  wd="obtener" cl="ER"
+                                    imp="obtenga"
+                                    prp="obtiene"
+                                    pri="esta obteniendo"       /></verb>
+    
+    Vocabulario para los testos y ejemplos:
+    <verb sym="HIT">        <g  wd="golpear" cl="AR"            /></verb>
+    
+    <verb sym="PUT">        <g  wd="poner" cl="ER"  
+                                    imp="ponga" 
+                                    prp="pone"
+                                    pri="esta poniendo"         /></verb>
 </verbs>
-
 <nouns>
-    <noun lbl="book">   <g  reg="libro"  cl="M"/>    </noun>
-    <noun lbl="pen">    <g  reg="pluma"  cl="F"/>    </noun>
-<!-- etc. ... -->
-</noun>
+    <noun sym="BOOK">           <g wd="libro"  cl="M"               /></noun>
+    <noun sym="PEN">            <g wd="pluma"  cl="F"               /></noun>
+
+    Vocabulario para los testos y ejemplos:
+    <noun sym="HAMMER">         <g wd="martillo" cl="M"             /></noun>
+    <noun sym="NAIL">           <g wd="clavo" cl="M"                /></noun>
+    <noun sym="BROOM">          <g wd="escoba" cl="M"               /></noun>
+    <noun sym="BROOM_CLOSET">   <g wd="alacena de escobas" cl="F"   /></noun>
+</nouns>
 
 <adjectives>
-    <adjective lbl="red"    ><g reg="roj~o"/>    </adjective>
-    <adjective lbl="blue"   ><g reg="azul"/>     </adjective>
-<!-- etc. ... -->
-</adjective>
+    <adje sym="red"    ><g wd="roj~o"/>    </adje>
+    <adje sym="blue"   ><g wd="azul"/>     </adje>
+</adjectives>
+
+<adverbs>
+    <advb sym="INTENSITY">      <g wd="débilmente"      val="-0.500" />
+                                <g wd="fuerzamente"     val="+0.500" /></advb>
+
+    <advb sym="POLITENESS">     <g wd=""     val="" />
+                                <g wd=""     val="" /></advb>
+
+    <advb sym="COMBINING">      <g wd="muy"             val="+0.200" />
+                                <g wd="extremamente"    val="+0.600" /></advb>
+</adverbs>
+
 </locale>
 </textarea>
 </p>

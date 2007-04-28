@@ -1,0 +1,111 @@
+<locale name="xx" lang="en" region="US" language="Test Locale" direction="LRTB" encoding="utf-8">
+    This file is a special locale used only for testing. The reason for
+    this is that if we tested any real locale, the unit tests would
+    break as the locale file was improved, which is undesireable (for
+    example, an increase in vocabulary words, will change the number of
+    words reported, causing the test output to not exactly match the
+    expected output). So, unless there are new features to test, this
+    locale should not be updated -- and of course, every time it is,
+    you need to check the unit tests.
+    
+    Because ElementTree doesn't always preserve XML comments, I've chosen
+    to make text legal (but ignored) in the locale file. This means you
+    can just type comments wherever you like (like this one).
+
+    For most game locales, you'll only need to create new nouns. Occasionally
+    you may need extra verbs, adjectives, or adverbs (but rarely!).
+    <nouns>
+        Vocabulary for the testcases:
+        <noun sym="HAMMER">         <g wd="hammer"          /></noun>
+        <noun sym="NAIL">           <g wd="nail"            /></noun>
+        <noun sym="BROOM">          <g wd="broom"           /></noun>
+        <noun sym="BROOM_CLOSET">   <g wd="broom closet"    /></noun>
+
+        <!-- <noun sym="YOU">            <g wd="you"             /></noun> -->
+    </nouns>
+    
+    <adjectives>
+        <adje sym="RUSTY"   sense="V">  <g wd="rusty"           /></adje>
+        <adje sym="SHINY"   sense="V">  <g wd="shiny"           /></adje>
+        <adje sym="LOUD"    sense="A">  <g wd="loud"            /></adje>
+        <adje sym="QUIET"   sense="A">  <g wd="quiet"           /></adje>
+        <adje sym="SOFT"    sense="F">  <g wd="soft"            /></adje>
+        <adje sym="HARD"    sense="F">  <g wd="hard"            /></adje>
+        <adje sym="SWEET"   sense="T">  <g wd="sweet"           /></adje>
+        <adje sym="BITTER"  sense="T">  <g wd="bitter"          /></adje>
+        <adje sym="ACRID"   sense="S">  <g wd="acrid"           /></adje>
+        <adje sym="FLORAL"  sense="S">  <g wd="floral"          />
+                                        <g wd="flowery"         /></adje>
+    </adjectives>
+    
+    <verbs>
+        Vocabulary for the testcases:
+        <verb sym="HIT">            <g wd="hit"             />
+                                    <g wd="tap"     adv="INTENSITY:-0.500"  />
+                                    <g wd="pound"   adv="INTENSITY:+0.500"  />
+                                    <g wd="bash"    adv="INTENSITY:+0.600"  /></verb>
+                                    
+        <verb sym="PUT">            <g wd="put"             />
+                                    <g wd="place"   adv="POLITENESS:+0.200" /></verb>
+    </verbs>
+    
+    <adverbs>
+        <advb sym="INTENSITY">      <g wd="gently"      val="-0.500"    />
+                                    <g wd="weakly"      val="-0.600"    />
+                                    <g wd="strongly"    val="+0.400"    />
+                                    <g wd="hard"        val="+0.600"    /></advb>
+                                    
+        <advb sym="POLITENESS">     <g wd="nicely"      val="+0.400"    />
+                                    <g wd="rudely"      val="-0.500"    /></advb>
+
+        <advb sym="COMBINING">      <g wd="very"        val="+0.800"    />
+                                    <g wd="extremely"   val="+0.990"    /></advb>
+    </adverbs>
+
+    Game locale writers should almost never mess with articles,
+    declensions, prepositions, conjunctions, or punctuation. Those
+    are bound up with the core localization, and are unlikely to need
+    extending anyway.
+
+    Very many of them are likely to have special-case handling in
+    the code.
+       
+    <declensions>
+        <decl sym="DAT">    <g wd="to"          />
+                            <g wd="onto"        />
+                            <g wd="upon"        />
+                            <g wd="towards"     />
+                            <g wd="toward"      />
+                            <g wd="on"          />
+                            <g wd="against"     /></decl>
+                            
+        <decl sym="GEN">    <g wd="from"        />
+                            <g wd="away from"   />
+                            <g wd="of"          /></decl>
+        
+        <decl sym="INS">    <g wd="using"   />
+                            <g wd="with"    /></decl>
+    </declensions>
+
+    <prepositions>
+        <prep sym="ON">     <g wd="on"          />
+                            <g wd="on top of"   />
+                            <g wd="upon"        />
+                            <g wd="onto"        />
+                            <g wd="atop"        /></prep>
+
+        <prep sym="IN">     <g wd="in"          />
+                            <g wd="inside"      />
+                            <g wd="inside of"   />
+                            <g wd="within"      />
+                            <g wd="into"        /></prep>
+    </prepositions>
+
+    <articles>
+        <artl sym="INDEF">  <g wd="a"           />
+                            <g wd="an"          /></artl>
+        <artl sym="DEFIN">  <g wd="the"         /></artl>
+        <artl sym="QUANT">  <g wd="some"        /></artl>
+    </articles>
+</locale>
+

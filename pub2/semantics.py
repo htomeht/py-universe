@@ -60,19 +60,22 @@ semantic objects are all designed to be reversible -- they can be re-referenced
 
 import textwrap
 from symbol import *
+from vague import SparseVector
 import random
 from noun import Noun, Adjective
 #from verb import Verb, AdverbDomain, Adver
 import vocabulary
+import protocols
+from interfaces import *
 
 # Symbolic vocabularies
 
-Symbol('PoS',      doc="Part of Speech")
-Symbol('SCOPE',    doc="Extent and place of search among program objects.")
-Symbol('TENSE',    doc="Tense (including aspect and mood) of a sentence or phrase.")
-Symbol('G_NUMBER', doc="Grammatical number of a noun.")
-Symbol('G_PERSON', doc="Grammatical 'person' 1st - 4th.")
-Symbol('SENSES',   doc="Senses to which adjectives apply.")
+Symbol('PoS',       doc="Part of Speech")
+Symbol('SCOPE',     doc="Extent and place of search among program objects.")
+Symbol('VERB_MOOD', doc="Tense (including aspect and mood) of a sentence or phrase.")
+Symbol('G_NUMBER',  doc="Grammatical number of a noun.")
+Symbol('G_PERSON',  doc="Grammatical 'person' 1st - 4th.")
+Symbol('SENSES',    doc="Senses to which adjectives apply.")
 
 part_of_speech = Enum(sym.PoS, {
         'NOUN':'Noun',
@@ -102,13 +105,18 @@ decl_cases = Enum(sym.DECL, {
         'INS':'Instrumental or "with"/"using" Indirect Object.',
         'PRP':'Prepositional case, used with "topological" prepositions, e.g. "in", "on"' })
 
-tense = Enum(sym.TENSE, {
-        'IMP':'Imperative = Command',
-        'INT':'Interrogative = Question',
-        'PPF':'Present Perfective = Statement of Completed Action',
-        'PIM':'Present Imperfective = Statement of Ongoing Action',
-        'COP':'Copular = Statement of Equality Between Subject and Object  "A is B"',
-        'EXS':'Existance = Statement of Existance "there are..."' })
+decl_order = [sym.NOM, sym.ACC, sym.DAT, sym.GEN, sym.INS, sym.PRP, None]
+
+tense = Enum(sym.VERB_MOOD, {
+        'VM_IMP':'Imperative = Command',      
+        'VM_PPF':'Present Perfective = Report completed action',       
+        'VM_PIM':'Present Imperfective = Report ongoing action',
+        'VM_COP':'Copular = Report equality, membership, or properties',
+        'VM_EXS':'Existential = Report existance "there are..."',
+        'VM_LOC':'Locative = Report location',
+        'VM_NEG':'Negative modifier',
+        'VM_POS':'Positive modifier',
+        'VM_INT':'Interrogative modifier'})
         
 article = Enum(sym.ARTL, {
         'UNDEF':'Undefined - definiteness not known, unclear, or unspecified.',
@@ -157,6 +165,7 @@ class AdjectiveVocabulary(Vocabulary):
     """
     # Domains are associated with sense-verbs:
     sense = {sym.VISIBLE:'V', sym.AUDIBLE:'A', sym.FEELABLE:'F', sym.SMELLABLE:'S', sym.TASTABLE:'T'}
+    sense_inv = dict([(v,k) for k,v in sense.items()])
 
     def update(self, names, doc=None):
         """
@@ -203,7 +212,7 @@ class AdjectiveVocabulary(Vocabulary):
             self._update(data)
 
 
-class NounPhrase(object):
+class SemanticNounPhrase(object):
     """
     Noun Phrase
 
@@ -218,169 +227,237 @@ class NounPhrase(object):
     @ivar adjs:	None | [unicode,...] | [Vocabulary PoS/ADJE,...] 
     """
     noun = None
-    plur = None
     decl = None
     prep = None
     artl = None
     adjs = ()
-	
-    def __init__(self, noun=None, plural=None, declension=None, preposition=None, 
-    			article=None, adjectives=()):
-        self.noun = noun
-        self.plur = plural
-        self.decl = declension
-        self.prep = preposition
-        self.artl = article
-        self.adjs = list(adjectives)
+    number = None
+    
+    protocols.advise(instancesProvide=[INounPhrase])
+    dereferenced = 'labels'
+    def __init__(self, *args, **kw):
+        self.set(*args, **kw)
+    
+    def set(self, noun, adjs=(), decl=None, prep=None, artl=sym.UNDEF, number=None):
+        if not number:
+            number = sym.SING
 
-        # build a dictionary mapping e.g. sym.SUBJ_SELF to self._match_scope_SUBJ_SELF
-        # gotcha: we want the instance *method* not the class *function*!
-        self.dereference_by_scope = dict([(c.name, getattr(self, '_match_scope_'+c.name))
-                                                    for c in sym.SCOPES.vocabulary])
+        self.noun = noun
+        self.adjs = adjs
+        self.decl = decl
+        self.prep = prep
+        self.artl = artl
+        self.number = number
+        if self.decl != sym.PRP:
+            self.prep = None
+            
+    def __repr__(self):
+        return "<NounPhrase: N=%s, a=%s,\t(%s/%s %s #%s)>" % (
+                        self.noun, repr(self.adjs), self.decl,
+                        self.prep or '-', self.artl, self.number or '-')
+
+    def __eq__(self, other):
+        """
+        Value-based comparison of phrases.
+        """
+        if isinstance(other, SemanticNounPhrase):
+            return  (   self.noun == other.noun and
+                        self.decl == other.decl and
+                        self.prep == other.prep and
+                        self.adjs == other.adjs and
+                        self._match_article(self.artl, other.artl) and
+                        self._match_number(self.number, other.number) )
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def _cmp_article(self, j, k):
+        for a,b,more_general in ((j,k,-1),(k,j,1)):
+            if a==b:
+                return 0
+            if a in (sym.UNDEF, None):
+                return more_general
+        raise ValueError("Articles %s and %s conflict." % (j,k) )
+
+    def _match_article(self, j, k):
+        """
+        Determine whether two definiteness articles match.
+        """
+        try:
+            v = self._cmp_article(j,k)
+            if v==1:
+                return 2
+            else:
+                return 1
+        except ValueError:
+            return 0
+    
+    def _general_article(self, articles):
+        """
+        Select more general of two articles.
+        """
+        if articles:
+            articles = list(articles[:])
+            articles.sort(self._cmp_article)
+            return articles[0]
+        else:
+            return None
+
+    def _specific_article(self, articles):
+        """
+        Select more specific of two articles.
+        """
+        if articles:
+            articles = list(articles[:])
+            articles.sort(self._cmp_article)
+            return articles[-1]
+        else:
+            return None
+
+    def _cmp_number(self, j, k):
+        for a,b,more_general in ((j,k,-1),(k,j,1)):
+            if a==b:
+                return 0
+            elif a==None:
+                return more_general
+            elif a==sym.PLUR and (b in (sym.PLUR, sym.PLND, sym.DUAL) or (type(b)==int and b > 1)):
+                return more_general
+            elif a==sym.PLND and (b==sym.PLND or (type(b)==int and b > 2)):
+                return more_general
+            elif a==sym.DUAL and b in (sym.DUAL, 2):
+                return more_general
+            elif a==sym.SING and b in (sym.SING, 1):
+                return more_general
+        raise ValueError("Grammatical numbers %s and %s conflict." % (j,k) )
+
+    def _match_number(self, j, k):
+        """
+        Determine whether two grammatical numbers are equivalent.
+
+        returns 0, 1, or 2
+        0 - means the two numbers conflict
+        1 - means the two numbers are compatible, j implies k (or j iff k)
+        2 - means the two numbers are compatible, k implies j (and not the reverse)
+        """
+        try:
+            v = self._cmp_number(j,k)
+            if v==1:
+                return 2
+            else:
+                return 1
+        except ValueError:
+            return 0
+
+    def _general_number(self, numbers):
+        """
+        Select more general of two grammatical numbers.
+        """
+        if numbers:
+            numbers = list(numbers[:])
+            numbers.sort(self._cmp_number)
+            return numbers[0]
+        else:
+            return None
+
+    def _specific_number(self, numbers):
+        """
+        Select the more exact of two grammatical numbers.
+        """
+        if numbers:
+            numbers = list(numbers[:])
+            numbers.sort(self._cmp_number)
+            return numbers[-1]
+        else:
+            return None 
 
     def addAdje(self, adje):
     	"""
         Add an adjective to the noun phrase.
         """
     	self.adjs.append(adje)
-        
-    def _match(self, noun):
-    	"""
-        Is this noun phrase consistent with being the noun?
-
-        This is essentially an equality test, but we don't want to imply a 1:1 relationship.
-        There may be many nouns that this phrase could match.
-        
-        @param noun: noun to match to (noun is assumed to be in scope, no checks made).
-        """
-        # NOTE: decl, plur, and artl do not affect individual matches, they
-        #       determine search sequence and multiple-matching rules.
-        #
-        match = False
-        # First the name must match -- most matches end here
-        if isinstance(self.noun, Symbol) and self.noun==noun.name:
-            match = True
-        else:
-            return False
-        
-        # interpretation of prepositions is going to depend on the target noun object
-        #  (if prep doesn't make sense for that noun, it probably can't match?)
-        if self.prep and (self.prep in noun.preps):
-            match = True
-        else:
-            return False
-        
-        # adjectives act as filters -- noun target should know if adjective matches
-        for adje in self.adjs:
-            if not noun.describedBy(adje):
-                return False
-        else:
-            match = True
-
-        return match
-
-    def _match_multiple(self, items):
-        matches = []
-        for item in items:
-            if self._match(item):
-                matches.append(item)
-        if len(matches)==1:
-            # If exactly one match, we have a winner
-            self.noun = matches[0]
-            return True
-        if len(matches)>1:
-            if self.plur in (sym.SING, sym.MASS, sym.ABST, 1):
-                # Ambiguous reference violates singular grammatical number
-                # user probably didn't mean all of them
-                raise SemanticAmbiguityError
-            elif self.artl==sym.INDEF:
-                # Indefinite -- just pick one at random:
-                # e.g. "push a button" -- pick a random button and push it... ;-)
-                self.noun = random.choice(matches)
-            elif isinstance(sym.plur, int):
-                # Pick N of the objects, where N is given by the number --
-                # only works for literal number
-                random.shuffle(matches)
-                self.noun = matches[:sym.plur]
-            else:
-                self.noun = matches
-                return True
-        else:
-            return False
-
-    def _match_scope_SUBJ_SELF(self, subject):
-        if self._match(subject):
-            self.noun = subject
-            return True
-        else:
-            return False
-
-    def _match_scope_INVENTORY(self, subject):
-        return self._match_multiple(subject.visibleContents())
-
-    def _match_scope_THIS_ROOM(self, subject):
-        # Actually any container holding the player,
-        # but that's usually the room
-        return self._match_multiple(subject.parent.visibleContents())
-
-    def _match_scope_CHARACTER(self, subject):
-        contents = subject.parent.visibleContents()
-        return self._match_multiple([s for s in contents if s.implements(IAgent)])
-
-    def _match_scope_UNIVERSE(self, subject):
-        # FIXME: we have no way to scan entire PUB universe for an object (?)
-        return False
-	
-    def _match_scope_EVERYBODY(self, subject):
-        # FIXME: Same as universe, except only consider agents.
-        return False
-
-    def _match_scope_ABSTRACTS(self, subject):
-        return self._match_multiple(sym.ABSTRACTS.vocabulary)
-
-    def dereference(self, subject, scopes):
-    	"""
-        Attempt to resolve the identity of the noun
-        from game scoping rules and available information in Noun Phrase.
-        
-        @param subject: subject (agent action originates from).
-        @param scopes: sequence of scopes for the verb.
-        """
-        # If words are still strings, then we need to ask the locale
-        # module to translate them into semantic symbols:
-        self.artl = Artl(self.artl)
-        self.decl = Decl(self.decl)
-        self.prep = Prep(self.prep)
-
-        if self.decl:
-            scopes = Declension.scopes[self.decl]
-
-        for scope in scopes:
-            if self.dereference_by_scope[scope](subject):
-                break
-        else:
-            # Didn't find any possible reference
-            raise SemanticError
-
-        # The important thing is the side-effect of setting self.noun 
-        # but we also return that:
-        return self.noun
                 
                     
-class VerbPhrase(object):
+class SemanticVerbPhrase(object):
     """
     Verb Phrase or Predicate of sentence, includes verb and adverb(s).
+
+    @ivar verb: None | unicode | symbol
+    @ivar advs: () | tuple of unicode
+    @ivar adverbs: dict of Adverb instances
+    @ivar mood: mood or tense of verb
+    @ivar negative: Boolean, is verb negated?
+    @ivar question: Boolean, is verb interrogative?
+    @ivar dereferenced: dereferencing state
+    @ivar agreements: noun agreements (used during parsing)
     """
     verb = None
-    advs = None
-    adverbs=None
+    advs = SparseVector()
+    adverbs=None    # FIXME: role of "advs" vs "adverbs"?
+    mood = None
+    negative = False
+    question = False
+    dereferenced = 'labels'
+    
+    agreements = None
 
-    def __init__(self, verb=None, advs=(), adverbs=None):
+    protocols.advise(instancesProvide=[IVerbPhrase])
+
+    def __init__(self, *args, **kw):
+        self.set(*args, **kw)
+    
+    def set(self, verb, advs=None, moods=(sym.VM_IMP, sym.VM_POS)):
+        if not advs:
+            advs = SparseVector()
+            
         self.verb = verb
         self.advs = advs
-        self.adverbs = {}
-        if adverbs and type(adverbs)==dict:
-            self.adverbs.update(adverbs)
+        for mood in moods:
+            if mood in (sym.VM_IMP, sym.VM_PPF, sym.VM_PIM, sym.VM_COP, sym.VM_LOC, sym.VM_EXS):
+                self.mood = mood
+                break
+        else:
+            self.mood = sym.VM_IMP
+        
+        for mood in (sym.VM_COP, sym.VM_LOC, sym.VM_EXS):
+            if mood in moods:
+                self.verb = mood
+                break
+
+        if sym.VM_NEG in moods:
+            self.negative = True
+        else:
+            self.negative = False
+
+        if sym.VM_INT in moods:
+            self.question = True
+        else:
+            self.question = False
+            
+        self.advb_remainders = {}
+            
+
+    def __repr__(self):
+        return "<VerbPhrase: V=%s, A=%s,\t(%3.3s%1.1s%1.1s)>" % (
+                        self.verb, repr(self.advs), str(self.mood)[3:], 
+                        '-+'[not self.negative], '.?'[self.question] )
+                        
+    def __eq__(self, other):
+        """
+        Value-based comparison of phrases.
+        """
+        if isinstance(other, SemanticVerbPhrase):
+            return  (   self.verb == other.verb and
+                        self.advs == other.advs and
+                        self.mood == other.mood and
+                        self.negative == other.negative and
+                        self.question == other.question )
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
     
     def _dereference_adverbs(self):
         if not adverbs:
@@ -395,5 +472,57 @@ class VerbPhrase(object):
         if type(verb) in (str, unicode):
             # Consider synonym impact on adverbial value
             verb, domain, value = locale.grok_verb(verb)
-            self.noun = verb
+            self.verb = verb
+            self.adverbs[domain] =  value
+
+
+class SemanticClause(object):
+    """
+    Independent clause. A complete simple sentence with a verb phrase and one or more nounphrases.
+    """
+    # implements IClause
+    protocols.advise(instancesProvide=[IClause])
+
+    dereferenced = 'labels'
+    def __init__(self, VP, NPs):
+        self.verb_phrase = VP
+        self.noun_phrases = list(NPs)
+        
+        # Convenient declension references to the Nouns:
+        for decl in sym.lookup(domain=sym.DECL):
+            decl_s = str(decl).lower()
+            setattr(self, decl_s, [N for N in self.noun_phrases if N.decl==decl])
+        
+        if not self.nom:
+            self.noun_phrases.append(SemanticNounPhrase(sym.SECOND, number=sym.SING, decl=sym.NOM))
+            self.nom = self.noun_phrases[-1]
+
+        self.noun_phrases.sort(lambda a,b: cmp(decl_order.index(a.decl), decl_order.index(b.decl)) )
+
+    def __repr__(self):
+        rep_s = "\n<Clause: %s\n\tVP = %s,\n\tNPs =\n" % ('-+'[not self.verb_phrase.negative],
+            repr(self.verb_phrase))
+        nouns = "".join(["\t\t%s\n" % repr(N) for N in self.noun_phrases])
+        tail  = "\t>"
+        return rep_s + nouns + tail
+
+    def __eq__(self, other):
+        if isinstance(other, SemanticClause):
+            return  (   self.verb_phrase == other.verb_phrase and
+                        self.noun_phrases == other.noun_phrases)
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+
+class Sentence(list):
+    """
+    A Sentence is an optional Address followed by a list of one or more clauses.
+    """
+    protocols.advise(instancesProvide=[ISentence])
+    
+
+
 
