@@ -9,16 +9,16 @@ class Askable:
         
         @parent.ask.when('cmd')
         def ask(self, cmd, c=self):
-            if c.answer[cmd]: print (c.answer[cmd])
-            print parent.x
+            if c.answer[cmd]: print(c.answer[cmd])
+            print(parent.x)
 
         @parent.ask.before('parent.x == 5')
         def ask(self, cmd, c=self):
-            print 'I evaluate first'
+            print('I evaluate first')
 
         @parent.ask.after('parent.x == 5')
         def ask(self, cmd, c=self):
-            print 'I evaluate last'
+            print('I evaluate last')
           
 
 class a:

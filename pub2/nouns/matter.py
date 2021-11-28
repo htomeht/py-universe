@@ -244,7 +244,7 @@ class ITurnL(Interface):
 class Turnable(Component):
     """"""
     
-    advise(InstancesProvide = [IPullL]
+    advise(InstancesProvide = [ITurnL]
 
     def __init__(self):
         """"""

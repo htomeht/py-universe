@@ -13,15 +13,14 @@ pub.scheduler = Scheduler("12:00")
 
 # print help message
 def usage():
-    print
-    print """usage: pubrun <game name> [options]
+    print("""usage: pubrun <game name> [options]
 
 Options:
   -d,   --debug          : set mode to debugging mode.
   -h,   --help           : print this help message and exit.
   -l,   --language       : specify which language to run ie English.
   -u,   --user-interface : specify an available user interface, ie ncurses.
-          """
+""")
 
 def rungame():
     """
@@ -29,15 +28,13 @@ def rungame():
     Set up the world and start the clock.
     """
     # Game Banner
-    print
-    print "  #----------------------------------------------------#"
-    print "  # This game was created with Python Universe Builder #"
-    print "  #                                                    #"
-    print "  # 'PUB' is freely available under the LGPL           #"
-    print "  #                                                    #"
-    print "  #    py-universe.sourceforge.net                     #"
-    print "  #----------------------------------------------------#"
-    print
+    print("  #----------------------------------------------------#")
+    print("  # This game was created with Python Universe Builder #")
+    print("  #                                                    #")
+    print("  # 'PUB' is freely available under the LGPL           #")
+    print("  #                                                    #")
+    print("  #    py-universe.sourceforge.net                     #")
+    print("  #----------------------------------------------------#")
     
     pub.player.Tell(pub.player.container.GetDesc(pub.player))
 
